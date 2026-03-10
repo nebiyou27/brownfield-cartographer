@@ -1,5 +1,6 @@
 import os
 import yaml
+import re
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 
@@ -21,7 +22,53 @@ def parse_yaml_file(file_path: str) -> Dict[str, Any]:
         print(f"[WARNING] Could not parse YAML file {file_path}: {e}")
         return {}
 
-def extract_nodes_from_schema_yml(file_path: str) -> List[DatasetNode]:
+def load_doc_blocks(models_dir: str) -> Dict[str, str]:
+    """
+    Read the docs.md file and extract all doc blocks into a dictionary.
+    """
+    doc_blocks = {}
+    docs_path = Path(models_dir) / "docs.md"
+    
+    if not docs_path.exists():
+        return doc_blocks
+    
+    try:
+        content = docs_path.read_text(encoding="utf-8")
+        pattern = r'\{%\s*docs\s+(\w+)\s*%\}(.*?)\{%\s*enddocs\s*%\}'
+        matches = re.findall(pattern, content, flags=re.DOTALL)
+        
+        for block_name, block_content in matches:
+            doc_blocks[block_name.strip()] = block_content.strip()
+            print(f"[DAG Config] Loaded doc block: {block_name.strip()}")
+    except Exception as e:
+        print(f"[WARNING] Could not read docs.md: {e}")
+    
+    return doc_blocks
+
+def resolve_doc_references(description: str, doc_blocks: Dict[str, str]) -> str:
+    """
+    Replace {{ doc("block_name") }} with the actual text from doc_blocks.
+    """
+    if not description or not doc_blocks:
+        return description
+        
+    pattern = r'\{\{\s*doc\(["\'](\w+)["\']\)\s*\}\}'
+    matches = re.findall(pattern, description)
+    
+    for block_name in matches:
+        if block_name in doc_blocks:
+            # Escape potential regex special characters in the replacement if any, 
+            # though here we just want the literal string.
+            replacement = doc_blocks[block_name]
+            # Use re.escape briefly for the search pattern but not the replacement
+            search_pattern = rf'\{{\{{\s*doc\(["\']{block_name}["\']\)\s*\}}\}}'
+            description = re.sub(search_pattern, replacement, description)
+        else:
+            print(f"[WARNING] doc() block '{block_name}' not found in docs.md")
+    
+    return description
+
+def extract_nodes_from_schema_yml(file_path: str, doc_blocks: Dict[str, str] = None) -> List[DatasetNode]:
     """
     Parses a dbt schema.yml file to extract DatasetNodes.
     Extracts model names, descriptions, and column details.
@@ -40,7 +87,8 @@ def extract_nodes_from_schema_yml(file_path: str) -> List[DatasetNode]:
         for model in content['models']:
             name = model.get('name')
             if name:
-                description = model.get('description', '')
+                raw_description = model.get('description', '')
+                description = resolve_doc_references(raw_description, doc_blocks)
                 
                 # Extract columns and their descriptions
                 columns = []
@@ -50,7 +98,8 @@ def extract_nodes_from_schema_yml(file_path: str) -> List[DatasetNode]:
                         col_name = col.get('name')
                         if col_name:
                             columns.append(col_name)
-                            col_desc = col.get('description', '')
+                            raw_col_desc = col.get('description', '')
+                            col_desc = resolve_doc_references(raw_col_desc, doc_blocks)
                             if col_desc:
                                 col_descriptions[col_name] = col_desc
                 
@@ -68,11 +117,14 @@ def extract_nodes_from_schema_yml(file_path: str) -> List[DatasetNode]:
     if 'sources' in content and isinstance(content['sources'], list):
         for source in content['sources']:
             source_name = source.get('name')
-            source_desc = source.get('description', '')
+            raw_source_desc = source.get('description', '')
+            source_desc = resolve_doc_references(raw_source_desc, doc_blocks)
+            
             if 'tables' in source and isinstance(source['tables'], list):
                 for table in source['tables']:
                     table_name = table.get('name')
-                    table_desc = table.get('description', source_desc)
+                    raw_table_desc = table.get('description', source_desc)
+                    table_desc = resolve_doc_references(raw_table_desc, doc_blocks)
                     if table_name:
                         columns = []
                         col_descriptions = {}
@@ -81,7 +133,8 @@ def extract_nodes_from_schema_yml(file_path: str) -> List[DatasetNode]:
                                 col_name = col.get('name')
                                 if col_name:
                                     columns.append(col_name)
-                                    c_desc = col.get('description', '')
+                                    raw_c_desc = col.get('description', '')
+                                    c_desc = resolve_doc_references(raw_c_desc, doc_blocks)
                                     if c_desc:
                                         col_descriptions[col_name] = c_desc
                         
@@ -151,7 +204,14 @@ def analyze_all_yaml_files(root_dir: str) -> Dict[str, Any]:
         results["seed_paths"] = proj_metadata["seed_paths"]
         print(f"[YAML Parser] Processed config: {project_path}")
     
-    # 2. Find and parse all schema.yml files within model and seed paths
+    # 2. Load doc blocks for resolution
+    doc_blocks = {}
+    for mod_path in results["model_paths"]:
+        full_mod_path = os.path.join(root_dir, mod_path)
+        if os.path.exists(full_mod_path):
+            doc_blocks.update(load_doc_blocks(full_mod_path))
+    
+    # 3. Find and parse all schema.yml files within model and seed paths
     search_dirs = results["model_paths"] + results["seed_paths"]
     
     for sub_dir in search_dirs:
@@ -165,8 +225,8 @@ def analyze_all_yaml_files(root_dir: str) -> Dict[str, Any]:
                     # dbt allows files ending in .yml or .yaml
                     if file.endswith(".yml") or file.endswith(".yaml"):
                         full_path = os.path.join(root, file)
-                        # We only care about schema files (which often contain 'models' or 'sources')
-                        nodes = extract_nodes_from_schema_yml(full_path)
+                        # We only care about schema files
+                        nodes = extract_nodes_from_schema_yml(full_path, doc_blocks)
                         if nodes:
                             results["datasets"].extend(nodes)
                             print(f"[YAML Parser] Processed: {full_path} (found {len(nodes)} models/sources)")
@@ -187,6 +247,8 @@ if __name__ == "__main__":
             
         print(f"\nTotal Datasets parsed: {len(parsed_data['datasets'])}")
         for ds in parsed_data["datasets"]:
-            print(f"- {ds.id} ({ds.dataset_type}) with {len(ds.columns)} columns")
+            print(f"\n- {ds.id} ({ds.dataset_type})")
+            if ds.id == "orders":
+                print(f"  [DEBUG] Orders status description: {ds.column_descriptions.get('status')}")
     else:
         print(f"[ERROR] Could not find {target_repo} directory.")
