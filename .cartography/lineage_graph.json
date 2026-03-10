@@ -1,0 +1,179 @@
+{
+  "directed": true,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "id": "customers",
+      "source_file": "jaffle_shop\\models\\schema.yml",
+      "source_line": null,
+      "description": "This table has basic information about a customer, as well as some derived facts based on a customer's orders",
+      "dataset_type": "model",
+      "columns": [
+        "customer_id",
+        "first_name",
+        "last_name",
+        "first_order",
+        "most_recent_order",
+        "number_of_orders",
+        "total_order_amount"
+      ],
+      "column_descriptions": {
+        "customer_id": "This is a unique identifier for a customer",
+        "first_name": "Customer's first name. PII.",
+        "last_name": "Customer's last name. PII.",
+        "first_order": "Date (UTC) of a customer's first order",
+        "most_recent_order": "Date (UTC) of a customer's most recent order",
+        "number_of_orders": "Count of the number of orders a customer has placed",
+        "total_order_amount": "Total value (AUD) of a customer's orders"
+      }
+    },
+    {
+      "id": "orders",
+      "source_file": "jaffle_shop\\models\\schema.yml",
+      "source_line": null,
+      "description": "This table has basic information about orders, as well as some derived facts based on payments",
+      "dataset_type": "model",
+      "columns": [
+        "order_id",
+        "customer_id",
+        "order_date",
+        "status",
+        "amount",
+        "credit_card_amount",
+        "coupon_amount",
+        "bank_transfer_amount",
+        "gift_card_amount"
+      ],
+      "column_descriptions": {
+        "order_id": "This is a unique identifier for an order",
+        "customer_id": "Foreign key to the customers table",
+        "order_date": "Date (UTC) that the order was placed",
+        "status": "{{ doc(\"orders_status\") }}",
+        "amount": "Total amount (AUD) of the order",
+        "credit_card_amount": "Amount of the order (AUD) paid for by credit card",
+        "coupon_amount": "Amount of the order (AUD) paid for by coupon",
+        "bank_transfer_amount": "Amount of the order (AUD) paid for by bank transfer",
+        "gift_card_amount": "Amount of the order (AUD) paid for by gift card"
+      }
+    },
+    {
+      "id": "stg_customers",
+      "source_file": "jaffle_shop\\models\\staging\\schema.yml",
+      "source_line": null,
+      "description": "",
+      "dataset_type": "model",
+      "columns": [
+        "customer_id"
+      ],
+      "column_descriptions": {}
+    },
+    {
+      "id": "stg_orders",
+      "source_file": "jaffle_shop\\models\\staging\\schema.yml",
+      "source_line": null,
+      "description": "",
+      "dataset_type": "model",
+      "columns": [
+        "order_id",
+        "status"
+      ],
+      "column_descriptions": {}
+    },
+    {
+      "id": "stg_payments",
+      "source_file": "jaffle_shop\\models\\staging\\schema.yml",
+      "source_line": null,
+      "description": "",
+      "dataset_type": "model",
+      "columns": [
+        "payment_id",
+        "payment_method"
+      ],
+      "column_descriptions": {}
+    },
+    {
+      "id": "raw_customers"
+    },
+    {
+      "id": "raw_orders"
+    },
+    {
+      "id": "raw_payments"
+    }
+  ],
+  "links": [
+    {
+      "source_dataset": "stg_customers",
+      "target_dataset": "customers",
+      "source_file": "jaffle_shop\\models\\customers.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "source": "stg_customers",
+      "target": "customers"
+    },
+    {
+      "source_dataset": "stg_orders",
+      "target_dataset": "customers",
+      "source_file": "jaffle_shop\\models\\customers.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "source": "stg_orders",
+      "target": "customers"
+    },
+    {
+      "source_dataset": "stg_orders",
+      "target_dataset": "orders",
+      "source_file": "jaffle_shop\\models\\orders.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "source": "stg_orders",
+      "target": "orders"
+    },
+    {
+      "source_dataset": "stg_payments",
+      "target_dataset": "customers",
+      "source_file": "jaffle_shop\\models\\customers.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "source": "stg_payments",
+      "target": "customers"
+    },
+    {
+      "source_dataset": "stg_payments",
+      "target_dataset": "orders",
+      "source_file": "jaffle_shop\\models\\orders.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "source": "stg_payments",
+      "target": "orders"
+    },
+    {
+      "source_dataset": "raw_customers",
+      "target_dataset": "stg_customers",
+      "source_file": "jaffle_shop\\models\\staging\\stg_customers.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "source": "raw_customers",
+      "target": "stg_customers"
+    },
+    {
+      "source_dataset": "raw_orders",
+      "target_dataset": "stg_orders",
+      "source_file": "jaffle_shop\\models\\staging\\stg_orders.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "source": "raw_orders",
+      "target": "stg_orders"
+    },
+    {
+      "source_dataset": "raw_payments",
+      "target_dataset": "stg_payments",
+      "source_file": "jaffle_shop\\models\\staging\\stg_payments.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "source": "raw_payments",
+      "target": "stg_payments"
+    }
+  ]
+}

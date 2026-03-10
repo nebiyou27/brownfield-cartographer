@@ -1,0 +1,17 @@
+# Overwrite the entire .gitignore with the correct content
+@"
+# Python
+__pycache__/
+*.pyc
+dist/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Project specific
+jaffle_shop/
+lineage_final.txt
+lineage_results.txt
+.env
