@@ -14,10 +14,10 @@ def main():
     subparsers = parser.add_subparsers(dest="command", help="Commands")
     
     # 'analyze' command
-    analyze_parser = subparsers.add_parser("analyze", help="Analyze a local repository")
+    analyze_parser = subparsers.add_parser("analyze", help="Analyze a local dbt repository")
     analyze_parser.add_argument(
         "repo_path", 
-        help="Path to the repository to analyze (e.g., jaffle_shop)"
+        help="Path to the dbt repository to analyze"
     )
     
     args = parser.parse_args()

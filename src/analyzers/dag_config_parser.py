@@ -97,13 +97,23 @@ def extract_nodes_from_schema_yml(file_path: str) -> List[DatasetNode]:
                     
     return nodes
 
-def extract_project_metadata(project_yml_path: str) -> Optional[ModuleNode]:
+def extract_project_metadata(project_yml_path: str) -> Dict[str, Any]:
     """
     Parses dbt_project.yml to extract project-level configuration.
-    Specifically pulls the project name and path settings.
+    Specifically pulls the project name and path settings (models, seeds).
     """
     content = parse_yaml_file(project_yml_path)
     project_name = content.get('name')
+    
+    # dbt defaults if not specified
+    model_paths = content.get('model-paths') or content.get('source-paths') or ['models']
+    seed_paths = content.get('seed-paths') or ['seeds']
+    
+    result = {
+        "node": None,
+        "model_paths": model_paths,
+        "seed_paths": seed_paths
+    }
     
     if project_name:
         try:
@@ -111,38 +121,57 @@ def extract_project_metadata(project_yml_path: str) -> Optional[ModuleNode]:
         except ValueError:
             rel_path = project_yml_path
             
-        return ModuleNode(
+        result["node"] = ModuleNode(
             id=project_name,
             source_file=rel_path,
             source_line=None,
             file_type="yaml",
             logical_name=project_name
         )
-    return None
+    return result
 
 def analyze_all_yaml_files(root_dir: str) -> Dict[str, Any]:
     """
     Finds and parses all relevant dbt YAML files in the project.
+    Now dynamically resolves model paths from dbt_project.yml.
     """
     results = {
         "project": None,
+        "model_paths": ["models"],
+        "seed_paths": ["seeds"],
         "datasets": []
     }
     
-    # 1. Parse jaffle_shop/dbt_project.yml
+    # 1. Parse dbt_project.yml to get configurations
     project_path = os.path.join(root_dir, "dbt_project.yml")
     if os.path.exists(project_path):
-        results["project"] = extract_project_metadata(project_path)
-        print(f"[YAML Parser] Processed: {project_path}")
+        proj_metadata = extract_project_metadata(project_path)
+        results["project"] = proj_metadata["node"]
+        results["model_paths"] = proj_metadata["model_paths"]
+        results["seed_paths"] = proj_metadata["seed_paths"]
+        print(f"[YAML Parser] Processed config: {project_path}")
     
-    # 2. Find and parse all schema.yml files (recursively)
-    for root, dirs, files in os.walk(root_dir):
-        for file in files:
-            if file == "schema.yml":
-                full_path = os.path.join(root, file)
-                nodes = extract_nodes_from_schema_yml(full_path)
-                results["datasets"].extend(nodes)
-                print(f"[YAML Parser] Processed: {full_path} (found {len(nodes)} models/sources)")
+    # 2. Find and parse all schema.yml files within model and seed paths
+    search_dirs = results["model_paths"] + results["seed_paths"]
+    
+    for sub_dir in search_dirs:
+        target_dir = os.path.join(root_dir, sub_dir)
+        if not os.path.exists(target_dir):
+            continue
+            
+        try:
+            for root, dirs, files in os.walk(target_dir):
+                for file in files:
+                    # dbt allows files ending in .yml or .yaml
+                    if file.endswith(".yml") or file.endswith(".yaml"):
+                        full_path = os.path.join(root, file)
+                        # We only care about schema files (which often contain 'models' or 'sources')
+                        nodes = extract_nodes_from_schema_yml(full_path)
+                        if nodes:
+                            results["datasets"].extend(nodes)
+                            print(f"[YAML Parser] Processed: {full_path} (found {len(nodes)} models/sources)")
+        except Exception as e:
+            print(f"[WARNING] Error walking directory {target_dir}: {e}")
                 
     return results
 
