@@ -16,8 +16,11 @@ def parse_yaml_file(file_path: str) -> Dict[str, Any]:
     """
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
-            content = yaml.safe_load(f)
-            return content if isinstance(content, dict) else {}
+            content = f.read()
+            # Fix YAML parser to handle tab characters gracefully by replacing them with 4 spaces
+            content = content.replace('\t', '    ')
+            data = yaml.safe_load(content)
+            return data if isinstance(data, dict) else {}
     except Exception as e:
         print(f"[WARNING] Could not parse YAML file {file_path}: {e}")
         return {}
