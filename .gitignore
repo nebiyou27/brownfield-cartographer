@@ -11,7 +11,6 @@ venv/
 env/
 
 # Project specific
-jaffle_shop/
+make-open-data/
 lineage_final.txt
 lineage_results.txt
-.env

@@ -40,4 +40,11 @@ class Orchestrator:
         self.module_graph.save_json(os.path.join(self.output_dir, "module_graph.json"))
         self.lineage_graph.save_json(os.path.join(self.output_dir, "lineage_graph.json"))
         
+        # 4. Export human-readable lineage for the final submission
+        lineage_text = self.lineage_graph.export_lineage_text()
+        with open("lineage_final.txt", "w", encoding="utf-8") as f:
+            f.write(f"Testing analyzer on {self.target_dir}...\n")
+            f.write(lineage_text)
+        print("[SUCCESS] Human-readable lineage exported to lineage_final.txt")
+        
         print(f"\n[SUCCESS] Analysis complete! Results saved to {self.output_dir}")

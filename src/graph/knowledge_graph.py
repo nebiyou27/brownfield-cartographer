@@ -48,3 +48,14 @@ class KnowledgeGraph:
             print(f"[Graph] Saved {self.name} to {output_path}")
         except Exception as e:
             print(f"[ERROR] Failed to save graph to {output_path}: {e}")
+
+    def export_lineage_text(self) -> str:
+        """
+        Returns a human-readable text representation of the data lineage.
+        """
+        lines = ["=== Extracted Lineage ==="]
+        # Use networkx edges to build the lineage list
+        for source, target, data in self.graph.edges(data=True):
+            source_file = data.get("source_file", "unknown")
+            lines.append(f"{source} -> {target} (from {source_file})")
+        return "\n".join(lines)
