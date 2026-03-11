@@ -2135,6 +2135,105 @@
         "latitiude_centre_departement": "Moyenne des latitudes des communes du d\u00e9partement",
         "longitude_centre_departement": "Moyenne des longitudes des communes du d\u00e9partement"
       }
+    },
+    {
+      "id": "<dynamic>:execute:load\\loaders.py:35",
+      "source_file": "load\\loaders.py",
+      "source_line": 35,
+      "description": "execute() call",
+      "dataset_type": "database_query",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:read_json:load\\loaders.py:59",
+      "source_file": "load\\loaders.py",
+      "source_line": 59,
+      "description": "read_json() call",
+      "dataset_type": "file_source",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:to_csv:load\\loaders.py:60",
+      "source_file": "load\\loaders.py",
+      "source_line": 60,
+      "description": "to_csv() call",
+      "dataset_type": "file_sink",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:read_csv:load\\loaders.py:70",
+      "source_file": "load\\loaders.py",
+      "source_line": 70,
+      "description": "read_csv() call",
+      "dataset_type": "file_source",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:execute:load\\loaders.py:99",
+      "source_file": "load\\loaders.py",
+      "source_line": 99,
+      "description": "execute() call",
+      "dataset_type": "database_query",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:execute:load\\loaders.py:105",
+      "source_file": "load\\loaders.py",
+      "source_line": 105,
+      "description": "execute() call",
+      "dataset_type": "database_query",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:execute:load\\loaders.py:112",
+      "source_file": "load\\loaders.py",
+      "source_line": 112,
+      "description": "execute() call",
+      "dataset_type": "database_query",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:create_engine:load\\loaders.py:144",
+      "source_file": "load\\loaders.py",
+      "source_line": 144,
+      "description": "create_engine() call",
+      "dataset_type": "database",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:to_postgis:load\\loaders.py:148",
+      "source_file": "load\\loaders.py",
+      "source_line": 148,
+      "description": "to_postgis() call",
+      "dataset_type": "file_sink",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "SELECT * from test_sources.test_load_file_to_pg",
+      "source_file": "tests\\load\\test_loaders.py",
+      "source_line": 111,
+      "description": "execute() call",
+      "dataset_type": "database_query",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "4_seeds/logement_2020_valeurs.csv",
+      "source_file": "utils\\generer_doc_recenssement.py",
+      "source_line": 14,
+      "description": "read_csv() call",
+      "dataset_type": "file_source",
+      "columns": [],
+      "column_descriptions": {}
     }
   ],
   "links": []
