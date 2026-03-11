@@ -21,20 +21,18 @@ def strip_jinja(sql: str) -> str:
     """
     Clean dbt Jinja templating from SQL before parsing.
     """
-    # Replace {{ ref('table_name') }} with just table_name
-    sql = re.sub(r"\{\{\s*ref\(['\"](\w+)['\"]\)\s*\}\}", r"\1", sql)
+    # 1. Handle ref/source first to preserve lineage data (use DOTALL for multi-line)
+    sql = re.sub(r"\{\{\s*ref\(['\"](\w+)['\"]\)\s*\}\}", r"\1", sql, flags=re.DOTALL)
+    sql = re.sub(r"\{\{\s*source\(['\"\w]+,\s*['\"](\w+)['\"]\)\s*\}\}", r"\1", sql, flags=re.DOTALL)
+
+    # 2. Replace remaining {{ ... }} with the token 'jinja_placeholder'
+    sql = re.sub(r"\{\{.*?\}\}", "jinja_placeholder", sql, flags=re.DOTALL)
     
-    # Replace {{ source('schema', 'table_name') }} with last arg
-    sql = re.sub(r"\{\{\s*source\(['\"\w]+,\s*['\"](\w+)['\"]\)\s*\}\}", r"\1", sql)
-    
-    # Remove {# comment blocks #} entirely
-    sql = re.sub(r'\{#.*?#\}', '', sql, flags=re.DOTALL)
-    
-    # Remove {% logic blocks %} entirely
+    # 3. Remove {% ... %} logic block tags entirely
     sql = re.sub(r'\{%.*?%\}', '', sql, flags=re.DOTALL)
-    
-    # Remove any remaining {{ }}
-    sql = re.sub(r'\{\{.*?\}\}', '', sql, flags=re.DOTALL)
+
+    # 4. Remove {# ... #} comments
+    sql = re.sub(r'\{#.*?#\}', '', sql, flags=re.DOTALL)
     
     return sql.strip()
 
