@@ -37,6 +37,13 @@ class Orchestrator:
 
         # 3. Finalize and save
         print("\n--- Finalizing Graphs ---")
+        
+        # Detect orphaned nodes in the lineage graph
+        orphaned_nodes = self.find_orphaned_nodes(self.lineage_graph.graph)
+        for node_id in orphaned_nodes:
+            print(f"[WARNING] Orphaned node detected: {node_id}")
+            self.lineage_graph.graph.nodes[node_id]["orphaned"] = True
+
         self.module_graph.save_json(os.path.join(self.output_dir, "module_graph.json"))
         self.lineage_graph.save_json(os.path.join(self.output_dir, "lineage_graph.json"))
         
@@ -48,3 +55,16 @@ class Orchestrator:
         print("[SUCCESS] Human-readable lineage exported to lineage_final.txt")
         
         print(f"\n[SUCCESS] Analysis complete! Results saved to {self.output_dir}")
+
+    def find_orphaned_nodes(self, graph) -> list:
+        """
+        Identifies nodes that have no incoming or outgoing edges.
+        """
+        all_nodes = set(graph.nodes())
+        nodes_with_edges = set()
+        for u, v in graph.edges():
+            nodes_with_edges.add(u)
+            nodes_with_edges.add(v)
+        
+        orphaned = list(all_nodes - nodes_with_edges)
+        return orphaned
