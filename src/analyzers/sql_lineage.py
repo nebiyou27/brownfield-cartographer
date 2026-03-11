@@ -2,7 +2,8 @@ import os
 import re
 import glob
 from pathlib import Path
-from typing import List, Set
+import logging
+from typing import List, Set, Optional, Dict
 
 import sqlglot
 from sqlglot import exp
@@ -11,6 +12,10 @@ import sys
 # Add project root to sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 from src.models.schemas import TransformationEdge
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def strip_jinja(sql: str) -> str:
     """
@@ -32,6 +37,44 @@ def strip_jinja(sql: str) -> str:
     sql = re.sub(r'\{\{.*?\}\}', '', sql, flags=re.DOTALL)
     
     return sql.strip()
+
+def extract_macro_calls(sql: str) -> List[str]:
+    """
+    Extract all {{ macro_name(...) }} calls from raw SQL.
+    """
+    # Matches {{ macro_name(...) }} and captures macro_name
+    # Excludes common built-ins like ref, source, config
+    pattern = r"\{\{\s*(\w+)\s*\("
+    matches = re.findall(pattern, sql)
+    
+    built_ins = {'ref', 'source', 'config', 'var', 'env_var'}
+    return [m for m in matches if m not in built_ins]
+
+def get_macros_map(macros_dir: str) -> Dict[str, str]:
+    """
+    Builds a map of macro names to their file paths in 5_macros/.
+    """
+    macro_map = {}
+    if not os.path.exists(macros_dir):
+        return macro_map
+        
+    sql_files = glob.glob(os.path.join(macros_dir, "**", "*.sql"), recursive=True)
+    for file_path in sql_files:
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                content = f.read()
+                # Find {% macro macro_name(...) %}
+                matches = re.findall(r"\{%\s*macro\s+(\w+)\s*\(", content)
+                for macro_name in matches:
+                    try:
+                        rel_path = str(Path(file_path).relative_to(Path.cwd()))
+                    except ValueError:
+                        rel_path = file_path
+                    macro_map[macro_name] = rel_path
+        except Exception as e:
+            logger.warning(f"Could not read macro file {file_path}: {e}")
+            
+    return macro_map
 
 def get_lineage_from_sql(sql: str, target_name: str, source_file: str) -> List[TransformationEdge]:
     """
@@ -83,45 +126,71 @@ def get_lineage_from_sql(sql: str, target_name: str, source_file: str) -> List[T
             
     return edges
 
-def analyze_sql_file(file_path: str) -> List[TransformationEdge]:
+def analyze_sql_file(file_path: str, macro_map: Optional[Dict[str, str]] = None) -> List[TransformationEdge]:
     """
-    Reads a single .sql file and extracts lineage edges.
+    Reads a single .sql file and extracts lineage edges, including macro dependencies.
     """
     try:
         with open(file_path, "r", encoding="utf-8") as f:
             raw_sql = f.read()
     except Exception as e:
-        print(f"[WARNING] Could not read file {file_path}: {e}")
+        logger.warning(f"Could not read file {file_path}: {e}")
         return []
 
-    clean_sql = strip_jinja(raw_sql)
     target_name = Path(file_path).stem
-    
     try:
         rel_path = str(Path(file_path).relative_to(Path.cwd()))
     except ValueError:
         rel_path = file_path
 
-    return get_lineage_from_sql(clean_sql, target_name, rel_path)
+    edges = []
+    
+    # 1. Macro Analysis
+    macro_calls = extract_macro_calls(raw_sql)
+    if macro_map:
+        for macro_name in macro_calls:
+            macro_file = macro_map.get(macro_name)
+            if macro_file:
+                edges.append(TransformationEdge(
+                    source_dataset=rel_path,
+                    target_dataset=macro_file,
+                    source_file=rel_path,
+                    source_line=None,
+                    transformation_type="configures"
+                ))
+            else:
+                logger.warning(f"Unresolvable macro call in {rel_path}: {macro_name}")
+    
+    # 2. SQL Lineage Analysis
+    clean_sql = strip_jinja(raw_sql)
+    sql_edges = get_lineage_from_sql(clean_sql, target_name, rel_path)
+    edges.extend(sql_edges)
 
-def analyze_all_sql_files(models_dir: str) -> List[TransformationEdge]:
+    return edges
+
+def analyze_all_sql_files(models_dir: str, macros_dir: Optional[str] = None) -> List[TransformationEdge]:
     """
     Recursively finds all .sql files in a directory and extracts lineage.
     """
     all_edges = []
     if not os.path.exists(models_dir):
         return []
+
+    macro_map = {}
+    if macros_dir:
+        logger.info(f"Building macro map from: {macros_dir}")
+        macro_map = get_macros_map(macros_dir)
         
     try:
         # Recursively find all .sql files
         sql_files = glob.glob(os.path.join(models_dir, "**", "*.sql"), recursive=True)
         
         for file_path in sql_files:
-            print(f"[SQL Lineage] Processing: {file_path}")
-            edges = analyze_sql_file(file_path)
+            logger.info(f"[SQL Lineage] Processing: {file_path}")
+            edges = analyze_sql_file(file_path, macro_map)
             all_edges.extend(edges)
     except Exception as e:
-        print(f"[WARNING] Error analyzing directory {models_dir}: {e}")
+        logger.warning(f"Error analyzing directory {models_dir}: {e}")
             
     return all_edges
 
