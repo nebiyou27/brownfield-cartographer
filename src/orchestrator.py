@@ -33,7 +33,14 @@ class Orchestrator:
         # 2. Hydrologist traces the data lineage based on the identified components
         # We use the model paths resolved by the Surveyor
         model_paths = survey_results.get("model_paths", ["models"])
-        self.hydrologist.trace_lineage(self.lineage_graph, survey_results["datasets"], model_paths)
+        macro_paths = survey_results.get("macro_paths", ["macros"])
+        self.hydrologist.trace_lineage(
+            self.lineage_graph,
+            survey_results["datasets"],
+            model_paths,
+            macro_paths=macro_paths,
+            precomputed_edges=survey_results.get("python_edges", []),
+        )
 
         # 3. Finalize and save
         print("\n--- Finalizing Graphs ---")

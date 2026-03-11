@@ -214,11 +214,13 @@ class PythonAnalyzer:
             print(f"  [WARNING] Unresolved dynamic reference in {self.rel_path}:{line_no} — {call_name}({arg_text})")
             # Still create an edge with a placeholder so the graph is complete
             dataset_id = f"<dynamic>:{call_name}:{self.rel_path}:{line_no}"
+            confidence = "inferred"
         else:
             literal = _extract_string_value(arg_text)
             if literal is None:
                 return
             dataset_id = literal
+            confidence = "low"
 
         # Create a DatasetNode for the source/sink
         ds_node = DatasetNode(
@@ -238,6 +240,7 @@ class PythonAnalyzer:
                 source_file=self.rel_path,
                 source_line=line_no,
                 transformation_type="consumes",
+                confidence=confidence,
             )
         else:  # produces
             edge = TransformationEdge(
@@ -246,6 +249,7 @@ class PythonAnalyzer:
                 source_file=self.rel_path,
                 source_line=line_no,
                 transformation_type="produces",
+                confidence=confidence,
             )
         self.edges.append(edge)
 

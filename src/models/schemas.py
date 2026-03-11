@@ -58,3 +58,6 @@ class TransformationEdge(BaseModel):
     
     # Type of transformation
     transformation_type: str = Field("sql_select", description="The type of transformation (e.g., 'sql_select')")
+
+    # Confidence Score
+    confidence: str = Field("high", description="Confidence score for this edge ('high', 'medium', 'low', 'inferred')")
