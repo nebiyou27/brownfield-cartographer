@@ -2,14 +2,50 @@ import os
 import yaml
 import re
 from pathlib import Path
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 
 import sys
 # Add project root to sys.path for absolute imports when running as script
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 from src.models.schemas import ModuleNode, DatasetNode
 
-def parse_yaml_file(file_path: str) -> Dict[str, Any]:
+
+class ParseFailureDatasetNode:
+    """
+    Minimal node emitted when a YAML file fails to load/parse.
+    """
+    def __init__(self, file_id: str, reason: str):
+        self.id = file_id
+        self.source_file = file_id
+        self.source_line = None
+        self.description = ""
+        self.dataset_type = "yaml_file"
+        self.columns: List[str] = []
+        self.column_descriptions: Dict[str, str] = {}
+        self.parsed = False
+        self.reason = reason
+
+    def model_dump(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "source_file": self.source_file,
+            "source_line": self.source_line,
+            "description": self.description,
+            "dataset_type": self.dataset_type,
+            "columns": self.columns,
+            "column_descriptions": self.column_descriptions,
+            "parsed": self.parsed,
+            "reason": self.reason,
+        }
+
+
+def _relative_file_path(file_path: str) -> str:
+    try:
+        return str(Path(file_path).relative_to(Path.cwd()))
+    except ValueError:
+        return file_path
+
+def parse_yaml_file(file_path: str) -> Tuple[Dict[str, Any], Optional[str]]:
     """
     Safely load a YAML file and return its content as a dictionary.
     Handles potential parsing errors gracefully.
@@ -20,10 +56,11 @@ def parse_yaml_file(file_path: str) -> Dict[str, Any]:
             # Fix YAML parser to handle tab characters gracefully by replacing them with 4 spaces
             content = content.replace('\t', '    ')
             data = yaml.safe_load(content)
-            return data if isinstance(data, dict) else {}
+            return (data if isinstance(data, dict) else {}), None
     except Exception as e:
         print(f"[WARNING] Could not parse YAML file {file_path}: {e}")
-        return {}
+        reason = f"yaml parse failure ({e.__class__.__name__}: {str(e).splitlines()[0][:120]})"
+        return {}, reason
 
 def load_doc_blocks(models_dir: str) -> Dict[str, str]:
     """
@@ -77,13 +114,14 @@ def extract_nodes_from_schema_yml(file_path: str, doc_blocks: Dict[str, str] = N
     Extracts model names, descriptions, and column details.
     """
     nodes = []
-    content = parse_yaml_file(file_path)
+    content, parse_error = parse_yaml_file(file_path)
     
     # Get relative path for traceability
-    try:
-        rel_path = str(Path(file_path).relative_to(Path.cwd()))
-    except ValueError:
-        rel_path = file_path # Fallback if not relative to cwd
+    rel_path = _relative_file_path(file_path)
+
+    if parse_error:
+        nodes.append(ParseFailureDatasetNode(rel_path, parse_error))
+        return nodes
     
     # Extract models defined in the yaml
     if 'models' in content and isinstance(content['models'], list):
@@ -158,17 +196,19 @@ def extract_project_metadata(project_yml_path: str) -> Dict[str, Any]:
     Parses dbt_project.yml to extract project-level configuration.
     Specifically pulls the project name and path settings (models, seeds).
     """
-    content = parse_yaml_file(project_yml_path)
+    content, _ = parse_yaml_file(project_yml_path)
     project_name = content.get('name')
     
     # dbt defaults if not specified
     model_paths = content.get('model-paths') or content.get('source-paths') or ['models']
     seed_paths = content.get('seed-paths') or ['seeds']
+    macro_paths = content.get('macro-paths') or ['macros']
     
     result = {
         "node": None,
         "model_paths": model_paths,
-        "seed_paths": seed_paths
+        "seed_paths": seed_paths,
+        "macro_paths": macro_paths,
     }
     
     if project_name:
@@ -195,6 +235,7 @@ def analyze_all_yaml_files(root_dir: str) -> Dict[str, Any]:
         "project": None,
         "model_paths": ["models"],
         "seed_paths": ["seeds"],
+        "macro_paths": ["macros"],
         "datasets": []
     }
     
@@ -205,6 +246,7 @@ def analyze_all_yaml_files(root_dir: str) -> Dict[str, Any]:
         results["project"] = proj_metadata["node"]
         results["model_paths"] = proj_metadata["model_paths"]
         results["seed_paths"] = proj_metadata["seed_paths"]
+        results["macro_paths"] = proj_metadata["macro_paths"]
         print(f"[YAML Parser] Processed config: {project_path}")
     
     # 2. Load doc blocks for resolution

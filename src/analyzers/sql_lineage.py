@@ -1,6 +1,7 @@
 import os
 import re
 import glob
+import inspect
 from pathlib import Path
 import logging
 from typing import List, Set, Optional, Dict
@@ -16,6 +17,50 @@ from src.models.schemas import TransformationEdge
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+
+def _relative_file_path(file_path: str) -> str:
+    try:
+        return str(Path(file_path).relative_to(Path.cwd()))
+    except ValueError:
+        return file_path
+
+
+def _add_parse_failure_placeholder_node(file_path: str, reason: str) -> None:
+    """
+    Add a placeholder node to the active lineage graph when SQL parsing fails.
+    The graph instance is discovered from the current call stack.
+    """
+    node_id = _relative_file_path(file_path)
+    short_reason = reason.strip().replace("\n", " ")
+    if len(short_reason) > 200:
+        short_reason = short_reason[:197] + "..."
+
+    attrs = {
+        "id": node_id,
+        "source_file": node_id,
+        "source_line": None,
+        "description": "",
+        "dataset_type": "sql_file",
+        "columns": [],
+        "column_descriptions": {},
+        "parsed": False,
+        "reason": short_reason,
+    }
+
+    frame = inspect.currentframe()
+    try:
+        frame = frame.f_back if frame else None
+        while frame:
+            graph_obj = frame.f_locals.get("graph")
+            if graph_obj is not None and hasattr(graph_obj, "graph"):
+                graph = getattr(graph_obj, "graph")
+                if hasattr(graph, "add_node"):
+                    graph.add_node(node_id, **attrs)
+                    return
+            frame = frame.f_back
+    finally:
+        del frame
 
 
 def sanitize_sql_for_sqlglot(sql: str, source_file: str) -> str:
@@ -233,7 +278,14 @@ def get_lineage_from_sql(sql: str, target_name: str, source_file: str, confidenc
     if not parsed_statements:
         print(f"  [WARNING] Could not parse {source_file} with any dialect - skipped")
         if parse_errors:
-            print(f"  [DEBUG] Last parse error: {parse_errors[-1]}")
+            safe_error = parse_errors[-1].encode("ascii", "backslashreplace").decode("ascii")
+            print(f"  [DEBUG] Last parse error: {safe_error}")
+            _add_parse_failure_placeholder_node(
+                source_file,
+                f"sql parse failure ({safe_error})",
+            )
+        else:
+            _add_parse_failure_placeholder_node(source_file, "sql parse failure")
         return []
 
     edges = []
@@ -275,13 +327,11 @@ def analyze_sql_file(file_path: str, macro_map: Optional[Dict[str, str]] = None)
             raw_sql = f.read()
     except Exception as e:
         logger.warning(f"Could not read file {file_path}: {e}")
+        _add_parse_failure_placeholder_node(file_path, f"sql file read failure ({e.__class__.__name__})")
         return []
 
     target_name = Path(file_path).stem
-    try:
-        rel_path = str(Path(file_path).relative_to(Path.cwd()))
-    except ValueError:
-        rel_path = file_path
+    rel_path = _relative_file_path(file_path)
 
     edges = []
     
