@@ -3,6 +3,7 @@ import os
 from .agents.surveyor import Surveyor
 from .agents.hydrologist import Hydrologist
 from .agents.semanticist import Semanticist
+from .agents.archivist import Archivist
 from .graph.knowledge_graph import KnowledgeGraph
 
 
@@ -27,6 +28,7 @@ class Orchestrator:
         self.surveyor = Surveyor(self.target_dir)
         self.hydrologist = Hydrologist(self.target_dir)
         self.semanticist = Semanticist(self.target_dir)
+        self.archivist = Archivist(self.target_dir)
 
     def run_analysis(self):
         """
@@ -66,7 +68,17 @@ class Orchestrator:
                 print(f"\n[WARNING] Semanticist failed: {e}")
                 print("[WARNING] Continuing without semantic enrichment.")
 
-        # 4. Finalize and save graphs
+        # 4. Archivist — human-readable documentation
+        print("\n--- Generating Documentation ---")
+        if not self.skip_semanticist and semantic_results:
+            try:
+                self.archivist.archive(self.module_graph, self.lineage_graph, semantic_results)
+            except Exception as e:
+                print(f"\n[WARNING] Archivist failed: {e}")
+        else:
+            print("\n[Archivist] Skipped because semantic results are unavailable.")
+
+        # 5. Finalize and save graphs
         print("\n--- Finalizing Graphs ---")
 
         orphaned_nodes = self.find_orphaned_nodes(self.lineage_graph.graph)
@@ -81,7 +93,7 @@ class Orchestrator:
             os.path.join(self.output_dir, "lineage_graph.json")
         )
 
-        # 5. Parse-failure diagnostics
+        # 6. Parse-failure diagnostics
         failed_nodes = [
             (nid, attrs)
             for nid, attrs in self.lineage_graph.graph.nodes(data=True)
@@ -97,7 +109,7 @@ class Orchestrator:
         else:
             print("\n[OK] All files parsed successfully — no parse failures.")
 
-        # 6. Export human-readable lineage
+        # 7. Export human-readable lineage
         lineage_text = self.lineage_graph.export_lineage_text()
         with open("lineage_final.txt", "w", encoding="utf-8") as f:
             f.write(f"Testing analyzer on {self.target_dir}...\n")
