@@ -18,6 +18,7 @@ class Surveyor:
     def survey(self, graph: KnowledgeGraph):
         print("[Surveyor] Scanning project structure and YAML configs...")
         results = analyze_all_yaml_files(self.repo_path)
+        results["git_velocity"] = {}
         
         # Add the project node
         if results["project"]:
@@ -33,6 +34,7 @@ class Surveyor:
             
             graph.add_node(node)
             graph.graph.nodes[node.id]["git_change_velocity"] = velocity
+            results["git_velocity"][file_in_repo] = velocity
 
         # --- Python file analysis via tree-sitter ---
         print("[Surveyor] Analyzing Python files with tree-sitter...")
@@ -43,6 +45,13 @@ class Surveyor:
         for mod_node in modules:
             graph.add_node(mod_node)
             logger.info(f"[Surveyor] Added Python module: {mod_node.id}")
+            if hasattr(mod_node, 'source_file') and mod_node.source_file:
+                repo_abs = os.path.abspath(self.repo_path)
+                file_abs = os.path.abspath(os.path.join(os.getcwd(), mod_node.source_file))
+                file_in_repo = os.path.relpath(file_abs, repo_abs)
+                velocity = get_git_change_velocity(self.repo_path, file_in_repo)
+                graph.graph.nodes[mod_node.id]["git_change_velocity"] = velocity
+                results["git_velocity"][file_in_repo] = velocity
 
         # Add Python datasets and edges to both graphs:
         # 1. To the module graph (direct access)

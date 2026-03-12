@@ -5,9 +5,12 @@ description = "A codebase intelligence tool that analyzes repositories and maps 
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "httpx>=0.28.1",
     "networkx",
+    "numpy>=2.2.6",
     "pydantic",
     "pyyaml>=6.0.3",
+    "scikit-learn>=1.7.2",
     "sqlglot",
     "tree-sitter",
     "tree-sitter-python",

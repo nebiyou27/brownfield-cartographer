@@ -5210,7 +5210,8 @@
       "source_line": null,
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
-      "logical_name": "__init__"
+      "logical_name": "__init__",
+      "git_change_velocity": 0
     },
     {
       "id": "load\\loaders.py",
@@ -5218,7 +5219,8 @@
       "source_line": null,
       "description": "Python module with 8 imports, 9 data-flow edges",
       "file_type": "python",
-      "logical_name": "loaders"
+      "logical_name": "loaders",
+      "git_change_velocity": 0
     },
     {
       "id": "load\\__init__.py",
@@ -5226,7 +5228,8 @@
       "source_line": null,
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
-      "logical_name": "__init__"
+      "logical_name": "__init__",
+      "git_change_velocity": 0
     },
     {
       "id": "load\\__main__.py",
@@ -5234,7 +5237,8 @@
       "source_line": null,
       "description": "Python module with 6 imports, 1 data-flow edges",
       "file_type": "python",
-      "logical_name": "__main__"
+      "logical_name": "__main__",
+      "git_change_velocity": 0
     },
     {
       "id": "tests\\conftest.py",
@@ -5242,7 +5246,8 @@
       "source_line": null,
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
-      "logical_name": "conftest"
+      "logical_name": "conftest",
+      "git_change_velocity": 0
     },
     {
       "id": "tests\\__init__.py",
@@ -5250,7 +5255,8 @@
       "source_line": null,
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
-      "logical_name": "__init__"
+      "logical_name": "__init__",
+      "git_change_velocity": 0
     },
     {
       "id": "tests\\fixtures\\db.py",
@@ -5258,7 +5264,8 @@
       "source_line": null,
       "description": "Python module with 3 imports, 0 data-flow edges",
       "file_type": "python",
-      "logical_name": "db"
+      "logical_name": "db",
+      "git_change_velocity": 0
     },
     {
       "id": "tests\\fixtures\\__init__.py",
@@ -5266,7 +5273,8 @@
       "source_line": null,
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
-      "logical_name": "__init__"
+      "logical_name": "__init__",
+      "git_change_velocity": 0
     },
     {
       "id": "tests\\load\\test_loaders.py",
@@ -5274,7 +5282,8 @@
       "source_line": null,
       "description": "Python module with 8 imports, 3 data-flow edges",
       "file_type": "python",
-      "logical_name": "test_loaders"
+      "logical_name": "test_loaders",
+      "git_change_velocity": 0
     },
     {
       "id": "tests\\load\\__init__.py",
@@ -5282,7 +5291,8 @@
       "source_line": null,
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
-      "logical_name": "__init__"
+      "logical_name": "__init__",
+      "git_change_velocity": 0
     },
     {
       "id": "utils\\generer_doc_recenssement.py",
@@ -5290,7 +5300,8 @@
       "source_line": null,
       "description": "Python module with 1 imports, 1 data-flow edges",
       "file_type": "python",
-      "logical_name": "generer_doc_recenssement"
+      "logical_name": "generer_doc_recenssement",
+      "git_change_velocity": 0
     },
     {
       "id": "<dynamic>:execute:load\\loaders.py:35",
