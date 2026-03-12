@@ -122,10 +122,44 @@ class PythonAnalyzer:
     def _extract_imports(self, root):
         """Extract module-level import statements."""
         for child in root.children:
+            text = _node_text(child)
             if child.type == "import_statement":
-                self.imports.append(_node_text(child))
+                self.imports.append(text)
+                match = re.search(r"^import\s+([a-zA-Z0-9_\.]+)", text)
+                if match:
+                    self._check_and_add_import_edge(match.group(1), child)
             elif child.type == "import_from_statement":
-                self.imports.append(_node_text(child))
+                self.imports.append(text)
+                match = re.search(r"^from\s+([a-zA-Z0-9_\.]+)\s+import", text)
+                if match:
+                    self._check_and_add_import_edge(match.group(1), child)
+
+    def _check_and_add_import_edge(self, module_path_str: str, node):
+        """Check if the imported module exists in the repo and add an edge."""
+        parts = module_path_str.split('.')
+        # Check both file.py and dir/__init__.py
+        rel_paths_to_check = [
+            os.path.join(*parts) + ".py",
+            os.path.join(*parts, "__init__.py")
+        ]
+        
+        for rel_check in rel_paths_to_check:
+            abs_path = os.path.join(self.repo_root, rel_check)
+            if os.path.exists(abs_path):
+                line_no = node.start_point[0] + 1
+                source_id = Path(rel_check).as_posix()
+                target_id = Path(self.rel_path).as_posix()
+                
+                edge = TransformationEdge(
+                    source_dataset=source_id,
+                    target_dataset=target_id,
+                    source_file=target_id,
+                    source_line=line_no,
+                    transformation_type="imports",
+                    confidence="high",
+                )
+                self.edges.append(edge)
+                break
 
     # ---- call extraction ---------------------------------------------------
 

@@ -73,29 +73,144 @@ The pipeline runs in this specific order because each agent depends on the outpu
 
 ---
 
-## Section 3: Progress Summary
+## Section 3: Progress Summary: Component Status
 
-As of this interim submission, the core two-agent pipeline is fully operational and verified against the production-grade `make-open-data` repository. The Surveyor agent successfully parses `dbt_project.yml` to dynamically discover model paths, recursively finds and parses all `schema.yml` files (even in complex subfolder structures like those in `make-open-data`), and resolves dbt `doc()` references into human-readable text. The Hydrologist agent reads every `.sql` file, strips all dbt Jinja templating, and parses the cleaned SQL with multi-dialect fallback. The tool correctly handles the high-velocity domain folders (`1_data/prepare/`) and captures the foundational dependencies of the geography mapping models. The full pipeline is invoked through a single CLI command and produces two JSON graphs in `.cartography/`, along with a human-readable lineage export. I have verified that the tool successfully captures the core architecture of the French open-data pipeline, identifying dozens of model dependencies that would take an engineer hours to map manually.
+### Working Components
 
-The final submission will add several major capabilities that are not yet implemented. Tree-sitter AST parsing will be integrated to generate module graph links — the edges that connect files to each other based on imports and references, which is why the `module_graph.json` currently has an empty `links` array. The Semanticist agent will use the Gemini Flash LLM to read each module's actual code and generate plain English purpose statements, flagging any cases where documentation contradicts implementation. The Archivist agent will package all accumulated intelligence into a `CODEBASE.md` living context file and an `onboarding_brief.md` that directly answers the five FDE Day-One questions. The Navigator agent will provide a LangGraph-powered query interface with four specialized tools for exploring the knowledge graph. I also plan to analyze a second target codebase, likely the Apache Airflow example DAGs repository, to demonstrate that the tool generalizes beyond dbt projects.
+1. **Surveyor agent - dbt config discovery (working):**  
+   `extract_project_metadata()` reads `dbt_project.yml` and returns configured `model-paths`, `seed-paths`, and `macro-paths` (or defaults when absent).
 
----
+2. **DAG/YAML analyzer - schema extraction + doc resolution (working):**  
+   `analyze_all_yaml_files()` recursively parses `.yml/.yaml` under discovered model/seed paths, and `resolve_doc_references()` replaces `{{ doc("...") }}` references from `docs.md`.
+
+3. **Git analyzer - per-file change velocity (working):**  
+   `get_git_change_velocity()` runs `git rev-list --count HEAD <file>` and stores the integer value on nodes as `git_change_velocity`.
+
+4. **Hydrologist agent - SQL lineage extraction (working):**  
+   `strip_jinja()` preserves dbt `ref()`/`source()` targets, `get_lineage_from_sql()` parses with dialect fallback (`duckdb`, `bigquery`, `snowflake`, `postgres`), and emits `sql_select` edges.
+
+5. **Macro dependency mapping (working):**  
+   `get_macros_map()` indexes `{% macro ... %}` definitions; `analyze_sql_file()` adds `configures` edges when macro calls are resolvable.
+
+6. **CLI + orchestrator artifact generation (working):**  
+   `uv run python -m src.cli analyze <repo_path>` executes Surveyor -> Hydrologist and writes `.cartography/module_graph.json`, `.cartography/lineage_graph.json`, and `lineage_final.txt`.
+
+### Partially Working Components
+
+1. **Tree-sitter Python analyzer (partially working):**  
+   It extracts `.py` data-flow calls (`read_csv`, `to_sql`, `create_engine`, `execute`) and import text, but does not emit explicit module-to-module import edges.
+
+2. **Jinja-heavy SQL robustness (partially working):**  
+   `sanitize_sql_for_sqlglot()` fixes known malformed patterns, but files that still fail parsing become placeholder nodes (`parsed=False`) and produce no lineage edges.
+
+3. **Macro-path coverage (partially working):**  
+   Hydrologist uses the first existing directory from `macro_paths`; multiple macro directories are not merged.
+
+4. **Human-readable lineage report (partially working):**  
+   `lineage_final.txt` is generated, but it is currently a flat edge list without grouping/deduplication.
+
+### Not Yet Started Components
+
+1. **Semanticist agent:** no implemented pipeline stage for LLM purpose statements or doc-drift detection.
+2. **Archivist agent:** no implemented stage that generates `CODEBASE.md` or `onboarding_brief.md`.
+3. **Navigator agent:** no implemented LangGraph query interface or query tools.
+4. **Non-Python AST analyzers:** no tree-sitter analyzers yet for languages beyond Python.
+
 
 ## Section 4: Early Accuracy Observations
 
-The performance on `make-open-data` has highlighted the robustness of the system. The lineage extraction successfully maps the flow from raw source definitions in `1_data/sources/` to the final prepared tables. For example, it correctly identifies how demographic data relies on the foundational geographic mapping in `postes_communes.sql`. There are zero false positives from SQL aliases, thanks to our CTE filtering logic.
+I compared generated artifacts (`.cartography/lineage_graph.json` and `.cartography/module_graph.json`) against the actual `make-open-data` files. Early results show clear wins and specific misses.
 
-The doc resolution system proved critical for this codebase, as many column descriptions in French government schemas rely on shared documentation blocks. By resolving `doc()` references, we've made the automated output significantly more readable than the raw YAML files. Additionally, the git change velocity measurements accurately identified the high-activity areas in census and geography models, providing exactly the kind of technical signal an FDE needs when triaging a new codebase.
+**Correct detections observed:**
+
+1. **`ventes_immobilieres -> ventes_immobilieres_enrichies` is correct.**  
+   In `make-open-data/1_data/prepare/foncier/ventes_immobilieres_enrichies.sql`, the model is `select * from {{ ref('ventes_immobilieres') }}`, and the lineage graph emits exactly that edge.
+
+2. **`infos_communes -> infos_departements` is correct.**  
+   In `make-open-data/1_data/prepare/geographie/infos_departements.sql`, the query groups from `{{ ref('infos_communes') }}`, and the generated lineage includes this dependency.
+
+3. **Geography join dependency is correctly captured in recensement outputs.**  
+   `make-open-data/1_data/prepare/recensement/demographie/demographie_communes.sql` joins `{{ ref('infos_communes') }}`, and the lineage graph contains `infos_communes -> demographie_communes`.
+
+**Inaccuracies / misses observed:**
+
+1. **Missing dependency from `logement_2020_valeurs` in commune-level recensement models.**  
+   `demographie_communes.sql` declares `--- depends_on: {{ ref('logement_2020_valeurs') }}`, but the graph currently only shows `infos_communes -> demographie_communes` and does not include `logement_2020_valeurs -> demographie_communes`.
+
+2. **Jinja macro expansion still collapses upstream lineage to a placeholder for departement-level models.**  
+   For `make-open-data/1_data/prepare/recensement/activite/activite_departements.sql` (and analogous `demographie/habitat/mobilite` files), the graph emits `jinja_placeholder -> <target_model>` instead of explicit macro-derived sources such as `activite_communes` and `logement_2020_valeurs` from `5_macros/recensement/aggreger_supra_commune.sql`.
+
+3. **Module import relationship missing in Python module graph.**  
+   `make-open-data/load/__main__.py` imports functions from `load/loaders.py` (`from load.loaders import ...`), but `.cartography/module_graph.json` has no `load\\__main__.py -> load\\loaders.py` module-to-module edge.
+
+Overall, early accuracy is strongest on direct SQL `ref()` relationships and weaker on dependencies expressed through Jinja macro logic and Python import linking.
 
 ---
 
 ## Section 5: Known Gaps and Plan for Final Submission
 
-The most visible gap in the current output is the empty `links` array in `module_graph.json`. The module graph has nodes — it knows about every model and source in the project — but it does not yet have edges connecting files to each other based on their import relationships. This is because the file-to-file relationship edges require AST-level parsing that goes beyond what the YAML and SQL analyzers currently provide. I plan to close this gap in the final submission by integrating tree-sitter to parse SQL and YAML files at the syntax tree level, extracting cross-file references that can be represented as module graph edges.
+The remaining work is now execution and hardening, not architecture redesign. I will complete final submission work in dependency order, because later components (Semanticist, Archivist, Navigator) rely on graph correctness from Surveyor/Hydrologist.
 
-The Semanticist agent is the most technically ambitious component still to be built. It will use the Gemini Flash LLM to read each module's source code and generate a one-sentence purpose statement in plain English. More importantly, it will compare that generated purpose against any existing documentation (model descriptions from `schema.yml`, column descriptions, inline comments) and flag cases where the documentation says one thing but the code does another. I expect this documentation drift detection to be the most valuable feature for FDE onboarding, since stale documentation is one of the most common sources of confusion on brownfield projects.
+### Priority-Ordered Completion Plan
 
-The Archivist and Navigator agents are planned as the final integration layer. The Archivist will take everything the other agents have discovered and produce two documents: a `CODEBASE.md` file that serves as a living context reference for the entire repository, and an `onboarding_brief.md` that directly answers the five FDE Day-One questions using data from the knowledge graph rather than manual analysis. The Navigator will wrap the knowledge graph in a LangGraph-powered query interface with four specialized tools, allowing an FDE to ask natural language questions like "what breaks if I change this table?" and receive answers grounded in the actual dependency data. I also intend to run the complete pipeline against a second target codebase — likely the Apache Airflow example DAGs — to demonstrate that the architecture generalizes beyond dbt projects.
+1. **P0 (first): fix graph correctness blockers in core extraction**
+   - Implement module-to-module Python import edges (`load/__main__.py -> load/loaders.py` class of misses).
+   - Capture `depends_on` references in SQL comments so hidden dbt dependencies appear in lineage.
+   - Improve macro expansion path for supra-commune aggregations to reduce `jinja_placeholder` edges in departement-level recensement models.
+   - **Why first:** if these are wrong, every downstream agent will generate confident but incorrect outputs.
+
+2. **P1 (second): expand parser coverage and reliability**
+   - Merge all configured `macro_paths` instead of using only the first existing macro directory.
+   - Add parse-failure diagnostics and fallback behavior so unresolved SQL is reported with actionable context (file, reason, fallback edge policy).
+   - Add/extend tests for direct `ref`, `depends_on`, and macro-driven dependency cases from `make-open-data`.
+   - **Dependency:** requires P0 improvements to define expected behavior and test fixtures.
+
+3. **P2 (third): implement Semanticist agent on top of stable graphs**
+   - Generate one-sentence purpose summaries for high-value modules.
+   - Add doc-drift checks by comparing extracted behavior (lineage + schema metadata) against existing descriptions.
+   - **Dependency:** requires P0/P1 so semantic outputs are grounded in accurate lineage.
+
+4. **P3 (fourth): implement Archivist artifact generation**
+   - Generate `CODEBASE.md` and `onboarding_brief.md` from graph + Semanticist outputs.
+   - Ensure deterministic section ordering and source traceability (each statement ties to graph evidence).
+   - **Dependency:** requires P2 outputs plus stable graph schema from P0/P1.
+
+5. **P4 (fifth): implement Navigator query layer and integration polish**
+   - Add query flows for dependency lookup, blast radius, and ownership/onboarding prompts.
+   - Wire end-to-end CLI pipeline: Surveyor -> Hydrologist -> Semanticist -> Archivist -> Navigator-ready artifacts.
+   - **Dependency:** needs all prior stages complete to avoid querying incomplete knowledge.
+
+6. **P5 (final gate): cross-repo generalization + final QA**
+   - Run full pipeline on one additional non-primary repository.
+   - Document transferability, failure modes, and minimal adaptation needed.
+   - Produce final accuracy table comparing manual checks vs generated edges for both repositories.
+   - **Dependency:** requires end-to-end pipeline and stable outputs from P0-P4.
+
+### Technical Risks and Mitigations
+
+1. **Risk: Jinja/macro dynamism may remain partially unresolvable statically.**
+   - Mitigation: hybrid strategy (`exact edge` + `inferred edge with confidence tag`) and explicit unresolved-call reporting.
+
+2. **Risk: SQL dialect variance may create false negatives in lineage extraction.**
+   - Mitigation: keep multi-dialect fallback, add fixture-based regression tests for failing files, and preserve parse error metadata in artifacts.
+
+3. **Risk: LLM-based Semanticist output drift/hallucination.**
+   - Mitigation: constrain prompts to graph-derived facts, require citation to node/edge IDs, and reject unsupported claims.
+
+4. **Risk: scope creep from adding too many features before final deadline.**
+   - Mitigation: freeze non-essential enhancements; prioritize correctness, test coverage, and end-to-end operability over UI sophistication.
+
+### Realistic Scope Before Final Deadline
+
+Given the time between interim and final, the committed scope is: **(a)** fix known correctness misses, **(b)** deliver runnable end-to-end pipeline including Semanticist/Archivist/Navigator baseline, and **(c)** validate on one second repository.  
+Deferred if needed: non-Python analyzers and advanced Navigator UX. These are valuable, but not required for a credible, evidence-backed final submission.
+
+### Final Done Criteria
+
+1. CLI runs all planned stages end-to-end without manual intervention.
+2. `.cartography/module_graph.json` and `.cartography/lineage_graph.json` include the currently missing dependency classes (`depends_on`, macro-derived edges, Python import links).
+3. `CODEBASE.md` and `onboarding_brief.md` are auto-generated from artifacts.
+4. At least one additional repository run is documented with measured accuracy and explicit limitations.
 
 ---
 

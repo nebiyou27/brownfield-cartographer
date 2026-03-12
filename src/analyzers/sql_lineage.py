@@ -184,6 +184,17 @@ def strip_jinja(sql: str) -> str:
     """
     Clean dbt Jinja templating from SQL before parsing.
     """
+    # 0. Expand known macros specifically for this repo.
+    def _replace_aggreger_supra_commune(match: re.Match) -> str:
+        theme = match.group(1)
+        return f"(SELECT * FROM {theme}_communes UNION ALL SELECT * FROM logement_2020_valeurs)"
+
+    sql = re.sub(
+        r"\{\{\s*aggreger_supra_commune\(\s*['\"]([^'\"]+)['\"]\s*,\s*['\"]([^'\"]+)['\"]\s*\)\s*\}\}",
+        _replace_aggreger_supra_commune,
+        sql,
+    )
+
     # 1. Remove dbt config blocks entirely (they are not SQL expressions).
     sql = re.sub(r"\{\{\s*config\s*\(.*?\)\s*\}\}", "", sql, flags=re.DOTALL)
 
@@ -352,6 +363,19 @@ def analyze_sql_file(file_path: str, macro_map: Optional[Dict[str, str]] = None)
             else:
                 logger.warning(f"Unresolvable macro call in {rel_path}: {macro_name}")
     
+    # 1.5 Extract explicit depends_on comments
+    depends_on_pattern = r"--[-]*\s*depends_on:\s*\{\{\s*ref\(\s*['\"]([^'\"]+)['\"]\s*\)\s*\}\}"
+    for match in re.finditer(depends_on_pattern, raw_sql):
+        upstream = match.group(1)
+        edges.append(TransformationEdge(
+            source_dataset=upstream,
+            target_dataset=target_name,
+            source_file=rel_path,
+            source_line=None,
+            transformation_type="sql_select",
+            confidence="high"
+        ))
+
     # 2. SQL Lineage Analysis
     # If the SQL is clean (no jinja_placeholder), confidence is high.
     # Otherwise, it's medium because it was parsed after stripping Jinja.
@@ -363,18 +387,31 @@ def analyze_sql_file(file_path: str, macro_map: Optional[Dict[str, str]] = None)
 
     return edges
 
-def analyze_all_sql_files(models_dir: str, macros_dir: Optional[str] = None) -> List[TransformationEdge]:
+def analyze_all_sql_files(
+    models_dir: str,
+    macros_dir: Optional[str] = None,
+    macros_dirs: Optional[List[str]] = None,
+) -> List[TransformationEdge]:
     """
     Recursively finds all .sql files in a directory and extracts lineage.
+    Accepts either a single macros_dir or a list of macros_dirs.
     """
     all_edges = []
     if not os.path.exists(models_dir):
         return []
 
+    # Build a merged macro map from all macro directories
     macro_map = {}
-    if macros_dir:
-        logger.info(f"Building macro map from: {macros_dir}")
-        macro_map = get_macros_map(macros_dir)
+    dirs_to_scan = []
+    if macros_dirs:
+        dirs_to_scan.extend(macros_dirs)
+    elif macros_dir:
+        dirs_to_scan.append(macros_dir)
+
+    for mdir in dirs_to_scan:
+        logger.info(f"Building macro map from: {mdir}")
+        partial = get_macros_map(mdir)
+        macro_map.update(partial)
         
     try:
         # Recursively find all .sql files

@@ -54,7 +54,23 @@ class Orchestrator:
         self.module_graph.save_json(os.path.join(self.output_dir, "module_graph.json"))
         self.lineage_graph.save_json(os.path.join(self.output_dir, "lineage_graph.json"))
         
-        # 4. Export human-readable lineage for the final submission
+        # 4. Report parse-failure diagnostics
+        failed_nodes = [
+            (nid, attrs)
+            for nid, attrs in self.lineage_graph.graph.nodes(data=True)
+            if attrs.get("parsed") is False
+        ]
+        if failed_nodes:
+            print(f"\n--- Parse-Failure Diagnostics ({len(failed_nodes)} file(s)) ---")
+            for nid, attrs in failed_nodes:
+                reason = attrs.get("reason", "unknown")
+                print(f"  FAIL: {nid}")
+                print(f"        Reason: {reason}")
+            print("---")
+        else:
+            print("\n[OK] All files parsed successfully — no parse failures.")
+
+        # 5. Export human-readable lineage for the final submission
         lineage_text = self.lineage_graph.export_lineage_text()
         with open("lineage_final.txt", "w", encoding="utf-8") as f:
             f.write(f"Testing analyzer on {self.target_dir}...\n")

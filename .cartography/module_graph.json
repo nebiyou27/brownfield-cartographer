@@ -5232,7 +5232,7 @@
       "id": "load\\__main__.py",
       "source_file": "load\\__main__.py",
       "source_line": null,
-      "description": "Python module with 6 imports, 0 data-flow edges",
+      "description": "Python module with 6 imports, 1 data-flow edges",
       "file_type": "python",
       "logical_name": "__main__"
     },
@@ -5272,7 +5272,7 @@
       "id": "tests\\load\\test_loaders.py",
       "source_file": "tests\\load\\test_loaders.py",
       "source_line": null,
-      "description": "Python module with 8 imports, 1 data-flow edges",
+      "description": "Python module with 8 imports, 3 data-flow edges",
       "file_type": "python",
       "logical_name": "test_loaders"
     },
@@ -5390,6 +5390,18 @@
       "dataset_type": "file_source",
       "columns": [],
       "column_descriptions": {}
+    },
+    {
+      "id": "load/loaders.py"
+    },
+    {
+      "id": "load/__main__.py"
+    },
+    {
+      "id": "load/__init__.py"
+    },
+    {
+      "id": "tests/load/test_loaders.py"
     }
   ],
   "links": [
@@ -5502,6 +5514,36 @@
       "confidence": "low",
       "source": "4_seeds/logement_2020_valeurs.csv",
       "target": "utils\\generer_doc_recenssement.py"
+    },
+    {
+      "source_dataset": "load/loaders.py",
+      "target_dataset": "load/__main__.py",
+      "source_file": "load/__main__.py",
+      "source_line": 11,
+      "transformation_type": "imports",
+      "confidence": "high",
+      "source": "load/loaders.py",
+      "target": "load/__main__.py"
+    },
+    {
+      "source_dataset": "load/loaders.py",
+      "target_dataset": "tests/load/test_loaders.py",
+      "source_file": "tests/load/test_loaders.py",
+      "source_line": 10,
+      "transformation_type": "imports",
+      "confidence": "high",
+      "source": "load/loaders.py",
+      "target": "tests/load/test_loaders.py"
+    },
+    {
+      "source_dataset": "load/__init__.py",
+      "target_dataset": "tests/load/test_loaders.py",
+      "source_file": "tests/load/test_loaders.py",
+      "source_line": 9,
+      "transformation_type": "imports",
+      "confidence": "high",
+      "source": "load/__init__.py",
+      "target": "tests/load/test_loaders.py"
     }
   ]
 }

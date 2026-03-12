@@ -32,18 +32,18 @@ class Hydrologist:
                 graph.add_edge(edge)
             
         # Extract and add edges for each configured model directory
-        macros_dir = None
+        # Merge macros from ALL existing macro paths (not just the first)
+        macros_dirs = []
         if macro_paths:
             for macro_path in macro_paths:
                 candidate = os.path.join(self.repo_path, macro_path)
                 if os.path.exists(candidate):
-                    macros_dir = candidate
-                    break
+                    macros_dirs.append(candidate)
 
         for path in model_paths:
             models_dir = os.path.join(self.repo_path, path)
             if os.path.exists(models_dir):
-                edges = analyze_all_sql_files(models_dir, macros_dir=macros_dir)
+                edges = analyze_all_sql_files(models_dir, macros_dirs=macros_dirs)
                 for edge in edges:
                     graph.add_edge(edge)
                     
