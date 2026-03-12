@@ -1,0 +1,14 @@
+{
+  "extract\\__init__.py": "ingestion",
+  "load\\loaders.py": "loader",
+  "load\\__init__.py": "ingestion",
+  "load\\__main__.py": "loader",
+  "tests\\conftest.py": "testing",
+  "tests\\__init__.py": "test",
+  "tests\\fixtures\\db.py": "test",
+  "tests\\fixtures\\__init__.py": "test",
+  "tests\\load\\test_loaders.py": "test",
+  "tests\\load\\__init__.py": "ingestion",
+  "utils\\generer_doc_recenssement.py": "**demog**",
+  "4_seeds/logement_2020_valeurs.csv": "**demog**"
+}

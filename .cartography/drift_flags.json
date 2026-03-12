@@ -1,0 +1,34 @@
+{
+  "load\\loaders.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "load\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "tests\\conftest.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "tests\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "tests\\fixtures\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "tests\\load\\test_loaders.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "tests\\load\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "4_seeds/logement_2020_valeurs.csv": {
+    "verdict": "MISSING",
+    "explanation": "The DOCSTRING is a short note with warnings and a terminal command, but it does not describe what the code does. The implementation code is the actual functionality, and the DOCSTRING is missing any explanation of the code's purpose."
+  }
+}
