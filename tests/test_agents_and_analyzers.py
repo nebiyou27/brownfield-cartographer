@@ -193,7 +193,10 @@ def test_archivist_helpers_and_archive(monkeypatch, tmp_path):
     assert "Circular Dependencies: 1" in codebase
     assert "Orphaned Nodes: 2" in codebase
     assert "## 7. Low-Confidence Lineage Edges" in codebase
-    assert "⚠️ `stg.orders` -> `qa.orders_check` (confidence: 0.70)" in codebase
+    assert (
+        "⚠️ `stg.orders` -> `qa.orders_check` (0.70: jinja placeholders reduced certainty)"
+        in codebase
+    )
     assert "src\\app.py" in audit
     assert "qwen: 2 calls, ~50 tokens" in audit
 

@@ -144,8 +144,10 @@ class Archivist:
                 for mod_id, flag in sorted(drift_items.items()):
                     verdict = flag.get("verdict", "UNKNOWN")
                     explanation = flag.get("explanation", "")
-                    icon = "⚠️" if verdict == "DRIFT" else "❌"
-                    f.write(f"- {icon} **{verdict}** `{mod_id}` — {explanation}\n")
+                    if verdict == "DRIFT":
+                        f.write(f"- **{verdict}** `{mod_id}` — {explanation}\n")
+                    else:
+                        f.write(f"- ❌ **{verdict}** `{mod_id}` — {explanation}\n")
             else:
                 f.write("✅ No documentation drift detected.\n")
             f.write("\n")
@@ -280,8 +282,9 @@ class Archivist:
             if low_conf_edges:
                 for src, tgt, conf, reason, src_file in low_conf_edges[:50]:
                     reason_text = reason or "No confidence reason recorded."
+                    flag = "\u26a0\ufe0f " if conf < 0.8 else ""
                     f.write(
-                        f"- ⚠️ `{src}` -> `{tgt}` (confidence: {conf:.2f}) — {reason_text} "
+                        f"- {flag}`{src}` -> `{tgt}` ({conf:.2f}: {reason_text}) "
                         f"[file: `{src_file}`]\n"
                     )
             else:
@@ -394,6 +397,8 @@ class Archivist:
         anomalies = []
         for node_id, purpose in purpose_statements.items():
             if _is_pseudo(node_id):
+                continue
+            if node_id not in graph.graph:
                 continue
 
             p_lower = purpose.lower()
