@@ -273,7 +273,11 @@ def get_macros_map(macros_dir: str) -> dict[str, str]:
 
 
 def get_lineage_from_sql(
-    sql: str, target_name: str, source_file: str, confidence: str = "high"
+    sql: str,
+    target_name: str,
+    source_file: str,
+    confidence: float = 0.95,
+    confidence_reason: str = "extracted via sqlglot from direct SELECT with no Jinja substitution",
 ) -> list[TransformationEdge]:
     """
     Parse cleaned SQL and return TransformationEdges.
@@ -335,6 +339,7 @@ def get_lineage_from_sql(
                         source_line=None,
                         transformation_type="sql_select",
                         confidence=confidence,
+                        confidence_reason=confidence_reason,
                     )
                 )
 
@@ -375,7 +380,8 @@ def analyze_sql_file(
                         source_file=rel_path,
                         source_line=None,
                         transformation_type="configures",
-                        confidence="high",
+                        confidence=0.85,
+                        confidence_reason=f"inferred via macro call to '{macro_name}'",
                     )
                 )
             else:
@@ -392,7 +398,8 @@ def analyze_sql_file(
                 source_file=rel_path,
                 source_line=None,
                 transformation_type="sql_select",
-                confidence="high",
+                confidence=1.0,
+                confidence_reason=f"explicitly declared via '-- depends_on' for '{upstream}'",
             )
         )
 
@@ -400,9 +407,18 @@ def analyze_sql_file(
     # If the SQL is clean (no jinja_placeholder), confidence is high.
     # Otherwise, it's medium because it was parsed after stripping Jinja.
     clean_sql = strip_jinja(raw_sql)
-    confidence = "medium" if "jinja_placeholder" in clean_sql else "high"
+    if "jinja_placeholder" in clean_sql:
+        confidence = 0.70
+        reason = (
+            "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain"
+        )
+    else:
+        confidence = 0.95
+        reason = "extracted via sqlglot from direct SELECT with no Jinja substitution"
 
-    sql_edges = get_lineage_from_sql(clean_sql, target_name, rel_path, confidence=confidence)
+    sql_edges = get_lineage_from_sql(
+        clean_sql, target_name, rel_path, confidence=confidence, confidence_reason=reason
+    )
     edges.extend(sql_edges)
 
     return edges

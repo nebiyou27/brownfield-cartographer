@@ -271,6 +271,23 @@ class Archivist:
 
                 f.write("---\n\n")
 
+            # Section 7: Low-confidence lineage edges
+            f.write("## 7. Low-Confidence Lineage Edges\n\n")
+            f.write(
+                "*Edges retained for visibility, but flagged because extraction confidence is below 0.80.*\n\n"
+            )
+            low_conf_edges = self._get_low_confidence_edges(lineage_graph)
+            if low_conf_edges:
+                for src, tgt, conf, reason, src_file in low_conf_edges[:50]:
+                    reason_text = reason or "No confidence reason recorded."
+                    f.write(
+                        f"- ⚠️ `{src}` -> `{tgt}` (confidence: {conf:.2f}) — {reason_text} "
+                        f"[file: `{src_file}`]\n"
+                    )
+            else:
+                f.write("✅ No low-confidence lineage edges detected.\n")
+            f.write("\n")
+
         logger.info("Generated CODEBASE.md → %s", path)
 
     # ------------------------------------------------------------------
@@ -402,3 +419,43 @@ class Archivist:
                 )
 
         return anomalies
+
+    def _confidence_to_float(self, value) -> float:
+        if isinstance(value, int | float):
+            return max(0.0, min(1.0, float(value)))
+        if isinstance(value, str):
+            norm = value.strip().lower()
+            mapping = {
+                "high": 0.95,
+                "medium": 0.70,
+                "low": 0.55,
+                "inferred": 0.75,
+                "unknown": 0.50,
+            }
+            if norm in mapping:
+                return mapping[norm]
+            try:
+                return max(0.0, min(1.0, float(norm)))
+            except ValueError:
+                return 0.50
+        return 0.50
+
+    def _get_low_confidence_edges(
+        self, graph: KnowledgeGraph, threshold: float = 0.80
+    ) -> list[tuple[str, str, float, str, str]]:
+        results = []
+        for src, tgt, data in graph.graph.edges(data=True):
+            if _is_pseudo(src) or _is_pseudo(tgt) or _is_macro(src) or _is_macro(tgt):
+                continue
+            conf = self._confidence_to_float(data.get("confidence", 1.0))
+            if conf < threshold:
+                results.append(
+                    (
+                        src,
+                        tgt,
+                        conf,
+                        data.get("confidence_reason", ""),
+                        data.get("source_file", "unknown"),
+                    )
+                )
+        return sorted(results, key=lambda item: item[2])

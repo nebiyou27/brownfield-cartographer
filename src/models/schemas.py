@@ -89,6 +89,9 @@ class TransformationEdge(BaseModel):
     )
 
     # Confidence Score
-    confidence: str = Field(
-        "high", description="Confidence score for this edge ('high', 'medium', 'low', 'inferred')"
+    confidence: float = Field(
+        1.0, description="Numerical confidence score for this edge (0.0 to 1.0)"
+    )
+    confidence_reason: str = Field(
+        "assumed high", description="Detailed reason for the assigned confidence score"
     )

@@ -114,12 +114,16 @@ def test_trace_lineage_handles_upstream_downstream_and_missing(monkeypatch):
         "stg.orders",
         transformation_type="sql_select",
         source_file="models/stg_orders.sql",
+        confidence=0.95,
+        confidence_reason="direct select parse",
     )
     graph.add_edge(
         "stg.orders",
         "mart.orders",
         transformation_type="aggregate",
         source_file="models/mart_orders.sql",
+        confidence=0.70,
+        confidence_reason="jinja placeholders reduced certainty",
     )
     monkeypatch.setattr(navigator, "_load_lineage_graph", lambda: graph)
 
@@ -130,14 +134,28 @@ def test_trace_lineage_handles_upstream_downstream_and_missing(monkeypatch):
     missing = navigator.trace_lineage.invoke({"dataset": "unknown", "direction": "upstream"})
 
     assert "raw.orders --[sql_select]--> stg.orders" in upstream
+    assert "confidence: 0.95" in upstream
     assert "stg.orders --[aggregate]--> mart.orders" in downstream
+    assert "confidence: 0.70" in downstream
     assert "not found in lineage graph" in missing
 
 
 def test_blast_radius_and_explain_module(monkeypatch, tmp_path):
     graph = nx.DiGraph()
-    graph.add_edge("loaders.py", "stg.orders", source_file="models/stg_orders.sql")
-    graph.add_edge("stg.orders", "mart.orders", source_file="models/mart_orders.sql")
+    graph.add_edge(
+        "loaders.py",
+        "stg.orders",
+        source_file="models/stg_orders.sql",
+        confidence=0.95,
+        confidence_reason="structural import edge",
+    )
+    graph.add_edge(
+        "stg.orders",
+        "mart.orders",
+        source_file="models/mart_orders.sql",
+        confidence=0.70,
+        confidence_reason="jinja placeholders reduced certainty",
+    )
     monkeypatch.setattr(navigator, "_load_lineage_graph", lambda: graph)
 
     purpose_data = {"module.py": "Purpose summary"}
@@ -156,6 +174,7 @@ def test_blast_radius_and_explain_module(monkeypatch, tmp_path):
     explanation = navigator.explain_module.invoke({"path": "module.py"})
 
     assert "Blast radius: 2 downstream node(s)" in blast
+    assert "path confidence: 0.70 ⚠️" in blast
     assert "Detailed explanation" in explanation
     assert "[explain_module] module.py" in explanation
 

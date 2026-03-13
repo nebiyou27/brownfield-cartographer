@@ -166,7 +166,8 @@ class PythonAnalyzer:
                     source_file=target_id,
                     source_line=line_no,
                     transformation_type="imports",
-                    confidence="high",
+                    confidence=0.95,
+                    confidence_reason=f"structural Python import of '{module_path_str}'",
                 )
                 self.edges.append(edge)
                 break
@@ -272,7 +273,8 @@ class PythonAnalyzer:
             )
             # Still create an edge with a placeholder so the graph is complete
             dataset_id = f"<dynamic>:{call_name}:{self.rel_path}:{line_no}"
-            confidence = "inferred"
+            confidence = 0.60
+            reason = f"inferred from dynamic {call_name}() call (f-string or variable)"
         else:
             literal = _extract_string_value(arg_text)
             if literal is None:
@@ -287,7 +289,8 @@ class PythonAnalyzer:
                     return
 
             dataset_id = literal
-            confidence = "low"
+            confidence = 0.75
+            reason = f"inferred from literal argument in {call_name}() call"
 
         # Create a DatasetNode for the source/sink
         ds_node = DatasetNode(
@@ -308,6 +311,7 @@ class PythonAnalyzer:
                 source_line=line_no,
                 transformation_type="consumes",
                 confidence=confidence,
+                confidence_reason=reason,
             )
         else:  # produces
             edge = TransformationEdge(
@@ -317,6 +321,7 @@ class PythonAnalyzer:
                 source_line=line_no,
                 transformation_type="produces",
                 confidence=confidence,
+                confidence_reason=reason,
             )
         self.edges.append(edge)
 
@@ -392,7 +397,8 @@ class PythonAnalyzer:
                         source_file=self.rel_path,
                         source_line=param.start_point[0] + 1,
                         transformation_type="depends_on",
-                        confidence="high",
+                        confidence=0.95,
+                        confidence_reason=f"explicit Dagster orchestration dependency in '{asset_name}'",
                     )
                     self.edges.append(edge)
 

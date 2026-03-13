@@ -82,6 +82,27 @@ def _load_lineage_graph() -> nx.DiGraph:
     return G
 
 
+def _confidence_to_float(value) -> float:
+    if isinstance(value, int | float):
+        return max(0.0, min(1.0, float(value)))
+    if isinstance(value, str):
+        norm = value.strip().lower()
+        mapping = {
+            "high": 0.95,
+            "medium": 0.70,
+            "low": 0.55,
+            "inferred": 0.75,
+            "unknown": 0.50,
+        }
+        if norm in mapping:
+            return mapping[norm]
+        try:
+            return max(0.0, min(1.0, float(norm)))
+        except ValueError:
+            return 0.50
+    return 0.50
+
+
 def _embed(text: str) -> list[float]:
     url = f"{OLLAMA_BASE}/api/embeddings"
     r = httpx.post(url, json={"model": EMBED_MODEL, "prompt": text}, timeout=60)
@@ -195,7 +216,12 @@ def trace_lineage(dataset: str, direction: str = "upstream") -> str:
             edge_data = G.get_edge_data(v, u) or {}
             tf_type = edge_data.get("transformation_type", "->")
             src_file = edge_data.get("source_file", "unknown")
-            edges_info.append(f"  {v} --[{tf_type}]--> {u}  [file: {src_file}]")
+            conf = _confidence_to_float(edge_data.get("confidence", 1.0))
+            conf_reason = edge_data.get("confidence_reason", "no reason recorded")
+            edges_info.append(
+                f"  {v} --[{tf_type}]--> {u}  "
+                f"[file: {src_file}; confidence: {conf:.2f}; reason: {conf_reason}]"
+            )
         nodes = list(reachable.nodes())
         nodes.remove(dataset)
     else:
@@ -205,7 +231,12 @@ def trace_lineage(dataset: str, direction: str = "upstream") -> str:
             edge_data = G.get_edge_data(u, v) or {}
             tf_type = edge_data.get("transformation_type", "->")
             src_file = edge_data.get("source_file", "unknown")
-            edges_info.append(f"  {u} --[{tf_type}]--> {v}  [file: {src_file}]")
+            conf = _confidence_to_float(edge_data.get("confidence", 1.0))
+            conf_reason = edge_data.get("confidence_reason", "no reason recorded")
+            edges_info.append(
+                f"  {u} --[{tf_type}]--> {v}  "
+                f"[file: {src_file}; confidence: {conf:.2f}; reason: {conf_reason}]"
+            )
         nodes = list(reachable.nodes())
         nodes.remove(dataset)
 
@@ -284,13 +315,28 @@ def blast_radius(module_path: str) -> str:
     for dist in sorted(by_distance.keys()):
         result.append(f"Distance {dist}:")
         for dep in by_distance[dist]:
-            edge_data = {}
-            for pred in G.predecessors(dep):
-                if pred in descendants or pred == node:
-                    edge_data = G.get_edge_data(pred, dep) or {}
-                    break
-            src_file = edge_data.get("source_file", "unknown")
-            result.append(f"  - {dep}  [file: {src_file}]")
+            path = nx.shortest_path(G, node, dep)
+            min_conf = 1.0
+            weakest = None
+            weakest_reason = "no reason recorded"
+            weakest_file = "unknown"
+
+            for path_u, path_v in zip(path, path[1:], strict=False):
+                edge_data = G.get_edge_data(path_u, path_v) or {}
+                conf = _confidence_to_float(edge_data.get("confidence", 1.0))
+                if conf <= min_conf:
+                    min_conf = conf
+                    weakest = (path_u, path_v)
+                    weakest_reason = edge_data.get("confidence_reason", "no reason recorded")
+                    weakest_file = edge_data.get("source_file", "unknown")
+
+            warn = " ⚠️" if min_conf < 0.80 else ""
+            edge_label = f"{weakest[0]} -> {weakest[1]}" if weakest else f"{path[0]} -> {path[-1]}"
+            result.append(
+                f"  - {dep}  [path confidence: {min_conf:.2f}{warn}; "
+                f"weakest edge: {edge_label}; file: {weakest_file}]"
+            )
+            result.append(f"    reason: {weakest_reason}")
 
     return "\n".join(result)
 

@@ -44,6 +44,8 @@ def test_hydrologist_trace_lineage_adds_nodes_and_edges(monkeypatch, tmp_path):
         source_dataset="raw.orders",
         target_dataset="stg.orders",
         source_file="models/stg_orders.sql",
+        confidence=0.95,
+        confidence_reason="test edge",
     )
     monkeypatch.setattr(
         "src.agents.hydrologist.analyze_all_sql_files", lambda path, macros_dirs: [edge]
@@ -61,6 +63,8 @@ def test_hydrologist_trace_lineage_adds_nodes_and_edges(monkeypatch, tmp_path):
         target_dataset="raw.orders",
         source_file="src/extract.py",
         transformation_type="imports",
+        confidence=0.95,
+        confidence_reason="precomputed",
     )
 
     Hydrologist(str(tmp_path)).trace_lineage(
@@ -153,6 +157,13 @@ def test_archivist_helpers_and_archive(monkeypatch, tmp_path):
     lineage_graph.graph.add_edge("raw.orders", "stg.orders", source_file="models/stg_orders.sql")
     lineage_graph.graph.add_edge("stg.orders", "mart.orders", source_file="models/mart_orders.sql")
     lineage_graph.graph.add_edge("mart.orders", "raw.orders", source_file="models/cycle.sql")
+    lineage_graph.graph.add_edge(
+        "stg.orders",
+        "qa.orders_check",
+        source_file="models/qa_orders_check.sql",
+        confidence=0.70,
+        confidence_reason="jinja placeholders reduced certainty",
+    )
     lineage_graph.graph.add_node("macros\\helper.sql")
     lineage_graph.graph.add_node("orphan.table")
     lineage_graph.graph.add_node("broken.sql", parsed=False)
@@ -181,6 +192,8 @@ def test_archivist_helpers_and_archive(monkeypatch, tmp_path):
     assert _is_macro("macros\\helper.sql") is True
     assert "Circular Dependencies: 1" in codebase
     assert "Orphaned Nodes: 2" in codebase
+    assert "## 7. Low-Confidence Lineage Edges" in codebase
+    assert "⚠️ `stg.orders` -> `qa.orders_check` (confidence: 0.70)" in codebase
     assert "src\\app.py" in audit
     assert "qwen: 2 calls, ~50 tokens" in audit
 
@@ -220,3 +233,22 @@ def test_semanticist_helpers_and_generation(monkeypatch, tmp_path):
     )
     answers = answer_day_one_questions(graph, {"src/app.py": "Purpose"}, budget, {"src/app.py": 9})
     assert answers == "Q1: answer"
+
+
+def test_uncertainty_scoring_values():
+    from src.analyzers.sql_lineage import get_lineage_from_sql, strip_jinja
+
+    clean_sql = "SELECT * FROM raw_orders"
+    edges = get_lineage_from_sql(clean_sql, "stg_orders", "models/stg_orders.sql")
+    assert edges[0].confidence == 0.95
+    assert "direct SELECT" in edges[0].confidence_reason
+
+    jinja_sql = "SELECT * FROM {{ ref('raw_orders') }} {% if true %} WHERE 1=1 {% endif %}"
+    stripped = strip_jinja(jinja_sql)
+    # The analyzer logic in analyze_sql_file handles the jinja_placeholder detection
+    # but get_lineage_from_sql can be tested with a manual confidence
+    edges_jinja = get_lineage_from_sql(
+        stripped, "stg_orders", "models/stg_orders.sql", confidence=0.70, confidence_reason="jinja"
+    )
+    assert edges_jinja[0].confidence == 0.70
+    assert edges_jinja[0].confidence_reason == "jinja"
