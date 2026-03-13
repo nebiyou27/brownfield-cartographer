@@ -111,26 +111,37 @@ def run_orchestrator(target_dir, skip_semanticist):
 st.title("🗺️ Brownfield Cartographer")
 st.markdown("Analyze and visualize codebase repositories and their data flows.")
 
-# Sidebar
-st.sidebar.header("⚙️ Configuration")
 default_target = (
     "make-open-data" if os.path.exists(os.path.join(os.getcwd(), "make-open-data")) else ""
 )
-target_dir = st.sidebar.text_input("Target Directory", value=default_target)
-skip_semanticist = st.sidebar.checkbox("Skip Semanticist (faster)", value=True)
+target_dir = st.text_input(
+    "Path to your dbt project",
+    placeholder="e.g. C:/projects/my-dbt-repo or ./make-open-data",
+    help="Point this to the root folder of the repository you want to analyze.",
+)
+if not target_dir and default_target:
+    target_dir = default_target
 
-if st.sidebar.button("▶ Run Analysis", type="primary"):
+with st.expander("⚙️ Advanced Settings"):
+    skip_semanticist = st.checkbox(
+        "Fast mode (skip AI summaries)",
+        help="Skips LLM-powered purpose statements and domain clustering. "
+        "Use this if Ollama is unavailable or you want a faster structural-only run.",
+    )
+
+if st.button("▶ Run Analysis", type="primary"):
     if not target_dir or not os.path.exists(target_dir):
-        st.sidebar.error("Target directory not found.")
+        st.error("Target directory not found.")
     else:
         success, logs = run_orchestrator(target_dir, skip_semanticist)
         if success:
-            st.sidebar.success("Analysis complete!")
+            st.success("✅ Analysis complete!")
+            st.info(f"📁 Results saved to: `{target_dir}/.cartography/`")
+            st.caption("Open CODEBASE.md for the full report, or explore the graphs below.")
         else:
-            st.sidebar.error("Analysis failed.")
+            st.error("Analysis failed.")
         with st.expander("📋 Analysis Logs"):
             st.code(logs)
-        st.rerun()
 
 # Load graphs
 lineage_path = os.path.join(CARTOGRAPHY_DIR, "lineage_graph.json")
