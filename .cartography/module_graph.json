@@ -5415,7 +5415,7 @@
       "id": "tests/load/test_loaders.py"
     }
   ],
-  "links": [
+  "edges": [
     {
       "source_dataset": "load\\loaders.py",
       "target_dataset": "<dynamic>:to_csv:load\\loaders.py:60",

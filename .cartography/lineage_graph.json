@@ -5348,7 +5348,7 @@
       "id": "make-open-data\\5_macros\\revenu\\nettoyer_modalite_revenu.sql"
     }
   ],
-  "links": [
+  "edges": [
     {
       "source_dataset": "ventes_immobilieres",
       "target_dataset": "ventes_immobilieres_enrichies",
