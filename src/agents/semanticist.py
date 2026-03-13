@@ -23,6 +23,7 @@ import httpx
 
 from ..graph.knowledge_graph import KnowledgeGraph
 from ..logger import get_logger
+from ..path_utils import normalize_path_key
 
 logger = get_logger(__name__)
 
@@ -458,14 +459,18 @@ class Semanticist:
         results = []
         source_graph = module_graph if module_graph is not None else graph
         for node_id, data in source_graph.graph.nodes(data=True):
+            normalized_node_id = normalize_path_key(node_id)
             # Skip dynamic reference pseudo-nodes emitted by tree-sitter analyzer
             # (e.g. "<dynamic>:execute:load\loaders.py:35") — not real files
-            if node_id.startswith("<dynamic>") or node_id.startswith("SELECT"):
+            if normalized_node_id.startswith("<dynamic>") or normalized_node_id.startswith(
+                "SELECT"
+            ):
                 continue
 
             source_file = data.get("source_file") or data.get("id", "")
             if not source_file:
                 continue
+            source_file = normalize_path_key(source_file)
 
             # Resolve absolute path
             candidate = Path(source_file)
@@ -485,7 +490,7 @@ class Semanticist:
                 continue
 
             docstring = _extract_docstring(code, suffix)
-            results.append((node_id, code, docstring))
+            results.append((normalized_node_id, code, docstring))
 
         return results
 

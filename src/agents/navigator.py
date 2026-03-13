@@ -27,6 +27,7 @@ from langchain_core.tools import tool
 from langgraph.graph import END, START, MessagesState, StateGraph
 
 from ..logger import get_logger
+from ..path_utils import normalize_path_key
 
 logger = get_logger(__name__)
 
@@ -332,10 +333,11 @@ def explain_module(path: str) -> str:
             break
 
     purpose_statements = _load_json("purpose_statements.json")
+    normalized_path = normalize_path_key(path)
     existing_purpose = (
-        purpose_statements.get(path)
+        purpose_statements.get(normalized_path)
+        or purpose_statements.get(path)
         or purpose_statements.get(path.replace("/", "\\"))
-        or purpose_statements.get(path.replace("\\", "/"))
     )
 
     if file_path and file_path.exists():

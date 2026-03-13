@@ -5,6 +5,7 @@ from ..analyzers.git_analyzer import get_git_change_velocity
 from ..analyzers.tree_sitter_analyzer import LanguageRouter
 from ..graph.knowledge_graph import KnowledgeGraph
 from ..logger import get_logger
+from ..path_utils import normalize_path_key, with_path_aliases
 
 logger = get_logger(__name__)
 
@@ -31,13 +32,13 @@ class Surveyor:
         for node in results["datasets"]:
             repo_abs = os.path.abspath(self.repo_path)
             file_abs = os.path.abspath(os.path.join(self.repo_path, node.source_file))
-            file_in_repo = os.path.relpath(file_abs, repo_abs)
+            file_in_repo = normalize_path_key(os.path.relpath(file_abs, repo_abs))
 
             velocity = get_git_change_velocity(self.repo_path, file_in_repo)
 
             graph.add_node(node)
             graph.graph.nodes[node.id]["git_change_velocity"] = velocity
-            results["git_velocity"][file_in_repo] = velocity
+            with_path_aliases(results["git_velocity"], file_in_repo, velocity)
 
         # --- Python file analysis via tree-sitter ---
         logger.info("Analyzing Python files with tree-sitter...")
@@ -51,10 +52,10 @@ class Surveyor:
             if hasattr(mod_node, "source_file") and mod_node.source_file:
                 repo_abs = os.path.abspath(self.repo_path)
                 file_abs = os.path.abspath(os.path.join(self.repo_path, mod_node.source_file))
-                file_in_repo = os.path.relpath(file_abs, repo_abs)
+                file_in_repo = normalize_path_key(os.path.relpath(file_abs, repo_abs))
                 velocity = get_git_change_velocity(self.repo_path, file_in_repo)
                 graph.graph.nodes[mod_node.id]["git_change_velocity"] = velocity
-                results["git_velocity"][file_in_repo] = velocity
+                with_path_aliases(results["git_velocity"], file_in_repo, velocity)
 
         # Add Python datasets and edges to both graphs:
         # 1. To the module graph (direct access)

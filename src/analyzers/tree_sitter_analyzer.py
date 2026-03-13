@@ -13,6 +13,7 @@ from tree_sitter import Language, Parser
 
 from ..logger import get_logger
 from ..models.schemas import DatasetNode, ModuleNode, TransformationEdge
+from ..path_utils import normalize_path_key
 
 logger = get_logger(__name__)
 
@@ -99,9 +100,9 @@ class PythonAnalyzer:
         self.file_path = file_path
         self.repo_root = repo_root
         try:
-            self.rel_path = str(Path(file_path).relative_to(Path(repo_root)))
+            self.rel_path = normalize_path_key(str(Path(file_path).relative_to(Path(repo_root))))
         except ValueError:
-            self.rel_path = file_path
+            self.rel_path = normalize_path_key(file_path)
 
         self.imports: list[str] = []
         self.nodes: list[DatasetNode] = []
@@ -472,9 +473,9 @@ class LanguageRouter:
         list[TransformationEdge],
     ]:
         try:
-            rel_path = str(Path(file_path).relative_to(Path(self.repo_root)))
+            rel_path = normalize_path_key(str(Path(file_path).relative_to(Path(self.repo_root))))
         except ValueError:
-            rel_path = file_path
+            rel_path = normalize_path_key(file_path)
 
         analyzer = PythonAnalyzer(file_path, self.repo_root)
         datasets, edges, imports = analyzer.analyze()

@@ -10,6 +10,7 @@ import yaml
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 from src.logger import get_logger
 from src.models.schemas import DatasetNode, ModuleNode
+from src.path_utils import normalize_path_key
 
 logger = get_logger(__name__)
 
@@ -46,9 +47,9 @@ class ParseFailureDatasetNode:
 
 def _relative_file_path(file_path: str) -> str:
     try:
-        return str(Path(file_path).relative_to(Path.cwd()))
+        return normalize_path_key(str(Path(file_path).relative_to(Path.cwd())))
     except ValueError:
-        return file_path
+        return normalize_path_key(file_path)
 
 
 def parse_yaml_file(file_path: str) -> tuple[dict[str, Any], str | None]:
