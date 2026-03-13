@@ -1,14 +1,14 @@
 {
   "extract\\__init__.py": "ingestion",
-  "load\\loaders.py": "loader",
-  "load\\__init__.py": "ingestion",
-  "load\\__main__.py": "loader",
-  "tests\\conftest.py": "testing",
-  "tests\\__init__.py": "test",
-  "tests\\fixtures\\db.py": "test",
-  "tests\\fixtures\\__init__.py": "test",
-  "tests\\load\\test_loaders.py": "test",
-  "tests\\load\\__init__.py": "ingestion",
-  "utils\\generer_doc_recenssement.py": "**demog**",
-  "4_seeds/logement_2020_valeurs.csv": "**demog**"
+  "load\\loaders.py": "ingestion",
+  "load\\__init__.py": "config",
+  "load\\__main__.py": "ingestion",
+  "tests\\conftest.py": "testenv",
+  "tests\\__init__.py": "testenv",
+  "tests\\fixtures\\db.py": "testenv",
+  "tests\\fixtures\\__init__.py": "testenv",
+  "tests\\load\\test_loaders.py": "ingestion",
+  "tests\\load\\__init__.py": "config",
+  "utils\\generer_doc_recenssement.py": "serving",
+  "4_seeds/logement_2020_valeurs.csv": "serving"
 }

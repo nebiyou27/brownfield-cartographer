@@ -1,5 +1,7 @@
 import json
 import os
+import warnings
+
 from .agents.surveyor import Surveyor
 from .agents.hydrologist import Hydrologist
 from .agents.semanticist import Semanticist
@@ -17,29 +19,23 @@ class Orchestrator:
     def __init__(self, target_dir: str, skip_semanticist: bool = False):
         self.target_dir = target_dir
         self.skip_semanticist = skip_semanticist
-        # Output folder for our results
         self.output_dir = os.path.join(os.getcwd(), ".cartography")
 
-        # Initialize our two target graphs
         self.module_graph = KnowledgeGraph("Module Graph")
         self.lineage_graph = KnowledgeGraph("Lineage Graph")
 
-        # Initialize agents
         self.surveyor = Surveyor(self.target_dir)
         self.hydrologist = Hydrologist(self.target_dir)
         self.semanticist = Semanticist(self.target_dir)
         self.archivist = Archivist(self.target_dir)
 
     def run_analysis(self):
-        """
-        Runs the full analysis pipeline on the target repository.
-        """
         print(f"\n--- Starting Analysis on {self.target_dir} ---")
 
-        # 1. Surveyor — identifies components and project structure
+        # 1. Surveyor — structural analysis + git velocity
         survey_results = self.surveyor.survey(self.module_graph)
 
-        # 2. Hydrologist — traces data lineage
+        # 2. Hydrologist — data lineage
         model_paths = survey_results.get("model_paths", ["models"])
         macro_paths = survey_results.get("macro_paths", ["macros"])
         self.hydrologist.trace_lineage(
@@ -50,9 +46,9 @@ class Orchestrator:
             precomputed_edges=survey_results.get("python_edges", []),
         )
 
-        # 3. Semanticist — LLM-powered purpose extraction, drift, clustering,
-        #    and Day-One synthesis. Can be skipped with --no-semanticist flag
-        #    (useful for fast iteration during development).
+        # 3. Semanticist — purpose statements, drift, clustering, Day-One answers.
+        #    git_velocity from Surveyor grounds Q5 in real git data rather than
+        #    heuristic guesses from file naming conventions.
         semantic_results = {}
         if self.skip_semanticist:
             print("\n[Semanticist] Skipped (--no-semanticist flag set)")
@@ -64,21 +60,19 @@ class Orchestrator:
                     git_velocity=survey_results.get("git_velocity", {}),
                 )
                 self._save_semantic_results(semantic_results)
+
+                # 4. Archivist — produce CODEBASE.md and audit_trace.log
+                self.archivist.archive(
+                    self.module_graph,
+                    self.lineage_graph,
+                    semantic_results,
+                    git_velocity=survey_results.get("git_velocity", {}),
+                )
             except Exception as e:
                 print(f"\n[WARNING] Semanticist failed: {e}")
                 print("[WARNING] Continuing without semantic enrichment.")
 
-        # 4. Archivist — human-readable documentation
-        print("\n--- Generating Documentation ---")
-        if not self.skip_semanticist and semantic_results:
-            try:
-                self.archivist.archive(self.module_graph, self.lineage_graph, semantic_results)
-            except Exception as e:
-                print(f"\n[WARNING] Archivist failed: {e}")
-        else:
-            print("\n[Archivist] Skipped because semantic results are unavailable.")
-
-        # 5. Finalize and save graphs
+        # 4. Finalize graphs
         print("\n--- Finalizing Graphs ---")
 
         orphaned_nodes = self.find_orphaned_nodes(self.lineage_graph.graph)
@@ -86,14 +80,17 @@ class Orchestrator:
             print(f"[WARNING] Orphaned node detected: {node_id}")
             self.lineage_graph.graph.nodes[node_id]["orphaned"] = True
 
-        self.module_graph.save_json(
-            os.path.join(self.output_dir, "module_graph.json")
-        )
-        self.lineage_graph.save_json(
-            os.path.join(self.output_dir, "lineage_graph.json")
-        )
+        # Suppress NetworkX FutureWarning on node_link_data edges kwarg
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", FutureWarning)
+            self.module_graph.save_json(
+                os.path.join(self.output_dir, "module_graph.json")
+            )
+            self.lineage_graph.save_json(
+                os.path.join(self.output_dir, "lineage_graph.json")
+            )
 
-        # 6. Parse-failure diagnostics
+        # 5. Parse-failure diagnostics
         failed_nodes = [
             (nid, attrs)
             for nid, attrs in self.lineage_graph.graph.nodes(data=True)
@@ -102,14 +99,13 @@ class Orchestrator:
         if failed_nodes:
             print(f"\n--- Parse-Failure Diagnostics ({len(failed_nodes)} file(s)) ---")
             for nid, attrs in failed_nodes:
-                reason = attrs.get("reason", "unknown")
                 print(f"  FAIL: {nid}")
-                print(f"        Reason: {reason}")
+                print(f"        Reason: {attrs.get('reason', 'unknown')}")
             print("---")
         else:
             print("\n[OK] All files parsed successfully — no parse failures.")
 
-        # 7. Export human-readable lineage
+        # 6. Human-readable lineage export
         lineage_text = self.lineage_graph.export_lineage_text()
         with open("lineage_final.txt", "w", encoding="utf-8") as f:
             f.write(f"Testing analyzer on {self.target_dir}...\n")
@@ -123,43 +119,27 @@ class Orchestrator:
         """Persist all Semanticist outputs to .cartography/"""
         os.makedirs(self.output_dir, exist_ok=True)
 
-        # purpose_statements.json
-        purpose_path = os.path.join(self.output_dir, "purpose_statements.json")
-        with open(purpose_path, "w", encoding="utf-8") as f:
-            json.dump(results.get("purpose_statements", {}), f, indent=2)
-        print(f"[Semanticist] Saved purpose statements → {purpose_path}")
+        files = {
+            "purpose_statements.json": results.get("purpose_statements", {}),
+            "drift_flags.json":        results.get("drift_flags", {}),
+            "domain_map.json":         results.get("domain_map", {}),
+            "budget_summary.json":     results.get("budget_summary", {}),
+        }
+        for filename, data in files.items():
+            path = os.path.join(self.output_dir, filename)
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+            print(f"[Semanticist] Saved {filename} → {path}")
 
-        # drift_flags.json
-        drift_path = os.path.join(self.output_dir, "drift_flags.json")
-        with open(drift_path, "w", encoding="utf-8") as f:
-            json.dump(results.get("drift_flags", {}), f, indent=2)
-        print(f"[Semanticist] Saved drift flags → {drift_path}")
-
-        # domain_map.json
-        domain_path = os.path.join(self.output_dir, "domain_map.json")
-        with open(domain_path, "w", encoding="utf-8") as f:
-            json.dump(results.get("domain_map", {}), f, indent=2)
-        print(f"[Semanticist] Saved domain map → {domain_path}")
-
-        # onboarding_brief.md  (Day-One answers)
+        # onboarding_brief.md — plain text, not JSON
         brief_path = os.path.join(self.output_dir, "onboarding_brief.md")
-        day_one = results.get("day_one_answers", "")
         with open(brief_path, "w", encoding="utf-8") as f:
             f.write("# FDE Day-One Onboarding Brief\n\n")
-            f.write(day_one)
-        print(f"[Semanticist] Saved onboarding brief → {brief_path}")
-
-        # budget_summary.json
-        budget_path = os.path.join(self.output_dir, "budget_summary.json")
-        with open(budget_path, "w", encoding="utf-8") as f:
-            json.dump(results.get("budget_summary", {}), f, indent=2)
+            f.write(results.get("day_one_answers", ""))
+        print(f"[Semanticist] Saved onboarding_brief.md → {brief_path}")
 
     # ------------------------------------------------------------------
     def find_orphaned_nodes(self, graph) -> list:
-        """Identifies nodes that have no incoming or outgoing edges."""
-        all_nodes = set(graph.nodes())
-        nodes_with_edges = set()
-        for u, v in graph.edges():
-            nodes_with_edges.add(u)
-            nodes_with_edges.add(v)
-        return list(all_nodes - nodes_with_edges)
+        """Identifies nodes with no incoming or outgoing edges."""
+        nodes_with_edges = {n for u, v in graph.edges() for n in (u, v)}
+        return list(set(graph.nodes()) - nodes_with_edges)

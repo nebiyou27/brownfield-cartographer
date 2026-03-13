@@ -1,0 +1,19 @@
+CARTOGRAPHER AUDIT TRACE — 2026-03-13T04:40:01.374446
+Target: D:\TRP-1\Week-4\brownfield-cartographer\make-open-data
+Modules Scanned:            92
+Lineage Nodes:              114
+Lineage Edges:              121
+Parse Failures:             0
+Purpose Statements:         12
+Doc Drift Flags:            7
+  [MISSING] load\__init__.py
+  [MISSING] load\loaders.py
+  [MISSING] tests\__init__.py
+  [MISSING] tests\conftest.py
+  [MISSING] tests\fixtures\__init__.py
+  [MISSING] tests\load\__init__.py
+  [MISSING] tests\load\test_loaders.py
+
+LLM Budget:
+  qwen3:1.7b: 17 calls, ~6961 tokens
+  deepseek-r1:8b: 1 calls, ~2238 tokens
