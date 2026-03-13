@@ -618,7 +618,13 @@ def _node_tool(state: NavState) -> dict:
 
 def _node_synthesise(state: NavState) -> dict:
     question = state["messages"][-1].content
-    answer = _synthesise(question, state["tool_result"])
+    tool_result = state["tool_result"]
+    # Preserve blast radius output verbatim so confidence lines are not lost
+    # during synthesis paraphrasing.
+    if tool_result.lstrip().startswith("[blast_radius]"):
+        answer = tool_result
+    else:
+        answer = _synthesise(question, tool_result)
     return {"messages": [AIMessage(content=answer)]}
 
 

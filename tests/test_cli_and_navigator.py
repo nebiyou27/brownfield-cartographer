@@ -221,3 +221,22 @@ def test_synthesise_and_navigator_wrapper(monkeypatch):
     monkeypatch.setattr(navigator, "_build_graph", lambda: StubGraph())
     nav = navigator.Navigator()
     assert nav.query("question") == "final answer"
+
+
+def test_node_synthesise_preserves_blast_radius_output(monkeypatch):
+    calls = {"count": 0}
+
+    def _should_not_run(*args, **kwargs):
+        calls["count"] += 1
+        return "summary"
+
+    monkeypatch.setattr(navigator, "_ollama_generate", _should_not_run)
+    raw = "[blast_radius] Impact of changing 'loaders.py'\n  - mart.orders  [path confidence: 0.70]"
+    state = {
+        "messages": [types.SimpleNamespace(content="What breaks if loaders.py changes?")],
+        "tool_result": raw,
+    }
+
+    synth_state = navigator._node_synthesise(state)
+    assert synth_state["messages"][0].content == raw
+    assert calls["count"] == 0
