@@ -13,6 +13,7 @@ Model tier strategy (all via Ollama local API):
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import time
@@ -382,6 +383,29 @@ class Semanticist:
     def __init__(self, repo_path: str):
         self.repo_path = Path(repo_path)
         self.budget = ContextWindowBudget()
+        self.cache_path = Path(os.getcwd()) / ".cartography" / "semantic_cache.json"
+        self.cache = self._load_cache()
+
+    def _load_cache(self) -> dict:
+        if self.cache_path.exists():
+            try:
+                return json.loads(self.cache_path.read_text(encoding="utf-8"))
+            except Exception as e:
+                logger.warning("Failed to load semantic cache: %s", e)
+        return {}
+
+    def _save_cache(self):
+        self.cache_path.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            self.cache_path.write_text(
+                json.dumps(self.cache, indent=2, ensure_ascii=False), encoding="utf-8"
+            )
+            logger.info("[Semanticist] Cache saved to %s", self.cache_path)
+        except Exception as e:
+            logger.warning("Failed to save semantic cache: %s", e)
+
+    def _get_hash(self, text: str) -> str:
+        return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
     # ------------------------------------------------------------------
     def analyse(
@@ -408,19 +432,37 @@ class Semanticist:
         # ---- BATCH 2: qwen3:1.7b — purpose statements (bulk) ------------------
         logger.info("Generating purpose statements (%s)...", BULK_MODEL)
         purpose_statements: dict[str, str] = {}
-        for mod_id, code, _ in modules:
+        drift_flags: dict[str, dict[str, str]] = {}
+
+        for mod_id, code, docstring in modules:
+            content_hash = self._get_hash(code + (docstring or ""))
+            cached = self.cache.get(mod_id)
+
+            if cached and cached.get("hash") == content_hash:
+                logger.info("  ⚡ Cache hit: %s", mod_id[:60])
+                purpose_statements[mod_id] = cached["purpose"]
+                if cached.get("drift"):
+                    drift_flags[mod_id] = cached["drift"]
+                continue
+
+            # Purpose
             stmt = generate_purpose_statement(mod_id, code, self.budget)
             purpose_statements[mod_id] = stmt
-            logger.info("  ✓ %s", mod_id[:60])
 
-        # ---- BATCH 3: qwen3:1.7b — doc drift detection (bulk) -----------------
-        logger.info("Detecting doc drift (%s)...", BULK_MODEL)
-        drift_flags: dict[str, dict[str, str]] = {}
-        for mod_id, code, docstring in modules:
+            # Drift
             verdict, explanation = detect_doc_drift(mod_id, docstring, code, self.budget)
+            drift_entry = None
             if verdict in ("DRIFT", "MISSING"):
-                drift_flags[mod_id] = {"verdict": verdict, "explanation": explanation}
+                drift_entry = {"verdict": verdict, "explanation": explanation}
+                drift_flags[mod_id] = drift_entry
                 logger.info("  ⚠ %s: %s", verdict, mod_id[:60])
+            else:
+                logger.info("  ✓ %s", mod_id[:60])
+
+            # Update cache
+            self.cache[mod_id] = {"hash": content_hash, "purpose": stmt, "drift": drift_entry}
+
+        self._save_cache()
 
         # ---- BATCH 4: nomic-embed-text — domain clustering --------------------
         logger.info("Clustering into domains (%s)...", EMBED_MODEL)

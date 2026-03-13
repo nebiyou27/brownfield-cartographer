@@ -95,10 +95,11 @@ class Archivist:
             f.write("*Top modules by PageRank — highest architectural impact if changed.*\n\n")
             pagerank_nodes = self._get_pagerank(lineage_graph)
             if pagerank_nodes:
-                for rank, (node_id, score) in enumerate(pagerank_nodes[:5], 1):
+                for rank, (node_id, score, details) in enumerate(pagerank_nodes[:5], 1):
                     purpose = purpose_statements.get(node_id, "")
                     purpose_snippet = f" — {purpose[:120]}..." if purpose else ""
                     f.write(f"{rank}. **`{node_id}`** (score: {score:.4f}){purpose_snippet}\n")
+                    f.write(f"   - *Why:* {details}\n")
             else:
                 f.write("*(PageRank unavailable — graph may be empty)*\n")
             f.write("\n")
@@ -149,14 +150,14 @@ class Archivist:
                 f.write("✅ No documentation drift detected.\n")
             f.write("\n")
 
-            # 4c. Orphaned nodes
-            orphans = self._get_orphans(lineage_graph)
-            f.write(f"### Orphaned Nodes: {len(orphans)}\n\n")
-            if orphans:
-                for o in sorted(orphans):
-                    f.write(f"- `{o}`\n")
+            # 4d. Semantic Anomalies
+            anomalies = self._get_semantic_anomalies(lineage_graph, purpose_statements)
+            f.write(f"### Semantic Anomalies: {len(anomalies)}\n\n")
+            if anomalies:
+                for target, issue in anomalies:
+                    f.write(f"- 🚩 **CONFLICT** `{target}`: {issue}\n")
             else:
-                f.write("✅ No orphaned nodes.\n")
+                f.write("✅ No structural-to-semantic contradictions detected.\n")
             f.write("\n")
 
             # ── Section 5: High-Velocity Files ────────────────────────
@@ -311,13 +312,21 @@ class Archivist:
     # ------------------------------------------------------------------
 
     def _get_pagerank(self, graph: KnowledgeGraph):
-        """Returns [(node_id, score)] sorted descending, pseudo-nodes and macros excluded."""
+        """Returns [(node_id, score, derivation_text)] sorted descending."""
         try:
             import networkx as nx
 
             pr = nx.pagerank(graph.graph, alpha=0.85)
             filtered = {k: v for k, v in pr.items() if not _is_pseudo(k) and not _is_macro(k)}
-            return sorted(filtered.items(), key=lambda x: x[1], reverse=True)
+            sorted_nodes = sorted(filtered.items(), key=lambda x: x[1], reverse=True)
+
+            results = []
+            for nid, score in sorted_nodes:
+                in_deg = graph.graph.in_degree(nid)
+                out_deg = graph.graph.out_degree(nid)
+                derivation = f"Centrality driven by {in_deg} upstream sources and {out_deg} downstream dependents."
+                results.append((nid, score, derivation))
+            return results
         except Exception:
             return []
 
@@ -350,3 +359,36 @@ class Archivist:
             for n in graph.graph.nodes
             if n not in nodes_with_edges and not _is_pseudo(n) and not _is_macro(n)
         ]
+
+    def _get_semantic_anomalies(
+        self, graph: KnowledgeGraph, purpose_statements: dict
+    ) -> list[tuple[str, str]]:
+        """Detects contradictions between graph structure and LLM purpose strings."""
+        anomalies = []
+        for node_id, purpose in purpose_statements.items():
+            if _is_pseudo(node_id):
+                continue
+
+            p_lower = purpose.lower()
+            in_deg = graph.graph.in_degree(node_id)
+            out_deg = graph.graph.out_degree(node_id)
+
+            # Contradiction: Purpose says it's a "source" or "ingestion" but it has upstreams
+            if ("source" in p_lower or "ingest" in p_lower) and in_deg > 0:
+                anomalies.append(
+                    (
+                        node_id,
+                        f"Purpose claims it's a source, but graph shows {in_deg} upstream dependencies.",
+                    )
+                )
+
+            # Contradiction: Purpose says it's an "output" or "final" but it has downstreams
+            if ("output" in p_lower or "final" in p_lower) and out_deg > 0:
+                anomalies.append(
+                    (
+                        node_id,
+                        f"Purpose claims it's a final output, but graph shows {out_deg} downstream dependents.",
+                    )
+                )
+
+        return anomalies

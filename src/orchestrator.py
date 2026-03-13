@@ -34,24 +34,33 @@ class Orchestrator:
 
     def run_analysis(self):
         logger.info("--- Starting Analysis on %s ---", self.target_dir)
+        os.makedirs(self.output_dir, exist_ok=True)
 
         # 1. Surveyor — structural analysis + git velocity
-        survey_results = self.surveyor.survey(self.module_graph)
+        try:
+            survey_results = self.surveyor.survey(self.module_graph)
+            self.module_graph.save_json(os.path.join(self.output_dir, "module_graph.json"))
+        except Exception as e:
+            logger.error("Surveyor failed: %s", e)
+            return
 
         # 2. Hydrologist — data lineage
-        model_paths = survey_results.get("model_paths", ["models"])
-        macro_paths = survey_results.get("macro_paths", ["macros"])
-        self.hydrologist.trace_lineage(
-            self.lineage_graph,
-            survey_results["datasets"],
-            model_paths,
-            macro_paths=macro_paths,
-            precomputed_edges=survey_results.get("python_edges", []),
-        )
+        try:
+            model_paths = survey_results.get("model_paths", ["models"])
+            macro_paths = survey_results.get("macro_paths", ["macros"])
+            self.hydrologist.trace_lineage(
+                self.lineage_graph,
+                survey_results["datasets"],
+                model_paths,
+                macro_paths=macro_paths,
+                precomputed_edges=survey_results.get("python_edges", []),
+            )
+            self.lineage_graph.save_json(os.path.join(self.output_dir, "lineage_graph.json"))
+        except Exception as e:
+            logger.error("Hydrologist failed: %s", e)
+            # We continue because Surveyor results might still be useful
 
         # 3. Semanticist — purpose statements, drift, clustering, Day-One answers.
-        #    git_velocity from Surveyor grounds Q5 in real git data rather than
-        #    heuristic guesses from file naming conventions.
         semantic_results = {}
         if self.skip_semanticist:
             logger.info("[Semanticist] Skipped (--no-semanticist flag set)")
@@ -63,33 +72,37 @@ class Orchestrator:
                     git_velocity=survey_results.get("git_velocity", {}),
                 )
                 self._save_semantic_results(semantic_results)
-
-                # 4. Archivist — produce CODEBASE.md and audit_trace.log
-                self.archivist.archive(
-                    self.module_graph,
-                    self.lineage_graph,
-                    semantic_results,
-                    git_velocity=survey_results.get("git_velocity", {}),
-                )
             except Exception as e:
                 logger.warning("[WARNING] Semanticist failed: %s", e)
                 logger.warning("[WARNING] Continuing without semantic enrichment.")
 
-        # 4. Finalize graphs
-        logger.info("--- Finalizing Graphs ---")
+        # 4. Finalize artifacts
+        logger.info("--- Finalizing Artifacts ---")
 
         orphaned_nodes = self.find_orphaned_nodes(self.lineage_graph.graph)
         for node_id in orphaned_nodes:
             logger.warning("Orphaned node detected: %s", node_id)
             self.lineage_graph.graph.nodes[node_id]["orphaned"] = True
 
+        # 5. Archivist — produce CODEBASE.md and audit_trace.log
+        try:
+            self.archivist.archive(
+                self.module_graph,
+                self.lineage_graph,
+                semantic_results,
+                git_velocity=survey_results.get("git_velocity", {}),
+            )
+        except Exception as e:
+            logger.error("Archivist failed: %s", e)
+
         # Suppress NetworkX FutureWarning on node_link_data edges kwarg
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", FutureWarning)
+            # Standard saves (redundant but ensures the latest state is captured)
             self.module_graph.save_json(os.path.join(self.output_dir, "module_graph.json"))
             self.lineage_graph.save_json(os.path.join(self.output_dir, "lineage_graph.json"))
 
-        # 5. Parse-failure diagnostics
+        # 6. Parse-failure diagnostics
         failed_nodes = [
             (nid, attrs)
             for nid, attrs in self.lineage_graph.graph.nodes(data=True)
