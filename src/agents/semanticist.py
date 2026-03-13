@@ -108,6 +108,20 @@ def _ollama_embed(text: str) -> list[float]:
         raise RuntimeError(f"Embedding call failed: {e}") from e
 
 
+def ollama_is_reachable(timeout: int = 5) -> bool:
+    """
+    Fast health check before starting Semanticist work.
+    Uses a single lightweight ping to avoid long failure cascades.
+    """
+    url = f"{OLLAMA_BASE}/api/tags"
+    try:
+        r = httpx.get(url, timeout=timeout)
+        r.raise_for_status()
+        return True
+    except Exception:
+        return False
+
+
 # ---------------------------------------------------------------------------
 # Purpose Statement generation  (qwen3:1.7b — bulk)
 # ---------------------------------------------------------------------------
@@ -423,6 +437,15 @@ class Semanticist:
                       in real git history rather than filename heuristics.
         """
         logger.info("===== Phase 3 Starting =====")
+        if not ollama_is_reachable():
+            logger.warning("Ollama unavailable - skipping semantic enrichment")
+            return {
+                "purpose_statements": {},
+                "drift_flags": {},
+                "domain_map": {},
+                "day_one_answers": "",
+                "budget_summary": self.budget.summary(),
+            }
 
         # Collect modules with readable source files
         modules = self._collect_readable_modules(graph, module_graph=module_graph)

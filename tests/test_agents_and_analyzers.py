@@ -2,12 +2,14 @@ from src.agents.archivist import Archivist, _is_macro, _is_pseudo
 from src.agents.hydrologist import Hydrologist
 from src.agents.semanticist import (
     ContextWindowBudget,
+    Semanticist,
     _extract_docstring,
     _summarise_lineage,
     _summarise_modules,
     answer_day_one_questions,
     detect_doc_drift,
     generate_purpose_statement,
+    ollama_is_reachable,
 )
 from src.agents.surveyor import Surveyor
 from src.analyzers import git_analyzer
@@ -255,3 +257,37 @@ def test_uncertainty_scoring_values():
     )
     assert edges_jinja[0].confidence == 0.70
     assert edges_jinja[0].confidence_reason == "jinja"
+
+
+def test_ollama_is_reachable_healthcheck(monkeypatch):
+    class OkResponse:
+        def raise_for_status(self):
+            return None
+
+    monkeypatch.setattr("src.agents.semanticist.httpx.get", lambda *args, **kwargs: OkResponse())
+    assert ollama_is_reachable() is True
+
+    def _raise(*args, **kwargs):
+        raise RuntimeError("down")
+
+    monkeypatch.setattr("src.agents.semanticist.httpx.get", _raise)
+    assert ollama_is_reachable() is False
+
+
+def test_semanticist_fast_fails_when_ollama_unavailable(monkeypatch, tmp_path):
+    semanticist = Semanticist(str(tmp_path))
+    graph = KnowledgeGraph("lineage")
+
+    monkeypatch.setattr("src.agents.semanticist.ollama_is_reachable", lambda timeout=5: False)
+    monkeypatch.setattr(
+        Semanticist,
+        "_collect_readable_modules",
+        lambda *args, **kwargs: (_ for _ in ()).throw(RuntimeError("should not run")),
+    )
+
+    results = semanticist.analyse(graph)
+
+    assert results["purpose_statements"] == {}
+    assert results["drift_flags"] == {}
+    assert results["domain_map"] == {}
+    assert results["day_one_answers"] == ""
