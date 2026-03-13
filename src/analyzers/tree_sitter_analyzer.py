@@ -114,6 +114,7 @@ class PythonAnalyzer:
 
         self._extract_imports(root)
         self._extract_calls(root)
+        self._extract_orchestration(root)
 
         return self.nodes, self.edges, self.imports
 
@@ -253,6 +254,13 @@ class PythonAnalyzer:
             literal = _extract_string_value(arg_text)
             if literal is None:
                 return
+
+            # Filter ephemeral SQL commands
+            if call_name == "execute":
+                upper_lit = literal.strip().upper()
+                if upper_lit.startswith(("INSTALL", "LOAD", "DROP", "SET", "PRAGMA", "VACUUM", "CHECKPOINT", "CALL")):
+                    return
+
             dataset_id = literal
             confidence = "low"
 
@@ -286,6 +294,82 @@ class PythonAnalyzer:
                 confidence=confidence,
             )
         self.edges.append(edge)
+
+    # ---- orchestration extraction ------------------------------------------
+
+    def _extract_orchestration(self, root):
+        """Walk the AST and find Dagster @asset / @op functions."""
+        self._walk_orchestration(root)
+
+    def _walk_orchestration(self, node):
+        if node.type == "decorated_definition":
+            self._process_decorated(node)
+        for child in node.children:
+            self._walk_orchestration(child)
+
+    def _process_decorated(self, node):
+        # find the decorator
+        is_dagster = False
+        for child in node.children:
+            if child.type == "decorator":
+                decorator_text = _node_text(child)
+                if "@asset" in decorator_text or "@op" in decorator_text:
+                    is_dagster = True
+                    break
+
+        if not is_dagster:
+            return
+
+        # find the function definition
+        func_def = None
+        for child in node.children:
+            if child.type == "function_definition":
+                func_def = child
+                break
+
+        if not func_def:
+            return
+
+        # find function name
+        name_node = func_def.child_by_field_name("name")
+        if not name_node:
+            return
+
+        asset_name = _node_text(name_node)
+        line_no = name_node.start_point[0] + 1
+
+        # Add a node for the asset
+        ds_node = DatasetNode(
+            id=asset_name,
+            source_file=self.rel_path,
+            source_line=line_no,
+            description="Dagster orchestrator node",
+            dataset_type="orchestration",
+        )
+        self.nodes.append(ds_node)
+
+        # find parameters
+        params_node = func_def.child_by_field_name("parameters")
+        if params_node:
+            for param in params_node.children:
+                param_name = None
+                if param.type == "identifier":
+                    param_name = _node_text(param)
+                elif param.type == "typed_parameter":
+                    id_node = param.child(0)
+                    if id_node and id_node.type == "identifier":
+                        param_name = _node_text(id_node)
+
+                if param_name and param_name not in ("context", "self"):
+                    edge = TransformationEdge(
+                        source_dataset=param_name,
+                        target_dataset=asset_name,
+                        source_file=self.rel_path,
+                        source_line=param.start_point[0] + 1,
+                        transformation_type="depends_on",
+                        confidence="high",
+                    )
+                    self.edges.append(edge)
 
 
 # ---------------------------------------------------------------------------

@@ -13,3 +13,6 @@ make-open-data/
 lineage_final.txt
 lineage_results.txt
 analysis_log.txt
+
+# text files
+*.txt

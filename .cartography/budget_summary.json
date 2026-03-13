@@ -1,10 +1,10 @@
 {
   "calls_per_model": {
-    "qwen3:1.7b": 290,
+    "qwen3:1.7b": 333,
     "deepseek-r1:8b": 1
   },
   "estimated_tokens_per_model": {
-    "qwen3:1.7b": 207315,
-    "deepseek-r1:8b": 3210
+    "qwen3:1.7b": 265509,
+    "deepseek-r1:8b": 3097
   }
 }

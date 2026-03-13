@@ -10,16 +10,16 @@
       "description": "Python module with 7 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "dbt-create-staging-models",
-      "git_change_velocity": 0
+      "git_change_velocity": 7
     },
     {
       "id": "bin\\dbt-local-dev.py",
       "source_file": "bin\\dbt-local-dev.py",
       "source_line": null,
-      "description": "Python module with 11 imports, 34 data-flow edges",
+      "description": "Python module with 11 imports, 28 data-flow edges",
       "file_type": "python",
       "logical_name": "dbt-local-dev",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "bin\\uv-operations.py",
@@ -28,7 +28,7 @@
       "description": "Python module with 5 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "uv-operations",
-      "git_change_velocity": 0
+      "git_change_velocity": 3
     },
     {
       "id": "bin\\utils\\chunk_tracking_logs_by_day.py",
@@ -37,7 +37,7 @@
       "description": "Python module with 5 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "chunk_tracking_logs_by_day",
-      "git_change_velocity": 0
+      "git_change_velocity": 8
     },
     {
       "id": "dg_deployments\\reconcile_edxorg_partitions.py",
@@ -46,7 +46,7 @@
       "description": "Python module with 13 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "reconcile_edxorg_partitions",
-      "git_change_velocity": 0
+      "git_change_velocity": 6
     },
     {
       "id": "dg_projects\\__init__.py",
@@ -55,7 +55,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\b2b_organization\\__init__.py",
@@ -64,7 +64,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\b2b_organization\\b2b_organization\\definitions.py",
@@ -73,7 +73,7 @@
       "description": "Python module with 7 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "definitions",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\b2b_organization\\b2b_organization\\__init__.py",
@@ -82,7 +82,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\b2b_organization\\b2b_organization\\assets\\data_export.py",
@@ -91,7 +91,7 @@
       "description": "Python module with 7 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "data_export",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\b2b_organization\\b2b_organization\\assets\\__init__.py",
@@ -100,7 +100,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\b2b_organization\\b2b_organization\\defs\\__init__.py",
@@ -109,7 +109,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\b2b_organization\\b2b_organization\\partitions\\b2b_organization.py",
@@ -118,7 +118,7 @@
       "description": "Python module with 1 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "b2b_organization",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\b2b_organization\\b2b_organization\\partitions\\__init__.py",
@@ -127,7 +127,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\b2b_organization\\b2b_organization\\sensors\\b2b_organization.py",
@@ -136,7 +136,7 @@
       "description": "Python module with 3 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "b2b_organization",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\b2b_organization\\b2b_organization\\sensors\\__init__.py",
@@ -145,7 +145,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\b2b_organization\\b2b_organization_tests\\__init__.py",
@@ -154,7 +154,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\canvas\\canvas\\definitions.py",
@@ -163,7 +163,7 @@
       "description": "Python module with 9 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "definitions",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "dg_projects\\canvas\\canvas\\__init__.py",
@@ -172,16 +172,16 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\canvas\\canvas\\assets\\canvas.py",
       "source_file": "dg_projects\\canvas\\canvas\\assets\\canvas.py",
       "source_line": null,
-      "description": "Python module with 8 imports, 0 data-flow edges",
+      "description": "Python module with 8 imports, 2 data-flow edges",
       "file_type": "python",
       "logical_name": "canvas",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\canvas\\canvas\\assets\\__init__.py",
@@ -190,7 +190,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\canvas\\canvas\\defs\\__init__.py",
@@ -199,7 +199,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\canvas\\canvas\\lib\\canvas.py",
@@ -208,7 +208,7 @@
       "description": "Python module with 4 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "canvas",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\canvas\\canvas\\lib\\__init__.py",
@@ -217,7 +217,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\canvas\\canvas\\resources\\api_client_factory.py",
@@ -226,7 +226,7 @@
       "description": "Python module with 9 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "api_client_factory",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\canvas\\canvas\\resources\\__init__.py",
@@ -235,7 +235,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\canvas\\canvas\\sensors\\canvas.py",
@@ -244,7 +244,7 @@
       "description": "Python module with 3 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "canvas",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\canvas\\canvas\\sensors\\__init__.py",
@@ -253,7 +253,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\canvas\\canvas_tests\\__init__.py",
@@ -262,7 +262,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\data_loading\\data_loading\\definitions.py",
@@ -271,7 +271,7 @@
       "description": "Python module with 3 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "definitions",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\data_loading\\data_loading\\__init__.py",
@@ -280,7 +280,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\data_loading\\data_loading\\components\\__init__.py",
@@ -289,7 +289,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\data_loading\\data_loading\\defs\\__init__.py",
@@ -298,7 +298,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\data_loading\\data_loading\\defs\\edxorg_s3_ingest\\dagster_assets.py",
@@ -307,7 +307,7 @@
       "description": "Python module with 4 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "dagster_assets",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\data_loading\\data_loading\\defs\\edxorg_s3_ingest\\defs.py",
@@ -316,7 +316,7 @@
       "description": "Python module with 1 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "defs",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\data_loading\\data_loading\\defs\\edxorg_s3_ingest\\loads.py",
@@ -325,7 +325,7 @@
       "description": "Python module with 8 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "loads",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\data_loading\\data_loading\\defs\\edxorg_s3_ingest\\__init__.py",
@@ -334,7 +334,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\data_loading\\data_loading_tests\\__init__.py",
@@ -343,7 +343,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\data_platform\\data_platform\\definitions.py",
@@ -352,7 +352,7 @@
       "description": "Python module with 6 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "definitions",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "dg_projects\\data_platform\\data_platform\\__init__.py",
@@ -361,7 +361,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\data_platform\\data_platform\\assets\\__init__.py",
@@ -370,7 +370,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\data_platform\\data_platform\\assets\\metadata\\databases.py",
@@ -379,7 +379,7 @@
       "description": "Python module with 3 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "databases",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\data_platform\\data_platform\\assets\\metadata\\__init__.py",
@@ -388,7 +388,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\data_platform\\data_platform\\defs\\__init__.py",
@@ -397,7 +397,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\data_platform\\data_platform\\lib\\__init__.py",
@@ -406,7 +406,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\data_platform\\orchestration_platform_tests\\__init__.py",
@@ -415,7 +415,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\edxorg\\edxorg\\definitions.py",
@@ -424,7 +424,7 @@
       "description": "Python module with 23 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "definitions",
-      "git_change_velocity": 0
+      "git_change_velocity": 14
     },
     {
       "id": "dg_projects\\edxorg\\edxorg\\__init__.py",
@@ -433,7 +433,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_api.py",
@@ -442,16 +442,16 @@
       "description": "Python module with 7 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "edxorg_api",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
       "source_file": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
       "source_line": null,
-      "description": "Python module with 22 imports, 9 data-flow edges",
+      "description": "Python module with 22 imports, 10 data-flow edges",
       "file_type": "python",
       "logical_name": "edxorg_archive",
-      "git_change_velocity": 0
+      "git_change_velocity": 10
     },
     {
       "id": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_db_table_specs.py",
@@ -460,16 +460,16 @@
       "description": "Python module with 4 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "edxorg_db_table_specs",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\edxorg\\edxorg\\assets\\openedx_course_archives.py",
       "source_file": "dg_projects\\edxorg\\edxorg\\assets\\openedx_course_archives.py",
       "source_line": null,
-      "description": "Python module with 12 imports, 0 data-flow edges",
+      "description": "Python module with 12 imports, 1 data-flow edges",
       "file_type": "python",
       "logical_name": "openedx_course_archives",
-      "git_change_velocity": 0
+      "git_change_velocity": 6
     },
     {
       "id": "dg_projects\\edxorg\\edxorg\\assets\\__init__.py",
@@ -478,7 +478,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\edxorg\\edxorg\\defs\\__init__.py",
@@ -487,7 +487,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\edxorg\\edxorg\\io_managers\\gcs.py",
@@ -496,7 +496,7 @@
       "description": "Python module with 4 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "gcs",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "dg_projects\\edxorg\\edxorg\\io_managers\\__init__.py",
@@ -505,7 +505,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\edxorg\\edxorg\\jobs\\edx_gcs_courses.py",
@@ -514,7 +514,7 @@
       "description": "Python module with 2 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "edx_gcs_courses",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\edxorg\\edxorg\\jobs\\retrieve_edx_exports.py",
@@ -523,7 +523,7 @@
       "description": "Python module with 2 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "retrieve_edx_exports",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\edxorg\\edxorg\\jobs\\__init__.py",
@@ -532,7 +532,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\edxorg\\edxorg\\lib\\edxorg.py",
@@ -541,7 +541,7 @@
       "description": "Python module with 2 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "edxorg",
-      "git_change_velocity": 0
+      "git_change_velocity": 4
     },
     {
       "id": "dg_projects\\edxorg\\edxorg\\lib\\__init__.py",
@@ -550,25 +550,25 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\edxorg\\edxorg\\ops\\edx_gcs_courses.py",
       "source_file": "dg_projects\\edxorg\\edxorg\\ops\\edx_gcs_courses.py",
       "source_line": null,
-      "description": "Python module with 5 imports, 0 data-flow edges",
+      "description": "Python module with 5 imports, 3 data-flow edges",
       "file_type": "python",
       "logical_name": "edx_gcs_courses",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
       "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
       "source_line": null,
-      "description": "Python module with 3 imports, 0 data-flow edges",
+      "description": "Python module with 3 imports, 7 data-flow edges",
       "file_type": "python",
       "logical_name": "object_storage",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "dg_projects\\edxorg\\edxorg\\ops\\__init__.py",
@@ -577,7 +577,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\edxorg\\edxorg\\sensors\\__init__.py",
@@ -586,7 +586,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\edxorg\\edxorg_tests\\test_edxorg_lib.py",
@@ -595,7 +595,7 @@
       "description": "Python module with 2 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "test_edxorg_lib",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\edxorg\\edxorg_tests\\__init__.py",
@@ -604,7 +604,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\lakehouse\\lakehouse\\definitions.py",
@@ -613,7 +613,7 @@
       "description": "Python module with 15 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "definitions",
-      "git_change_velocity": 0
+      "git_change_velocity": 5
     },
     {
       "id": "dg_projects\\lakehouse\\lakehouse\\__init__.py",
@@ -622,25 +622,25 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\lakehouse\\lakehouse\\assets\\instructor_onboarding.py",
       "source_file": "dg_projects\\lakehouse\\lakehouse\\assets\\instructor_onboarding.py",
       "source_line": null,
-      "description": "Python module with 9 imports, 2 data-flow edges",
+      "description": "Python module with 9 imports, 4 data-flow edges",
       "file_type": "python",
       "logical_name": "instructor_onboarding",
-      "git_change_velocity": 0
+      "git_change_velocity": 11
     },
     {
       "id": "dg_projects\\lakehouse\\lakehouse\\assets\\superset.py",
       "source_file": "dg_projects\\lakehouse\\lakehouse\\assets\\superset.py",
       "source_line": null,
-      "description": "Python module with 7 imports, 0 data-flow edges",
+      "description": "Python module with 7 imports, 1 data-flow edges",
       "file_type": "python",
       "logical_name": "superset",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "dg_projects\\lakehouse\\lakehouse\\assets\\__init__.py",
@@ -649,7 +649,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\lakehouse\\lakehouse\\assets\\lakehouse\\dbt.py",
@@ -658,7 +658,7 @@
       "description": "Python module with 8 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "dbt",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\lakehouse\\lakehouse\\assets\\lakehouse\\__init__.py",
@@ -667,7 +667,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\lakehouse\\lakehouse\\defs\\__init__.py",
@@ -676,7 +676,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\lakehouse\\lakehouse\\lib\\__init__.py",
@@ -685,7 +685,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\lakehouse\\lakehouse\\resources\\airbyte.py",
@@ -694,7 +694,7 @@
       "description": "Python module with 8 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "airbyte",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "dg_projects\\lakehouse\\lakehouse\\resources\\superset_api.py",
@@ -703,7 +703,7 @@
       "description": "Python module with 8 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "superset_api",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "dg_projects\\lakehouse\\lakehouse\\resources\\__init__.py",
@@ -712,7 +712,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\lakehouse\\lakehouse_tests\\__init__.py",
@@ -721,7 +721,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\learning_resources\\learning_resources\\definitions.py",
@@ -730,7 +730,7 @@
       "description": "Python module with 13 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "definitions",
-      "git_change_velocity": 0
+      "git_change_velocity": 4
     },
     {
       "id": "dg_projects\\learning_resources\\learning_resources\\__init__.py",
@@ -739,7 +739,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\learning_resources\\learning_resources\\assets\\open_learning_library.py",
@@ -748,7 +748,7 @@
       "description": "Python module with 1 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "open_learning_library",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\learning_resources\\learning_resources\\assets\\sloan_api.py",
@@ -757,16 +757,16 @@
       "description": "Python module with 7 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "sloan_api",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
       "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
       "source_line": null,
-      "description": "Python module with 16 imports, 0 data-flow edges",
+      "description": "Python module with 16 imports, 11 data-flow edges",
       "file_type": "python",
       "logical_name": "video_shorts",
-      "git_change_velocity": 0
+      "git_change_velocity": 4
     },
     {
       "id": "dg_projects\\learning_resources\\learning_resources\\assets\\__init__.py",
@@ -775,7 +775,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\learning_resources\\learning_resources\\defs\\__init__.py",
@@ -784,7 +784,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\learning_resources\\learning_resources\\lib\\contants.py",
@@ -793,7 +793,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "contants",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\learning_resources\\learning_resources\\lib\\google_sheets.py",
@@ -802,7 +802,7 @@
       "description": "Python module with 10 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "google_sheets",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "dg_projects\\learning_resources\\learning_resources\\lib\\video_processing.py",
@@ -811,7 +811,7 @@
       "description": "Python module with 4 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "video_processing",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "dg_projects\\learning_resources\\learning_resources\\lib\\__init__.py",
@@ -820,7 +820,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\learning_resources\\learning_resources\\resources\\__init__.py",
@@ -829,7 +829,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\learning_resources\\learning_resources\\sensors\\video_shorts.py",
@@ -838,7 +838,7 @@
       "description": "Python module with 2 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "video_shorts",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\learning_resources\\learning_resources\\sensors\\__init__.py",
@@ -847,7 +847,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\learning_resources\\learning_resources_tests\\__init__.py",
@@ -856,7 +856,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\legacy_openedx\\legacy_openedx\\definitions.py",
@@ -865,7 +865,7 @@
       "description": "Python module with 16 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "definitions",
-      "git_change_velocity": 0
+      "git_change_velocity": 4
     },
     {
       "id": "dg_projects\\legacy_openedx\\legacy_openedx\\__init__.py",
@@ -874,7 +874,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\legacy_openedx\\legacy_openedx\\jobs\\open_edx.py",
@@ -883,7 +883,7 @@
       "description": "Python module with 3 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "open_edx",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\legacy_openedx\\legacy_openedx\\jobs\\__init__.py",
@@ -892,7 +892,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\legacy_openedx\\legacy_openedx\\lib\\__init__.py",
@@ -901,16 +901,16 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
       "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
       "source_line": null,
-      "description": "Python module with 18 imports, 0 data-flow edges",
+      "description": "Python module with 18 imports, 15 data-flow edges",
       "file_type": "python",
       "logical_name": "open_edx",
-      "git_change_velocity": 0
+      "git_change_velocity": 3
     },
     {
       "id": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\__init__.py",
@@ -919,7 +919,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\legacy_openedx\\legacy_openedx\\repositories\\__init__.py",
@@ -928,7 +928,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\legacy_openedx\\legacy_openedx\\resources\\healthchecks.py",
@@ -937,7 +937,7 @@
       "description": "Python module with 5 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "healthchecks",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\legacy_openedx\\legacy_openedx\\resources\\mysql_db.py",
@@ -946,7 +946,7 @@
       "description": "Python module with 4 imports, 1 data-flow edges",
       "file_type": "python",
       "logical_name": "mysql_db",
-      "git_change_velocity": 0
+      "git_change_velocity": 3
     },
     {
       "id": "dg_projects\\legacy_openedx\\legacy_openedx\\resources\\sqlite_db.py",
@@ -955,7 +955,7 @@
       "description": "Python module with 3 imports, 1 data-flow edges",
       "file_type": "python",
       "logical_name": "sqlite_db",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "dg_projects\\legacy_openedx\\legacy_openedx\\resources\\__init__.py",
@@ -964,7 +964,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\legacy_openedx\\legacy_openedx\\schedules\\open_edx.py",
@@ -973,7 +973,7 @@
       "description": "Python module with 1 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "open_edx",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\legacy_openedx\\legacy_openedx\\schedules\\__init__.py",
@@ -982,7 +982,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\legacy_openedx\\legacy_openedx\\sensors\\__init__.py",
@@ -991,7 +991,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\legacy_openedx\\legacy_openedx_tests\\__init__.py",
@@ -1000,7 +1000,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\openedx\\openedx\\definitions.py",
@@ -1009,7 +1009,7 @@
       "description": "Python module with 15 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "definitions",
-      "git_change_velocity": 0
+      "git_change_velocity": 3
     },
     {
       "id": "dg_projects\\openedx\\openedx\\__init__.py",
@@ -1018,16 +1018,16 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\openedx\\openedx\\assets\\openedx.py",
       "source_file": "dg_projects\\openedx\\openedx\\assets\\openedx.py",
       "source_line": null,
-      "description": "Python module with 15 imports, 0 data-flow edges",
+      "description": "Python module with 15 imports, 2 data-flow edges",
       "file_type": "python",
       "logical_name": "openedx",
-      "git_change_velocity": 0
+      "git_change_velocity": 5
     },
     {
       "id": "dg_projects\\openedx\\openedx\\assets\\__init__.py",
@@ -1036,7 +1036,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\openedx\\openedx\\components\\openedx_deployment.py",
@@ -1045,7 +1045,7 @@
       "description": "Python module with 9 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "openedx_deployment",
-      "git_change_velocity": 0
+      "git_change_velocity": 5
     },
     {
       "id": "dg_projects\\openedx\\openedx\\components\\__init__.py",
@@ -1054,7 +1054,7 @@
       "description": "Python module with 1 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\openedx\\openedx\\jobs\\normalize_logs.py",
@@ -1063,7 +1063,7 @@
       "description": "Python module with 2 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "normalize_logs",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\openedx\\openedx\\jobs\\__init__.py",
@@ -1072,7 +1072,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\openedx\\openedx\\lib\\assets_helper.py",
@@ -1081,7 +1081,7 @@
       "description": "Python module with 2 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "assets_helper",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\openedx\\openedx\\lib\\magic_numbers.py",
@@ -1090,7 +1090,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "magic_numbers",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\openedx\\openedx\\lib\\__init__.py",
@@ -1099,16 +1099,16 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
       "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
       "source_line": null,
-      "description": "Python module with 5 imports, 14 data-flow edges",
+      "description": "Python module with 5 imports, 17 data-flow edges",
       "file_type": "python",
       "logical_name": "normalize_logs",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\openedx\\openedx\\ops\\__init__.py",
@@ -1117,7 +1117,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\openedx\\openedx\\partitions\\openedx.py",
@@ -1126,7 +1126,7 @@
       "description": "Python module with 2 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "openedx",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\openedx\\openedx\\partitions\\__init__.py",
@@ -1135,7 +1135,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\openedx\\openedx\\schedules\\open_edx.py",
@@ -1144,7 +1144,7 @@
       "description": "Python module with 1 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "open_edx",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\openedx\\openedx\\schedules\\__init__.py",
@@ -1153,7 +1153,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\openedx\\openedx\\sensors\\openedx.py",
@@ -1162,7 +1162,7 @@
       "description": "Python module with 9 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "openedx",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "dg_projects\\openedx\\openedx\\sensors\\__init__.py",
@@ -1171,7 +1171,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\openedx\\openedx_tests\\__init__.py",
@@ -1180,7 +1180,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\student_risk_probability\\__init__.py",
@@ -1189,7 +1189,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\student_risk_probability\\student_risk_probability\\definitions.py",
@@ -1198,7 +1198,7 @@
       "description": "Python module with 9 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "definitions",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\student_risk_probability\\student_risk_probability\\__init__.py",
@@ -1207,7 +1207,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\student_risk_probability\\student_risk_probability\\assets\\risk_probability.py",
@@ -1216,7 +1216,7 @@
       "description": "Python module with 6 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "risk_probability",
-      "git_change_velocity": 0
+      "git_change_velocity": 3
     },
     {
       "id": "dg_projects\\student_risk_probability\\student_risk_probability\\assets\\__init__.py",
@@ -1225,7 +1225,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\student_risk_probability\\student_risk_probability\\lib\\helper.py",
@@ -1234,7 +1234,7 @@
       "description": "Python module with 5 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "helper",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\student_risk_probability\\student_risk_probability\\lib\\__init__.py",
@@ -1243,7 +1243,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "dg_projects\\student_risk_probability\\student_risk_probability\\resources\\__init__.py",
@@ -1252,7 +1252,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\__init__.py",
@@ -1261,7 +1261,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\assets\\__init__.py",
@@ -1270,7 +1270,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\io_managers\\filepath.py",
@@ -1279,7 +1279,7 @@
       "description": "Python module with 9 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "filepath",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\io_managers\\__init__.py",
@@ -1288,7 +1288,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\jobs\\__init__.py",
@@ -1297,7 +1297,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\arrow_helper.py",
@@ -1306,7 +1306,7 @@
       "description": "Python module with 1 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "arrow_helper",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\automation_policies.py",
@@ -1315,7 +1315,7 @@
       "description": "Python module with 1 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "automation_policies",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\constants.py",
@@ -1324,7 +1324,7 @@
       "description": "Python module with 2 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "constants",
-      "git_change_velocity": 0
+      "git_change_velocity": 3
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\dagster_helpers.py",
@@ -1333,7 +1333,7 @@
       "description": "Python module with 6 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "dagster_helpers",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\file_rendering.py",
@@ -1342,7 +1342,7 @@
       "description": "Python module with 2 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "file_rendering",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\glue_helper.py",
@@ -1351,7 +1351,7 @@
       "description": "Python module with 4 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "glue_helper",
-      "git_change_velocity": 0
+      "git_change_velocity": 4
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\hooks.py",
@@ -1360,7 +1360,7 @@
       "description": "Python module with 1 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "hooks",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\openedx.py",
@@ -1369,7 +1369,7 @@
       "description": "Python module with 8 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "openedx",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\utils.py",
@@ -1378,7 +1378,7 @@
       "description": "Python module with 6 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "utils",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\yaml_config_helper.py",
@@ -1387,7 +1387,7 @@
       "description": "Python module with 3 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "yaml_config_helper",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\__init__.py",
@@ -1396,7 +1396,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\dagster_types\\files.py",
@@ -1405,7 +1405,7 @@
       "description": "Python module with 2 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "files",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\dagster_types\\google.py",
@@ -1414,7 +1414,7 @@
       "description": "Python module with 2 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "google",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\dagster_types\\__init__.py",
@@ -1423,7 +1423,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\postgres\\event_log.py",
@@ -1432,7 +1432,7 @@
       "description": "Python module with 13 imports, 2 data-flow edges",
       "file_type": "python",
       "logical_name": "event_log",
-      "git_change_velocity": 0
+      "git_change_velocity": 4
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\postgres\\run_storage.py",
@@ -1441,7 +1441,7 @@
       "description": "Python module with 11 imports, 2 data-flow edges",
       "file_type": "python",
       "logical_name": "run_storage",
-      "git_change_velocity": 0
+      "git_change_velocity": 4
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\postgres\\schedule_storage.py",
@@ -1450,7 +1450,7 @@
       "description": "Python module with 10 imports, 2 data-flow edges",
       "file_type": "python",
       "logical_name": "schedule_storage",
-      "git_change_velocity": 0
+      "git_change_velocity": 4
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\postgres\\__init__.py",
@@ -1459,7 +1459,7 @@
       "description": "Python module with 3 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\ops\\__init__.py",
@@ -1468,7 +1468,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\partitions\\edxorg.py",
@@ -1477,7 +1477,7 @@
       "description": "Python module with 1 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "edxorg",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\partitions\\__init__.py",
@@ -1486,7 +1486,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\api_client.py",
@@ -1495,7 +1495,7 @@
       "description": "Python module with 4 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "api_client",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\api_client_factory.py",
@@ -1504,7 +1504,7 @@
       "description": "Python module with 9 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "api_client_factory",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\athena_db.py",
@@ -1513,7 +1513,7 @@
       "description": "Python module with 3 imports, 1 data-flow edges",
       "file_type": "python",
       "logical_name": "athena_db",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\bigquery_db.py",
@@ -1522,7 +1522,7 @@
       "description": "Python module with 3 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "bigquery_db",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\canvas_api.py",
@@ -1531,7 +1531,7 @@
       "description": "Python module with 5 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "canvas_api",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\gcp_gcs.py",
@@ -1540,7 +1540,7 @@
       "description": "Python module with 5 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "gcp_gcs",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\github.py",
@@ -1549,7 +1549,7 @@
       "description": "Python module with 4 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "github",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\learn_api.py",
@@ -1558,7 +1558,7 @@
       "description": "Python module with 6 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "learn_api",
-      "git_change_velocity": 0
+      "git_change_velocity": 3
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\oauth.py",
@@ -1567,7 +1567,7 @@
       "description": "Python module with 9 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "oauth",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\openedx.py",
@@ -1576,7 +1576,7 @@
       "description": "Python module with 9 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "openedx",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\outputs.py",
@@ -1585,7 +1585,7 @@
       "description": "Python module with 5 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "outputs",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\postgres_db.py",
@@ -1594,7 +1594,7 @@
       "description": "Python module with 4 imports, 2 data-flow edges",
       "file_type": "python",
       "logical_name": "postgres_db",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\__init__.py",
@@ -1603,7 +1603,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\secrets\\vault.py",
@@ -1612,7 +1612,7 @@
       "description": "Python module with 7 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "vault",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\secrets\\__init__.py",
@@ -1621,7 +1621,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\schedules\\__init__.py",
@@ -1630,7 +1630,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\sensors\\object_storage.py",
@@ -1639,7 +1639,7 @@
       "description": "Python module with 6 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "object_storage",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\sensors\\__init__.py",
@@ -1648,7 +1648,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "src\\ol_orchestrate\\__init__.py",
@@ -1657,7 +1657,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "src\\ol_superset\\ol_superset\\cli.py",
@@ -1666,7 +1666,7 @@
       "description": "Python module with 11 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "cli",
-      "git_change_velocity": 0
+      "git_change_velocity": 6
     },
     {
       "id": "src\\ol_superset\\ol_superset\\__init__.py",
@@ -1675,7 +1675,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "src\\ol_superset\\ol_superset\\commands\\apply_rls.py",
@@ -1684,7 +1684,7 @@
       "description": "Python module with 9 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "apply_rls",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "src\\ol_superset\\ol_superset\\commands\\dedupe.py",
@@ -1693,7 +1693,7 @@
       "description": "Python module with 6 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "dedupe",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "src\\ol_superset\\ol_superset\\commands\\export.py",
@@ -1702,7 +1702,7 @@
       "description": "Python module with 4 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "export",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "src\\ol_superset\\ol_superset\\commands\\lock.py",
@@ -1711,7 +1711,7 @@
       "description": "Python module with 8 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "lock",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "src\\ol_superset\\ol_superset\\commands\\promote.py",
@@ -1720,7 +1720,7 @@
       "description": "Python module with 6 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "promote",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "src\\ol_superset\\ol_superset\\commands\\refresh.py",
@@ -1729,7 +1729,7 @@
       "description": "Python module with 8 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "refresh",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "src\\ol_superset\\ol_superset\\commands\\roles.py",
@@ -1738,7 +1738,7 @@
       "description": "Python module with 8 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "roles",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "src\\ol_superset\\ol_superset\\commands\\sync.py",
@@ -1747,7 +1747,7 @@
       "description": "Python module with 6 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "sync",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "src\\ol_superset\\ol_superset\\commands\\validate.py",
@@ -1756,7 +1756,7 @@
       "description": "Python module with 6 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "validate",
-      "git_change_velocity": 0
+      "git_change_velocity": 2
     },
     {
       "id": "src\\ol_superset\\ol_superset\\commands\\__init__.py",
@@ -1765,7 +1765,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "src\\ol_superset\\ol_superset\\lib\\database_mapping.py",
@@ -1774,7 +1774,7 @@
       "description": "Python module with 6 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "database_mapping",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "src\\ol_superset\\ol_superset\\lib\\role_management.py",
@@ -1783,7 +1783,7 @@
       "description": "Python module with 6 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "role_management",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "src\\ol_superset\\ol_superset\\lib\\superset_api.py",
@@ -1792,7 +1792,7 @@
       "description": "Python module with 12 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "superset_api",
-      "git_change_velocity": 0
+      "git_change_velocity": 4
     },
     {
       "id": "src\\ol_superset\\ol_superset\\lib\\utils.py",
@@ -1801,7 +1801,7 @@
       "description": "Python module with 3 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "utils",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "src\\ol_superset\\ol_superset\\lib\\__init__.py",
@@ -1810,7 +1810,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 0
+      "git_change_velocity": 1
     },
     {
       "id": "<dynamic>:execute:bin\\dbt-local-dev.py:181",
@@ -2029,60 +2029,6 @@
       "column_descriptions": {}
     },
     {
-      "id": "INSTALL httpfs",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1590,
-      "description": "execute() call",
-      "dataset_type": "database_query",
-      "columns": [],
-      "column_descriptions": {}
-    },
-    {
-      "id": "LOAD httpfs",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1591,
-      "description": "execute() call",
-      "dataset_type": "database_query",
-      "columns": [],
-      "column_descriptions": {}
-    },
-    {
-      "id": "INSTALL aws",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1594,
-      "description": "execute() call",
-      "dataset_type": "database_query",
-      "columns": [],
-      "column_descriptions": {}
-    },
-    {
-      "id": "LOAD aws",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1595,
-      "description": "execute() call",
-      "dataset_type": "database_query",
-      "columns": [],
-      "column_descriptions": {}
-    },
-    {
-      "id": "INSTALL iceberg",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1598,
-      "description": "execute() call",
-      "dataset_type": "database_query",
-      "columns": [],
-      "column_descriptions": {}
-    },
-    {
-      "id": "LOAD iceberg",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1599,
-      "description": "execute() call",
-      "dataset_type": "database_query",
-      "columns": [],
-      "column_descriptions": {}
-    },
-    {
       "id": "\n            SELECT\n                glue_database,\n                COUNT(*) as table_count\n            FROM _glue_source_registry\n            GROUP BY glue_database\n            ORDER BY glue_database\n        ",
       "source_file": "bin\\dbt-local-dev.py",
       "source_line": 1697,
@@ -2092,20 +2038,20 @@
       "column_descriptions": {}
     },
     {
-      "id": "DROP TABLE IF EXISTS tracking_logs",
-      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
-      "source_line": 87,
-      "description": "execute() call",
-      "dataset_type": "database_query",
+      "id": "export_b2b_organization_data",
+      "source_file": "dg_projects\\b2b_organization\\b2b_organization\\assets\\data_export.py",
+      "source_line": 27,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
       "columns": [],
       "column_descriptions": {}
     },
     {
-      "id": "INSTALL json;",
-      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
-      "source_line": 188,
-      "description": "execute() call",
-      "dataset_type": "database_query",
+      "id": "course_content_metadata",
+      "source_file": "dg_projects\\canvas\\canvas\\assets\\canvas.py",
+      "source_line": 214,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
       "columns": [],
       "column_descriptions": {}
     },
@@ -2173,6 +2119,132 @@
       "column_descriptions": {}
     },
     {
+      "id": "edxorg_raw_data_archive",
+      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
+      "source_line": 137,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "process_edxorg_archive_bundle",
+      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
+      "source_line": 209,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "dummy_edxorg_course_structure",
+      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
+      "source_line": 386,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "edxorg_raw_tracking_logs",
+      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
+      "source_line": 555,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "normalize_edxorg_tracking_log",
+      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
+      "source_line": 572,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "dummy_edxorg_course_xml",
+      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\openedx_course_archives.py",
+      "source_line": 36,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "edxorg_course_content_webhook",
+      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\openedx_course_archives.py",
+      "source_line": 179,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "download_edx_gcs_course_data",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\edx_gcs_courses.py",
+      "source_line": 38,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "upload_edx_gcs_course_data_to_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\edx_gcs_courses.py",
+      "source_line": 65,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "sync_files_to_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 27,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "download_files_from_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 53,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "upload_files_to_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 83,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "download_file_from_gcs",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 109,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "upload_file_to_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 128,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
       "id": "<dynamic>:read_csv:dg_projects\\lakehouse\\lakehouse\\assets\\instructor_onboarding.py:158",
       "source_file": "dg_projects\\lakehouse\\lakehouse\\assets\\instructor_onboarding.py",
       "source_line": 158,
@@ -2191,6 +2263,186 @@
       "column_descriptions": {}
     },
     {
+      "id": "generate_instructor_onboarding_user_list",
+      "source_file": "dg_projects\\lakehouse\\lakehouse\\assets\\instructor_onboarding.py",
+      "source_line": 35,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "update_access_forge_repo",
+      "source_file": "dg_projects\\lakehouse\\lakehouse\\assets\\instructor_onboarding.py",
+      "source_line": 110,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "_superset_dataset",
+      "source_file": "dg_projects\\lakehouse\\lakehouse\\assets\\superset.py",
+      "source_line": 24,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "google_sheets_api",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 73,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "video_short_metadata",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 129,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "video_short_content",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 219,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "video_short_thumbnail_small",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 308,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "video_short_thumbnail_large",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 380,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "video_short_webhook",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 457,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "list_courses",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 92,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "fetch_edx_course_structure_from_api",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 141,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "enrolled_users",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 204,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "student_submissions",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 266,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "course_enrollments",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 334,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "course_roles",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 386,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "user_roles",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 434,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "export_edx_forum_database",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 494,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "export_edx_courses",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 571,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "write_course_list_csv",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 634,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "upload_extracted_data",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 648,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
       "id": "<dynamic>:execute:dg_projects\\legacy_openedx\\legacy_openedx\\resources\\mysql_db.py:60",
       "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\resources\\mysql_db.py",
       "source_line": 60,
@@ -2205,6 +2457,33 @@
       "source_line": 34,
       "description": "execute() call",
       "dataset_type": "database_query",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "openedx_live_courseware",
+      "source_file": "dg_projects\\openedx\\openedx\\assets\\openedx.py",
+      "source_line": 45,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "course_xml",
+      "source_file": "dg_projects\\openedx\\openedx\\assets\\openedx.py",
+      "source_line": 162,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "openedx_course_content_webhook",
+      "source_file": "dg_projects\\openedx\\openedx\\assets\\openedx.py",
+      "source_line": 314,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
       "columns": [],
       "column_descriptions": {}
     },
@@ -2290,6 +2569,51 @@
       "column_descriptions": {}
     },
     {
+      "id": "load_files_to_table",
+      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
+      "source_line": 61,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "transform_log_data",
+      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
+      "source_line": 120,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "jsonify_log_data",
+      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
+      "source_line": 174,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "write_file_to_s3",
+      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
+      "source_line": 224,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "student_risk_probability",
+      "source_file": "dg_projects\\student_risk_probability\\student_risk_probability\\assets\\risk_probability.py",
+      "source_line": 27,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
       "id": "<dynamic>:create_engine:packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\postgres\\event_log.py:91",
       "source_file": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\postgres\\event_log.py",
       "source_line": 91,
@@ -2369,6 +2693,78 @@
       "dataset_type": "database_query",
       "columns": [],
       "column_descriptions": {}
+    },
+    {
+      "id": "canvas_content_export"
+    },
+    {
+      "id": "course_metadata_export"
+    },
+    {
+      "id": "config"
+    },
+    {
+      "id": "edxorg_raw_tracking_log"
+    },
+    {
+      "id": "course_archive"
+    },
+    {
+      "id": "edx_gcs_course_tarball_directory"
+    },
+    {
+      "id": "downloaded_objects"
+    },
+    {
+      "id": "output_file"
+    },
+    {
+      "id": "github_api"
+    },
+    {
+      "id": "instructor_onboarding_user_list"
+    },
+    {
+      "id": "superset_api"
+    },
+    {
+      "id": "sheets_data"
+    },
+    {
+      "id": "video_metadata"
+    },
+    {
+      "id": "video_content"
+    },
+    {
+      "id": "learn_api"
+    },
+    {
+      "id": "video_thumbnail_small"
+    },
+    {
+      "id": "video_thumbnail_large"
+    },
+    {
+      "id": "course_ids"
+    },
+    {
+      "id": "edx_course_ids"
+    },
+    {
+      "id": "daily_extracts_dir"
+    },
+    {
+      "id": "uploads"
+    },
+    {
+      "id": "courseware"
+    },
+    {
+      "id": "log_date"
+    },
+    {
+      "id": "columns"
     }
   ],
   "edges": [
@@ -2613,66 +3009,6 @@
       "target": "bin\\dbt-local-dev.py"
     },
     {
-      "source_dataset": "INSTALL httpfs",
-      "target_dataset": "bin\\dbt-local-dev.py",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1590,
-      "transformation_type": "consumes",
-      "confidence": "low",
-      "source": "INSTALL httpfs",
-      "target": "bin\\dbt-local-dev.py"
-    },
-    {
-      "source_dataset": "LOAD httpfs",
-      "target_dataset": "bin\\dbt-local-dev.py",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1591,
-      "transformation_type": "consumes",
-      "confidence": "low",
-      "source": "LOAD httpfs",
-      "target": "bin\\dbt-local-dev.py"
-    },
-    {
-      "source_dataset": "INSTALL aws",
-      "target_dataset": "bin\\dbt-local-dev.py",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1594,
-      "transformation_type": "consumes",
-      "confidence": "low",
-      "source": "INSTALL aws",
-      "target": "bin\\dbt-local-dev.py"
-    },
-    {
-      "source_dataset": "LOAD aws",
-      "target_dataset": "bin\\dbt-local-dev.py",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1595,
-      "transformation_type": "consumes",
-      "confidence": "low",
-      "source": "LOAD aws",
-      "target": "bin\\dbt-local-dev.py"
-    },
-    {
-      "source_dataset": "INSTALL iceberg",
-      "target_dataset": "bin\\dbt-local-dev.py",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1598,
-      "transformation_type": "consumes",
-      "confidence": "low",
-      "source": "INSTALL iceberg",
-      "target": "bin\\dbt-local-dev.py"
-    },
-    {
-      "source_dataset": "LOAD iceberg",
-      "target_dataset": "bin\\dbt-local-dev.py",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1599,
-      "transformation_type": "consumes",
-      "confidence": "low",
-      "source": "LOAD iceberg",
-      "target": "bin\\dbt-local-dev.py"
-    },
-    {
       "source_dataset": "\n            SELECT\n                glue_database,\n                COUNT(*) as table_count\n            FROM _glue_source_registry\n            GROUP BY glue_database\n            ORDER BY glue_database\n        ",
       "target_dataset": "bin\\dbt-local-dev.py",
       "source_file": "bin\\dbt-local-dev.py",
@@ -2681,46 +3017,6 @@
       "confidence": "low",
       "source": "\n            SELECT\n                glue_database,\n                COUNT(*) as table_count\n            FROM _glue_source_registry\n            GROUP BY glue_database\n            ORDER BY glue_database\n        ",
       "target": "bin\\dbt-local-dev.py"
-    },
-    {
-      "source_dataset": "DROP TABLE IF EXISTS tracking_logs",
-      "target_dataset": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
-      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
-      "source_line": 578,
-      "transformation_type": "consumes",
-      "confidence": "low",
-      "source": "DROP TABLE IF EXISTS tracking_logs",
-      "target": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py"
-    },
-    {
-      "source_dataset": "DROP TABLE IF EXISTS tracking_logs",
-      "target_dataset": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
-      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
-      "source_line": 87,
-      "transformation_type": "consumes",
-      "confidence": "low",
-      "source": "DROP TABLE IF EXISTS tracking_logs",
-      "target": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py"
-    },
-    {
-      "source_dataset": "INSTALL json;",
-      "target_dataset": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
-      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
-      "source_line": 579,
-      "transformation_type": "consumes",
-      "confidence": "low",
-      "source": "INSTALL json;",
-      "target": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py"
-    },
-    {
-      "source_dataset": "INSTALL json;",
-      "target_dataset": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
-      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
-      "source_line": 188,
-      "transformation_type": "consumes",
-      "confidence": "low",
-      "source": "INSTALL json;",
-      "target": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py"
     },
     {
       "source_dataset": "<dynamic>:execute:dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py:580",
@@ -2813,6 +3109,16 @@
       "target": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py"
     },
     {
+      "source_dataset": "edxorg_raw_data_archive",
+      "target_dataset": "process_edxorg_archive_bundle",
+      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
+      "source_line": 212,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "edxorg_raw_data_archive",
+      "target": "process_edxorg_archive_bundle"
+    },
+    {
       "source_dataset": "<dynamic>:read_csv:dg_projects\\lakehouse\\lakehouse\\assets\\instructor_onboarding.py:158",
       "target_dataset": "dg_projects\\lakehouse\\lakehouse\\assets\\instructor_onboarding.py",
       "source_file": "dg_projects\\lakehouse\\lakehouse\\assets\\instructor_onboarding.py",
@@ -2851,6 +3157,16 @@
       "confidence": "inferred",
       "source": "<dynamic>:execute:dg_projects\\legacy_openedx\\legacy_openedx\\resources\\sqlite_db.py:34",
       "target": "dg_projects\\legacy_openedx\\legacy_openedx\\resources\\sqlite_db.py"
+    },
+    {
+      "source_dataset": "course_xml",
+      "target_dataset": "openedx_course_content_webhook",
+      "source_file": "dg_projects\\openedx\\openedx\\assets\\openedx.py",
+      "source_line": 315,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "course_xml",
+      "target": "openedx_course_content_webhook"
     },
     {
       "source_dataset": "<dynamic>:execute:dg_projects\\openedx\\openedx\\ops\\normalize_logs.py:88",
@@ -3031,6 +3347,506 @@
       "confidence": "inferred",
       "source": "<dynamic>:execute:packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\postgres_db.py:77",
       "target": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\postgres_db.py"
+    },
+    {
+      "source_dataset": "canvas_content_export",
+      "target_dataset": "course_content_metadata",
+      "source_file": "dg_projects\\canvas\\canvas\\assets\\canvas.py",
+      "source_line": 215,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "canvas_content_export",
+      "target": "course_content_metadata"
+    },
+    {
+      "source_dataset": "course_metadata_export",
+      "target_dataset": "course_content_metadata",
+      "source_file": "dg_projects\\canvas\\canvas\\assets\\canvas.py",
+      "source_line": 215,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "course_metadata_export",
+      "target": "course_content_metadata"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "process_edxorg_archive_bundle",
+      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
+      "source_line": 211,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "process_edxorg_archive_bundle"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "download_edx_gcs_course_data",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\edx_gcs_courses.py",
+      "source_line": 38,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "download_edx_gcs_course_data"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "upload_edx_gcs_course_data_to_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\edx_gcs_courses.py",
+      "source_line": 68,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "upload_edx_gcs_course_data_to_s3"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "sync_files_to_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 27,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "sync_files_to_s3"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "download_files_from_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 53,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "download_files_from_s3"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "upload_files_to_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 84,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "upload_files_to_s3"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "download_file_from_gcs",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 109,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "download_file_from_gcs"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "upload_file_to_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 129,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "upload_file_to_s3"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "list_courses",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 93,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "list_courses"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "fetch_edx_course_structure_from_api",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 142,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "fetch_edx_course_structure_from_api"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "export_edx_forum_database",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 496,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "export_edx_forum_database"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "export_edx_courses",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 575,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "export_edx_courses"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "upload_extracted_data",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 650,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "upload_extracted_data"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "load_files_to_table",
+      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
+      "source_line": 62,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "load_files_to_table"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "write_file_to_s3",
+      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
+      "source_line": 228,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "write_file_to_s3"
+    },
+    {
+      "source_dataset": "edxorg_raw_tracking_log",
+      "target_dataset": "normalize_edxorg_tracking_log",
+      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
+      "source_line": 573,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "edxorg_raw_tracking_log",
+      "target": "normalize_edxorg_tracking_log"
+    },
+    {
+      "source_dataset": "course_archive",
+      "target_dataset": "edxorg_course_content_webhook",
+      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\openedx_course_archives.py",
+      "source_line": 180,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "course_archive",
+      "target": "edxorg_course_content_webhook"
+    },
+    {
+      "source_dataset": "edx_gcs_course_tarball_directory",
+      "target_dataset": "upload_edx_gcs_course_data_to_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\edx_gcs_courses.py",
+      "source_line": 67,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "edx_gcs_course_tarball_directory",
+      "target": "upload_edx_gcs_course_data_to_s3"
+    },
+    {
+      "source_dataset": "downloaded_objects",
+      "target_dataset": "upload_files_to_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 84,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "downloaded_objects",
+      "target": "upload_files_to_s3"
+    },
+    {
+      "source_dataset": "output_file",
+      "target_dataset": "upload_file_to_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 129,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "output_file",
+      "target": "upload_file_to_s3"
+    },
+    {
+      "source_dataset": "github_api",
+      "target_dataset": "update_access_forge_repo",
+      "source_file": "dg_projects\\lakehouse\\lakehouse\\assets\\instructor_onboarding.py",
+      "source_line": 112,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "github_api",
+      "target": "update_access_forge_repo"
+    },
+    {
+      "source_dataset": "instructor_onboarding_user_list",
+      "target_dataset": "update_access_forge_repo",
+      "source_file": "dg_projects\\lakehouse\\lakehouse\\assets\\instructor_onboarding.py",
+      "source_line": 113,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "instructor_onboarding_user_list",
+      "target": "update_access_forge_repo"
+    },
+    {
+      "source_dataset": "superset_api",
+      "target_dataset": "_superset_dataset",
+      "source_file": "dg_projects\\lakehouse\\lakehouse\\assets\\superset.py",
+      "source_line": 26,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "superset_api",
+      "target": "_superset_dataset"
+    },
+    {
+      "source_dataset": "sheets_data",
+      "target_dataset": "video_short_metadata",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 131,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "sheets_data",
+      "target": "video_short_metadata"
+    },
+    {
+      "source_dataset": "video_metadata",
+      "target_dataset": "video_short_content",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 221,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "video_metadata",
+      "target": "video_short_content"
+    },
+    {
+      "source_dataset": "video_metadata",
+      "target_dataset": "video_short_thumbnail_small",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 311,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "video_metadata",
+      "target": "video_short_thumbnail_small"
+    },
+    {
+      "source_dataset": "video_metadata",
+      "target_dataset": "video_short_thumbnail_large",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 383,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "video_metadata",
+      "target": "video_short_thumbnail_large"
+    },
+    {
+      "source_dataset": "video_metadata",
+      "target_dataset": "video_short_webhook",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 463,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "video_metadata",
+      "target": "video_short_webhook"
+    },
+    {
+      "source_dataset": "video_content",
+      "target_dataset": "video_short_thumbnail_small",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 310,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "video_content",
+      "target": "video_short_thumbnail_small"
+    },
+    {
+      "source_dataset": "video_content",
+      "target_dataset": "video_short_thumbnail_large",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 382,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "video_content",
+      "target": "video_short_thumbnail_large"
+    },
+    {
+      "source_dataset": "video_content",
+      "target_dataset": "video_short_webhook",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 460,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "video_content",
+      "target": "video_short_webhook"
+    },
+    {
+      "source_dataset": "learn_api",
+      "target_dataset": "video_short_webhook",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 459,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "learn_api",
+      "target": "video_short_webhook"
+    },
+    {
+      "source_dataset": "video_thumbnail_small",
+      "target_dataset": "video_short_webhook",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 461,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "video_thumbnail_small",
+      "target": "video_short_webhook"
+    },
+    {
+      "source_dataset": "video_thumbnail_large",
+      "target_dataset": "video_short_webhook",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 462,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "video_thumbnail_large",
+      "target": "video_short_webhook"
+    },
+    {
+      "source_dataset": "course_ids",
+      "target_dataset": "fetch_edx_course_structure_from_api",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 142,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "course_ids",
+      "target": "fetch_edx_course_structure_from_api"
+    },
+    {
+      "source_dataset": "edx_course_ids",
+      "target_dataset": "enrolled_users",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 205,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "edx_course_ids",
+      "target": "enrolled_users"
+    },
+    {
+      "source_dataset": "edx_course_ids",
+      "target_dataset": "student_submissions",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 267,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "edx_course_ids",
+      "target": "student_submissions"
+    },
+    {
+      "source_dataset": "edx_course_ids",
+      "target_dataset": "course_enrollments",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 335,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "edx_course_ids",
+      "target": "course_enrollments"
+    },
+    {
+      "source_dataset": "edx_course_ids",
+      "target_dataset": "course_roles",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 387,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "edx_course_ids",
+      "target": "course_roles"
+    },
+    {
+      "source_dataset": "edx_course_ids",
+      "target_dataset": "user_roles",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 435,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "edx_course_ids",
+      "target": "user_roles"
+    },
+    {
+      "source_dataset": "edx_course_ids",
+      "target_dataset": "export_edx_courses",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 573,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "edx_course_ids",
+      "target": "export_edx_courses"
+    },
+    {
+      "source_dataset": "edx_course_ids",
+      "target_dataset": "write_course_list_csv",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 634,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "edx_course_ids",
+      "target": "write_course_list_csv"
+    },
+    {
+      "source_dataset": "daily_extracts_dir",
+      "target_dataset": "export_edx_courses",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 574,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "daily_extracts_dir",
+      "target": "export_edx_courses"
+    },
+    {
+      "source_dataset": "uploads",
+      "target_dataset": "upload_extracted_data",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 651,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "uploads",
+      "target": "upload_extracted_data"
+    },
+    {
+      "source_dataset": "courseware",
+      "target_dataset": "course_xml",
+      "source_file": "dg_projects\\openedx\\openedx\\assets\\openedx.py",
+      "source_line": 162,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "courseware",
+      "target": "course_xml"
+    },
+    {
+      "source_dataset": "log_date",
+      "target_dataset": "load_files_to_table",
+      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
+      "source_line": 62,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "log_date",
+      "target": "load_files_to_table"
+    },
+    {
+      "source_dataset": "log_date",
+      "target_dataset": "write_file_to_s3",
+      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
+      "source_line": 227,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "log_date",
+      "target": "write_file_to_s3"
+    },
+    {
+      "source_dataset": "columns",
+      "target_dataset": "write_file_to_s3",
+      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
+      "source_line": 226,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "columns",
+      "target": "write_file_to_s3"
     }
   ]
 }

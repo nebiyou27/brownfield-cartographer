@@ -1,17 +1,21 @@
-CARTOGRAPHER AUDIT TRACE — 2026-03-13T06:59:05.512630
+CARTOGRAPHER AUDIT TRACE — 2026-03-13T08:34:57.190056
 Target: d:\TRP-1\Week-4\ol-data-platform
-Modules Scanned:            263
-Lineage Nodes:              73
-Lineage Edges:              66
+Modules Scanned:            323
+Lineage Nodes:              133
+Lineage Edges:              108
 Parse Failures:             0
-Purpose Statements:         219
-Doc Drift Flags:            155
+Purpose Statements:         255
+Doc Drift Flags:            189
   [MISSING] 
             UPDATE tracking_logs
             SET time = strftime(TRY_CAST(time AS TIMESTAMP), '%Y-%m-%d %H:%M:%S.%f')
             
-  [MISSING] DROP TABLE IF EXISTS tracking_logs
-  [MISSING] INSTALL json;
+  [MISSING] _superset_dataset
+  [MISSING] bin\dbt-create-staging-models.py
+  [MISSING] course_content_metadata
+  [MISSING] course_enrollments
+  [MISSING] course_roles
+  [MISSING] course_xml
   [MISSING] dg_projects\__init__.py
   [MISSING] dg_projects\b2b_organization\__init__.py
   [MISSING] dg_projects\b2b_organization\b2b_organization\__init__.py
@@ -62,14 +66,16 @@ Doc Drift Flags:            155
   [MISSING] dg_projects\edxorg\edxorg\lib\edxorg.py
   [MISSING] dg_projects\edxorg\edxorg\ops\__init__.py
   [MISSING] dg_projects\edxorg\edxorg\ops\edx_gcs_courses.py
+  [DRIFT] dg_projects\edxorg\edxorg\ops\object_storage.py
   [MISSING] dg_projects\edxorg\edxorg\sensors\__init__.py
   [MISSING] dg_projects\edxorg\edxorg_tests\__init__.py
+  [DRIFT] dg_projects\edxorg\edxorg_tests\test_edxorg_lib.py
   [MISSING] dg_projects\lakehouse\lakehouse\__init__.py
   [MISSING] dg_projects\lakehouse\lakehouse\assets\__init__.py
   [MISSING] dg_projects\lakehouse\lakehouse\assets\lakehouse\__init__.py
   [MISSING] dg_projects\lakehouse\lakehouse\assets\lakehouse\dbt.py
   [MISSING] dg_projects\lakehouse\lakehouse\assets\superset.py
-  [DRIFT] dg_projects\lakehouse\lakehouse\definitions.py
+  [MISSING] dg_projects\lakehouse\lakehouse\definitions.py
   [MISSING] dg_projects\lakehouse\lakehouse\defs\__init__.py
   [MISSING] dg_projects\lakehouse\lakehouse\lib\__init__.py
   [MISSING] dg_projects\lakehouse\lakehouse\resources\__init__.py
@@ -81,7 +87,7 @@ Doc Drift Flags:            155
   [MISSING] dg_projects\learning_resources\learning_resources\assets\sloan_api.py
   [MISSING] dg_projects\learning_resources\learning_resources\defs\__init__.py
   [MISSING] dg_projects\learning_resources\learning_resources\lib\__init__.py
-  [MISSING] dg_projects\learning_resources\learning_resources\lib\google_sheets.py
+  [DRIFT] dg_projects\learning_resources\learning_resources\lib\contants.py
   [MISSING] dg_projects\learning_resources\learning_resources\resources\__init__.py
   [MISSING] dg_projects\learning_resources\learning_resources\sensors\__init__.py
   [MISSING] dg_projects\learning_resources\learning_resources_tests\__init__.py
@@ -126,6 +132,24 @@ Doc Drift Flags:            155
   [MISSING] dg_projects\student_risk_probability\student_risk_probability\lib\__init__.py
   [MISSING] dg_projects\student_risk_probability\student_risk_probability\lib\helper.py
   [MISSING] dg_projects\student_risk_probability\student_risk_probability\resources\__init__.py
+  [MISSING] download_edx_gcs_course_data
+  [DRIFT] download_file_from_gcs
+  [MISSING] dummy_edxorg_course_structure
+  [MISSING] dummy_edxorg_course_xml
+  [MISSING] edxorg_course_content_webhook
+  [MISSING] edxorg_raw_data_archive
+  [MISSING] edxorg_raw_tracking_logs
+  [MISSING] enrolled_users
+  [MISSING] export_b2b_organization_data
+  [MISSING] export_edx_courses
+  [MISSING] export_edx_forum_database
+  [MISSING] fetch_edx_course_structure_from_api
+  [MISSING] jsonify_log_data
+  [MISSING] list_courses
+  [MISSING] load_files_to_table
+  [MISSING] normalize_edxorg_tracking_log
+  [MISSING] openedx_course_content_webhook
+  [MISSING] openedx_live_courseware
   [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\assets\__init__.py
   [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\io_managers\__init__.py
   [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\io_managers\filepath.py
@@ -140,7 +164,6 @@ Doc Drift Flags:            155
   [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\lib\file_rendering.py
   [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\lib\hooks.py
   [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\lib\openedx.py
-  [DRIFT] packages\ol-orchestrate-lib\src\ol_orchestrate\lib\postgres\event_log.py
   [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\lib\utils.py
   [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\lib\yaml_config_helper.py
   [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\ops\__init__.py
@@ -148,23 +171,34 @@ Doc Drift Flags:            155
   [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\__init__.py
   [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\api_client.py
   [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\api_client_factory.py
-  [DRIFT] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\athena_db.py
   [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\canvas_api.py
+  [DRIFT] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\gcp_gcs.py
   [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\learn_api.py
   [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\oauth.py
   [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\openedx.py
   [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\outputs.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\postgres_db.py
   [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\secrets\__init__.py
   [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\secrets\vault.py
   [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\schedules\__init__.py
   [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\sensors\__init__.py
   [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\sensors\object_storage.py
+  [MISSING] process_edxorg_archive_bundle
   [MISSING] src\ol_superset\ol_superset\commands\__init__.py
-  [MISSING] src\ol_superset\ol_superset\commands\sync.py
+  [DRIFT] src\ol_superset\ol_superset\commands\lock.py
   [MISSING] src\ol_superset\ol_superset\lib\__init__.py
-  [DRIFT] src\ol_superset\ol_superset\lib\role_management.py
   [DRIFT] src\ol_superset\ol_superset\lib\utils.py
+  [MISSING] student_risk_probability
+  [MISSING] student_submissions
+  [MISSING] transform_log_data
+  [DRIFT] update_access_forge_repo
+  [MISSING] upload_edx_gcs_course_data_to_s3
+  [MISSING] upload_extracted_data
+  [MISSING] user_roles
+  [DRIFT] video_short_thumbnail_small
+  [MISSING] write_course_list_csv
+  [MISSING] write_file_to_s3
 
 LLM Budget:
-  qwen3:1.7b: 290 calls, ~207315 tokens
-  deepseek-r1:8b: 1 calls, ~3210 tokens
+  qwen3:1.7b: 333 calls, ~265509 tokens
+  deepseek-r1:8b: 1 calls, ~3097 tokens

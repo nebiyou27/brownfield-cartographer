@@ -1,4 +1,8 @@
 {
+  "bin\\dbt-create-staging-models.py": {
+    "verdict": "MISSING",
+    "explanation": "The docstring is missing, indicating that the code's functionality and details are not documented."
+  },
   "dg_projects\\__init__.py": {
     "verdict": "MISSING",
     "explanation": "No docstring found."
@@ -195,6 +199,10 @@
     "verdict": "MISSING",
     "explanation": "No docstring found."
   },
+  "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py": {
+    "verdict": "DRIFT",
+    "explanation": "The docstring is a deprecation notice informing users that the code is outdated and should be replaced, but it does not describe the actual functionality of the code. The implementation, however, defines the operations (sync_files_to_s3, download_files_from_s3, upload_files_to_s3) which are the actual implementations of the deprecated functionality. The docstring does not accurately reflect the code's purpose or functionality."
+  },
   "dg_projects\\edxorg\\edxorg\\ops\\__init__.py": {
     "verdict": "MISSING",
     "explanation": "No docstring found."
@@ -203,13 +211,17 @@
     "verdict": "MISSING",
     "explanation": "No docstring found."
   },
+  "dg_projects\\edxorg\\edxorg_tests\\test_edxorg_lib.py": {
+    "verdict": "DRIFT",
+    "explanation": "The docstring incorrectly states that the file contains tests for parsing utilities, but the implementation is a set of test cases for those utilities. The docstring does not accurately describe the code's functionality, as it focuses on the test file's purpose rather than the actual implementation."
+  },
   "dg_projects\\edxorg\\edxorg_tests\\__init__.py": {
     "verdict": "MISSING",
     "explanation": "No docstring found."
   },
   "dg_projects\\lakehouse\\lakehouse\\definitions.py": {
-    "verdict": "DRIFT",
-    "explanation": "The DOCSTRING is a brief summary stating the purpose of the code but does not accurately describe its implementation details, such as the assets, resources, and configurations defined in the implementation."
+    "verdict": "MISSING",
+    "explanation": "The DOCSTRING is missing, as it only states \"ELT assets for the data lakehouse\" without any detailed explanation of the code's functionality or purpose. The implementation contains extensive code for setting up environments, configuring airbyte, vault, and other resources, but the docstring does not reflect this."
   },
   "dg_projects\\lakehouse\\lakehouse\\__init__.py": {
     "verdict": "MISSING",
@@ -271,9 +283,9 @@
     "verdict": "MISSING",
     "explanation": "No docstring found."
   },
-  "dg_projects\\learning_resources\\learning_resources\\lib\\google_sheets.py": {
-    "verdict": "MISSING",
-    "explanation": "The DOCSTRING is missing because it only states that the function is a helper for Google Sheets data processing without detailing the actual implementation steps, such as authentication, data fetching, and parsing. The implementation provides the detailed code logic."
+  "dg_projects\\learning_resources\\learning_resources\\lib\\contants.py": {
+    "verdict": "DRIFT",
+    "explanation": "The docstring lacks specific details about the constants' values or purpose, while the implementation defines them explicitly."
   },
   "dg_projects\\learning_resources\\learning_resources\\lib\\__init__.py": {
     "verdict": "MISSING",
@@ -365,7 +377,7 @@
   },
   "dg_projects\\openedx\\openedx\\components\\__init__.py": {
     "verdict": "DRIFT",
-    "explanation": "The docstring inaccurately describes the file's purpose, as it merely states \"Components for OpenEdX data extraction\" without specifying the actual code or components implemented, which contradicts the implementation details."
+    "explanation": "The docstring mentions \"Components for OpenEdX data extraction,\" but the implementation is about importing a module and defining an entry point, which does not accurately describe the code's actual purpose."
   },
   "dg_projects\\openedx\\openedx\\jobs\\normalize_logs.py": {
     "verdict": "MISSING",
@@ -519,10 +531,6 @@
     "verdict": "MISSING",
     "explanation": "No docstring found."
   },
-  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\postgres\\event_log.py": {
-    "verdict": "DRIFT",
-    "explanation": "The docstring states \"Postgres event log storage with connection pooling,\" but it doesn't explain the connection pooling mechanism or its implementation details. The code indeed uses connection pooling (via QueuePool), but the docstring lacks specific details about how the pooling is managed or why it's important. This discrepancy means the docstring misrepresents the code's purpose and functionality."
-  },
   "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\ops\\__init__.py": {
     "verdict": "MISSING",
     "explanation": "No docstring found."
@@ -539,13 +547,13 @@
     "verdict": "MISSING",
     "explanation": "No docstring found."
   },
-  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\athena_db.py": {
-    "verdict": "DRIFT",
-    "explanation": "The docstring states \"Resource for connection to athena.\" but the implementation includes a detailed class definition with parameters and methods related to connecting to Athena, including parameters like `work_group`, `region_name`, and `schema_name`. The docstring is overly brief and fails to capture the full functionality of the implementation, making it misleading."
-  },
   "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\canvas_api.py": {
     "verdict": "MISSING",
     "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\gcp_gcs.py": {
+    "verdict": "DRIFT",
+    "explanation": "The DOCSTRING is overly vague and does not accurately describe the code's implementation. It merely states \"Resource for connecting to a gcs\" without detailing the class's fields, context manager, or client property, which are critical to understanding the code's functionality."
   },
   "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\learn_api.py": {
     "verdict": "MISSING",
@@ -562,6 +570,10 @@
   "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\outputs.py": {
     "verdict": "MISSING",
     "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\postgres_db.py": {
+    "verdict": "MISSING",
+    "explanation": "The docstring is missing, and it does not describe the resource's purpose or usage in the Dagster framework, which is evident from the implementation."
   },
   "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\__init__.py": {
     "verdict": "MISSING",
@@ -587,31 +599,27 @@
     "verdict": "MISSING",
     "explanation": "No docstring found."
   },
-  "src\\ol_superset\\ol_superset\\commands\\sync.py": {
-    "verdict": "MISSING",
-    "explanation": "The docstring is missing entirely, while the implementation provides detailed description of the sync command's functionality."
+  "src\\ol_superset\\ol_superset\\commands\\lock.py": {
+    "verdict": "DRIFT",
+    "explanation": ""
   },
   "src\\ol_superset\\ol_superset\\commands\\__init__.py": {
     "verdict": "MISSING",
     "explanation": "No docstring found."
   },
-  "src\\ol_superset\\ol_superset\\lib\\role_management.py": {
-    "verdict": "DRIFT",
-    "explanation": "The DOCSTRING claims the function manages dataset access from governance policy, but the implementation loads role definitions from a JSON file, unrelated to dataset synchronization."
-  },
   "src\\ol_superset\\ol_superset\\lib\\utils.py": {
     "verdict": "DRIFT",
-    "explanation": "The DOCSTRING is a general overview of the file's purpose but does not specify the exact functions or their purposes. The implementation details (e.g., functions like `get_repo_root`, `count_assets`, `run_sup_command`) provide specific functionality, which the DOCSTRING does not accurately describe. Thus, the DOCSTRING contradicts or significantly misrepresents the code."
+    "explanation": "The DOCSTRING is too vague and does not accurately describe the specific functions and purposes of the code. It only states that the code is for \"Superset CLI\" without detailing the actual implementations, such as handling repository roots, asset counting, or running CLI commands. The code's functionality is significantly more detailed than the DOCSTRING provides."
   },
   "src\\ol_superset\\ol_superset\\lib\\__init__.py": {
     "verdict": "MISSING",
     "explanation": "No docstring found."
   },
-  "DROP TABLE IF EXISTS tracking_logs": {
+  "export_b2b_organization_data": {
     "verdict": "MISSING",
     "explanation": "No docstring found."
   },
-  "INSTALL json;": {
+  "course_content_metadata": {
     "verdict": "MISSING",
     "explanation": "No docstring found."
   },
@@ -620,6 +628,134 @@
     "explanation": "No docstring found."
   },
   "\n            UPDATE tracking_logs\n            SET time = strftime(TRY_CAST(time AS TIMESTAMP), '%Y-%m-%d %H:%M:%S.%f')\n            ": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "edxorg_raw_data_archive": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "process_edxorg_archive_bundle": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dummy_edxorg_course_structure": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "edxorg_raw_tracking_logs": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "normalize_edxorg_tracking_log": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dummy_edxorg_course_xml": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "edxorg_course_content_webhook": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "download_edx_gcs_course_data": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "upload_edx_gcs_course_data_to_s3": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "download_file_from_gcs": {
+    "verdict": "DRIFT",
+    "explanation": "The docstring is a deprecation notice explaining that the code is outdated and suggests using the IO Manager interface. It does not describe the actual functionality of the code, nor does it accurately reflect what the implementation does. The implementation's code is the actual logic, which is not mentioned in the docstring."
+  },
+  "update_access_forge_repo": {
+    "verdict": "DRIFT",
+    "explanation": "The docstring incorrectly claims the module pushes data to a private GitHub repository, but the implementation does not perform any GitHub operations; it simply generates a CSV file."
+  },
+  "_superset_dataset": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "video_short_thumbnail_small": {
+    "verdict": "DRIFT",
+    "explanation": "The docstring claims the code processes Video Shorts videos from Google Sheets, but the implementation merely fetches the metadata without processing it. The code does not actually handle the videos, contradicting the docstring's description."
+  },
+  "list_courses": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "fetch_edx_course_structure_from_api": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "enrolled_users": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "student_submissions": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "course_enrollments": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "course_roles": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "user_roles": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "export_edx_forum_database": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "export_edx_courses": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "write_course_list_csv": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "upload_extracted_data": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "openedx_live_courseware": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "course_xml": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "openedx_course_content_webhook": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "load_files_to_table": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "transform_log_data": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "jsonify_log_data": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "write_file_to_s3": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "student_risk_probability": {
     "verdict": "MISSING",
     "explanation": "No docstring found."
   }

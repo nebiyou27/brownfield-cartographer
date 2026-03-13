@@ -220,60 +220,6 @@
       "column_descriptions": {}
     },
     {
-      "id": "INSTALL httpfs",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1590,
-      "description": "execute() call",
-      "dataset_type": "database_query",
-      "columns": [],
-      "column_descriptions": {}
-    },
-    {
-      "id": "LOAD httpfs",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1591,
-      "description": "execute() call",
-      "dataset_type": "database_query",
-      "columns": [],
-      "column_descriptions": {}
-    },
-    {
-      "id": "INSTALL aws",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1594,
-      "description": "execute() call",
-      "dataset_type": "database_query",
-      "columns": [],
-      "column_descriptions": {}
-    },
-    {
-      "id": "LOAD aws",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1595,
-      "description": "execute() call",
-      "dataset_type": "database_query",
-      "columns": [],
-      "column_descriptions": {}
-    },
-    {
-      "id": "INSTALL iceberg",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1598,
-      "description": "execute() call",
-      "dataset_type": "database_query",
-      "columns": [],
-      "column_descriptions": {}
-    },
-    {
-      "id": "LOAD iceberg",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1599,
-      "description": "execute() call",
-      "dataset_type": "database_query",
-      "columns": [],
-      "column_descriptions": {}
-    },
-    {
       "id": "\n            SELECT\n                glue_database,\n                COUNT(*) as table_count\n            FROM _glue_source_registry\n            GROUP BY glue_database\n            ORDER BY glue_database\n        ",
       "source_file": "bin\\dbt-local-dev.py",
       "source_line": 1697,
@@ -283,20 +229,21 @@
       "column_descriptions": {}
     },
     {
-      "id": "DROP TABLE IF EXISTS tracking_logs",
-      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
-      "source_line": 87,
-      "description": "execute() call",
-      "dataset_type": "database_query",
+      "id": "export_b2b_organization_data",
+      "source_file": "dg_projects\\b2b_organization\\b2b_organization\\assets\\data_export.py",
+      "source_line": 27,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
       "columns": [],
-      "column_descriptions": {}
+      "column_descriptions": {},
+      "orphaned": true
     },
     {
-      "id": "INSTALL json;",
-      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
-      "source_line": 188,
-      "description": "execute() call",
-      "dataset_type": "database_query",
+      "id": "course_content_metadata",
+      "source_file": "dg_projects\\canvas\\canvas\\assets\\canvas.py",
+      "source_line": 214,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
       "columns": [],
       "column_descriptions": {}
     },
@@ -364,6 +311,135 @@
       "column_descriptions": {}
     },
     {
+      "id": "edxorg_raw_data_archive",
+      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
+      "source_line": 137,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "process_edxorg_archive_bundle",
+      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
+      "source_line": 209,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "dummy_edxorg_course_structure",
+      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
+      "source_line": 386,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {},
+      "orphaned": true
+    },
+    {
+      "id": "edxorg_raw_tracking_logs",
+      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
+      "source_line": 555,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {},
+      "orphaned": true
+    },
+    {
+      "id": "normalize_edxorg_tracking_log",
+      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
+      "source_line": 572,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "dummy_edxorg_course_xml",
+      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\openedx_course_archives.py",
+      "source_line": 36,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {},
+      "orphaned": true
+    },
+    {
+      "id": "edxorg_course_content_webhook",
+      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\openedx_course_archives.py",
+      "source_line": 179,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "download_edx_gcs_course_data",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\edx_gcs_courses.py",
+      "source_line": 38,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "upload_edx_gcs_course_data_to_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\edx_gcs_courses.py",
+      "source_line": 65,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "sync_files_to_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 27,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "download_files_from_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 53,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "upload_files_to_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 83,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "download_file_from_gcs",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 109,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "upload_file_to_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 128,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
       "id": "<dynamic>:read_csv:dg_projects\\lakehouse\\lakehouse\\assets\\instructor_onboarding.py:158",
       "source_file": "dg_projects\\lakehouse\\lakehouse\\assets\\instructor_onboarding.py",
       "source_line": 158,
@@ -382,6 +458,188 @@
       "column_descriptions": {}
     },
     {
+      "id": "generate_instructor_onboarding_user_list",
+      "source_file": "dg_projects\\lakehouse\\lakehouse\\assets\\instructor_onboarding.py",
+      "source_line": 35,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {},
+      "orphaned": true
+    },
+    {
+      "id": "update_access_forge_repo",
+      "source_file": "dg_projects\\lakehouse\\lakehouse\\assets\\instructor_onboarding.py",
+      "source_line": 110,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "_superset_dataset",
+      "source_file": "dg_projects\\lakehouse\\lakehouse\\assets\\superset.py",
+      "source_line": 24,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "google_sheets_api",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 73,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {},
+      "orphaned": true
+    },
+    {
+      "id": "video_short_metadata",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 129,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "video_short_content",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 219,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "video_short_thumbnail_small",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 308,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "video_short_thumbnail_large",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 380,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "video_short_webhook",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 457,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "list_courses",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 92,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "fetch_edx_course_structure_from_api",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 141,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "enrolled_users",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 204,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "student_submissions",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 266,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "course_enrollments",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 334,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "course_roles",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 386,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "user_roles",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 434,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "export_edx_forum_database",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 494,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "export_edx_courses",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 571,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "write_course_list_csv",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 634,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "upload_extracted_data",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 648,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
       "id": "<dynamic>:execute:dg_projects\\legacy_openedx\\legacy_openedx\\resources\\mysql_db.py:60",
       "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\resources\\mysql_db.py",
       "source_line": 60,
@@ -396,6 +654,34 @@
       "source_line": 34,
       "description": "execute() call",
       "dataset_type": "database_query",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "openedx_live_courseware",
+      "source_file": "dg_projects\\openedx\\openedx\\assets\\openedx.py",
+      "source_line": 45,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {},
+      "orphaned": true
+    },
+    {
+      "id": "course_xml",
+      "source_file": "dg_projects\\openedx\\openedx\\assets\\openedx.py",
+      "source_line": 162,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "openedx_course_content_webhook",
+      "source_file": "dg_projects\\openedx\\openedx\\assets\\openedx.py",
+      "source_line": 314,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
       "columns": [],
       "column_descriptions": {}
     },
@@ -479,6 +765,54 @@
       "dataset_type": "database_query",
       "columns": [],
       "column_descriptions": {}
+    },
+    {
+      "id": "load_files_to_table",
+      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
+      "source_line": 61,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "transform_log_data",
+      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
+      "source_line": 120,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {},
+      "orphaned": true
+    },
+    {
+      "id": "jsonify_log_data",
+      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
+      "source_line": 174,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {},
+      "orphaned": true
+    },
+    {
+      "id": "write_file_to_s3",
+      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
+      "source_line": 224,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "student_risk_probability",
+      "source_file": "dg_projects\\student_risk_probability\\student_risk_probability\\assets\\risk_probability.py",
+      "source_line": 27,
+      "description": "Dagster orchestrator node",
+      "dataset_type": "orchestration",
+      "columns": [],
+      "column_descriptions": {},
+      "orphaned": true
     },
     {
       "id": "<dynamic>:create_engine:packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\postgres\\event_log.py:91",
@@ -565,10 +899,73 @@
       "id": "bin\\dbt-local-dev.py"
     },
     {
+      "id": "canvas_content_export"
+    },
+    {
+      "id": "course_metadata_export"
+    },
+    {
       "id": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py"
     },
     {
+      "id": "config"
+    },
+    {
+      "id": "edxorg_raw_tracking_log"
+    },
+    {
+      "id": "course_archive"
+    },
+    {
+      "id": "edx_gcs_course_tarball_directory"
+    },
+    {
+      "id": "downloaded_objects"
+    },
+    {
+      "id": "output_file"
+    },
+    {
       "id": "dg_projects\\lakehouse\\lakehouse\\assets\\instructor_onboarding.py"
+    },
+    {
+      "id": "github_api"
+    },
+    {
+      "id": "instructor_onboarding_user_list"
+    },
+    {
+      "id": "superset_api"
+    },
+    {
+      "id": "sheets_data"
+    },
+    {
+      "id": "video_metadata"
+    },
+    {
+      "id": "video_content"
+    },
+    {
+      "id": "learn_api"
+    },
+    {
+      "id": "video_thumbnail_small"
+    },
+    {
+      "id": "video_thumbnail_large"
+    },
+    {
+      "id": "course_ids"
+    },
+    {
+      "id": "edx_course_ids"
+    },
+    {
+      "id": "daily_extracts_dir"
+    },
+    {
+      "id": "uploads"
     },
     {
       "id": "dg_projects\\legacy_openedx\\legacy_openedx\\resources\\mysql_db.py"
@@ -577,7 +974,16 @@
       "id": "dg_projects\\legacy_openedx\\legacy_openedx\\resources\\sqlite_db.py"
     },
     {
+      "id": "courseware"
+    },
+    {
       "id": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py"
+    },
+    {
+      "id": "log_date"
+    },
+    {
+      "id": "columns"
     },
     {
       "id": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\postgres\\event_log.py"
@@ -837,66 +1243,6 @@
       "target": "bin\\dbt-local-dev.py"
     },
     {
-      "source_dataset": "INSTALL httpfs",
-      "target_dataset": "bin\\dbt-local-dev.py",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1590,
-      "transformation_type": "consumes",
-      "confidence": "low",
-      "source": "INSTALL httpfs",
-      "target": "bin\\dbt-local-dev.py"
-    },
-    {
-      "source_dataset": "LOAD httpfs",
-      "target_dataset": "bin\\dbt-local-dev.py",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1591,
-      "transformation_type": "consumes",
-      "confidence": "low",
-      "source": "LOAD httpfs",
-      "target": "bin\\dbt-local-dev.py"
-    },
-    {
-      "source_dataset": "INSTALL aws",
-      "target_dataset": "bin\\dbt-local-dev.py",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1594,
-      "transformation_type": "consumes",
-      "confidence": "low",
-      "source": "INSTALL aws",
-      "target": "bin\\dbt-local-dev.py"
-    },
-    {
-      "source_dataset": "LOAD aws",
-      "target_dataset": "bin\\dbt-local-dev.py",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1595,
-      "transformation_type": "consumes",
-      "confidence": "low",
-      "source": "LOAD aws",
-      "target": "bin\\dbt-local-dev.py"
-    },
-    {
-      "source_dataset": "INSTALL iceberg",
-      "target_dataset": "bin\\dbt-local-dev.py",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1598,
-      "transformation_type": "consumes",
-      "confidence": "low",
-      "source": "INSTALL iceberg",
-      "target": "bin\\dbt-local-dev.py"
-    },
-    {
-      "source_dataset": "LOAD iceberg",
-      "target_dataset": "bin\\dbt-local-dev.py",
-      "source_file": "bin\\dbt-local-dev.py",
-      "source_line": 1599,
-      "transformation_type": "consumes",
-      "confidence": "low",
-      "source": "LOAD iceberg",
-      "target": "bin\\dbt-local-dev.py"
-    },
-    {
       "source_dataset": "\n            SELECT\n                glue_database,\n                COUNT(*) as table_count\n            FROM _glue_source_registry\n            GROUP BY glue_database\n            ORDER BY glue_database\n        ",
       "target_dataset": "bin\\dbt-local-dev.py",
       "source_file": "bin\\dbt-local-dev.py",
@@ -905,46 +1251,6 @@
       "confidence": "low",
       "source": "\n            SELECT\n                glue_database,\n                COUNT(*) as table_count\n            FROM _glue_source_registry\n            GROUP BY glue_database\n            ORDER BY glue_database\n        ",
       "target": "bin\\dbt-local-dev.py"
-    },
-    {
-      "source_dataset": "DROP TABLE IF EXISTS tracking_logs",
-      "target_dataset": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
-      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
-      "source_line": 578,
-      "transformation_type": "consumes",
-      "confidence": "low",
-      "source": "DROP TABLE IF EXISTS tracking_logs",
-      "target": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py"
-    },
-    {
-      "source_dataset": "DROP TABLE IF EXISTS tracking_logs",
-      "target_dataset": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
-      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
-      "source_line": 87,
-      "transformation_type": "consumes",
-      "confidence": "low",
-      "source": "DROP TABLE IF EXISTS tracking_logs",
-      "target": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py"
-    },
-    {
-      "source_dataset": "INSTALL json;",
-      "target_dataset": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
-      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
-      "source_line": 579,
-      "transformation_type": "consumes",
-      "confidence": "low",
-      "source": "INSTALL json;",
-      "target": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py"
-    },
-    {
-      "source_dataset": "INSTALL json;",
-      "target_dataset": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
-      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
-      "source_line": 188,
-      "transformation_type": "consumes",
-      "confidence": "low",
-      "source": "INSTALL json;",
-      "target": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py"
     },
     {
       "source_dataset": "<dynamic>:execute:dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py:580",
@@ -1037,6 +1343,16 @@
       "target": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py"
     },
     {
+      "source_dataset": "edxorg_raw_data_archive",
+      "target_dataset": "process_edxorg_archive_bundle",
+      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
+      "source_line": 212,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "edxorg_raw_data_archive",
+      "target": "process_edxorg_archive_bundle"
+    },
+    {
       "source_dataset": "<dynamic>:read_csv:dg_projects\\lakehouse\\lakehouse\\assets\\instructor_onboarding.py:158",
       "target_dataset": "dg_projects\\lakehouse\\lakehouse\\assets\\instructor_onboarding.py",
       "source_file": "dg_projects\\lakehouse\\lakehouse\\assets\\instructor_onboarding.py",
@@ -1075,6 +1391,16 @@
       "confidence": "inferred",
       "source": "<dynamic>:execute:dg_projects\\legacy_openedx\\legacy_openedx\\resources\\sqlite_db.py:34",
       "target": "dg_projects\\legacy_openedx\\legacy_openedx\\resources\\sqlite_db.py"
+    },
+    {
+      "source_dataset": "course_xml",
+      "target_dataset": "openedx_course_content_webhook",
+      "source_file": "dg_projects\\openedx\\openedx\\assets\\openedx.py",
+      "source_line": 315,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "course_xml",
+      "target": "openedx_course_content_webhook"
     },
     {
       "source_dataset": "<dynamic>:execute:dg_projects\\openedx\\openedx\\ops\\normalize_logs.py:88",
@@ -1255,6 +1581,506 @@
       "confidence": "inferred",
       "source": "<dynamic>:execute:packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\postgres_db.py:77",
       "target": "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\postgres_db.py"
+    },
+    {
+      "source_dataset": "canvas_content_export",
+      "target_dataset": "course_content_metadata",
+      "source_file": "dg_projects\\canvas\\canvas\\assets\\canvas.py",
+      "source_line": 215,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "canvas_content_export",
+      "target": "course_content_metadata"
+    },
+    {
+      "source_dataset": "course_metadata_export",
+      "target_dataset": "course_content_metadata",
+      "source_file": "dg_projects\\canvas\\canvas\\assets\\canvas.py",
+      "source_line": 215,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "course_metadata_export",
+      "target": "course_content_metadata"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "process_edxorg_archive_bundle",
+      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
+      "source_line": 211,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "process_edxorg_archive_bundle"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "download_edx_gcs_course_data",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\edx_gcs_courses.py",
+      "source_line": 38,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "download_edx_gcs_course_data"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "upload_edx_gcs_course_data_to_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\edx_gcs_courses.py",
+      "source_line": 68,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "upload_edx_gcs_course_data_to_s3"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "sync_files_to_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 27,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "sync_files_to_s3"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "download_files_from_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 53,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "download_files_from_s3"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "upload_files_to_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 84,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "upload_files_to_s3"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "download_file_from_gcs",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 109,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "download_file_from_gcs"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "upload_file_to_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 129,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "upload_file_to_s3"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "list_courses",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 93,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "list_courses"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "fetch_edx_course_structure_from_api",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 142,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "fetch_edx_course_structure_from_api"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "export_edx_forum_database",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 496,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "export_edx_forum_database"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "export_edx_courses",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 575,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "export_edx_courses"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "upload_extracted_data",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 650,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "upload_extracted_data"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "load_files_to_table",
+      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
+      "source_line": 62,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "load_files_to_table"
+    },
+    {
+      "source_dataset": "config",
+      "target_dataset": "write_file_to_s3",
+      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
+      "source_line": 228,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "config",
+      "target": "write_file_to_s3"
+    },
+    {
+      "source_dataset": "edxorg_raw_tracking_log",
+      "target_dataset": "normalize_edxorg_tracking_log",
+      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py",
+      "source_line": 573,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "edxorg_raw_tracking_log",
+      "target": "normalize_edxorg_tracking_log"
+    },
+    {
+      "source_dataset": "course_archive",
+      "target_dataset": "edxorg_course_content_webhook",
+      "source_file": "dg_projects\\edxorg\\edxorg\\assets\\openedx_course_archives.py",
+      "source_line": 180,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "course_archive",
+      "target": "edxorg_course_content_webhook"
+    },
+    {
+      "source_dataset": "edx_gcs_course_tarball_directory",
+      "target_dataset": "upload_edx_gcs_course_data_to_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\edx_gcs_courses.py",
+      "source_line": 67,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "edx_gcs_course_tarball_directory",
+      "target": "upload_edx_gcs_course_data_to_s3"
+    },
+    {
+      "source_dataset": "downloaded_objects",
+      "target_dataset": "upload_files_to_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 84,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "downloaded_objects",
+      "target": "upload_files_to_s3"
+    },
+    {
+      "source_dataset": "output_file",
+      "target_dataset": "upload_file_to_s3",
+      "source_file": "dg_projects\\edxorg\\edxorg\\ops\\object_storage.py",
+      "source_line": 129,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "output_file",
+      "target": "upload_file_to_s3"
+    },
+    {
+      "source_dataset": "github_api",
+      "target_dataset": "update_access_forge_repo",
+      "source_file": "dg_projects\\lakehouse\\lakehouse\\assets\\instructor_onboarding.py",
+      "source_line": 112,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "github_api",
+      "target": "update_access_forge_repo"
+    },
+    {
+      "source_dataset": "instructor_onboarding_user_list",
+      "target_dataset": "update_access_forge_repo",
+      "source_file": "dg_projects\\lakehouse\\lakehouse\\assets\\instructor_onboarding.py",
+      "source_line": 113,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "instructor_onboarding_user_list",
+      "target": "update_access_forge_repo"
+    },
+    {
+      "source_dataset": "superset_api",
+      "target_dataset": "_superset_dataset",
+      "source_file": "dg_projects\\lakehouse\\lakehouse\\assets\\superset.py",
+      "source_line": 26,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "superset_api",
+      "target": "_superset_dataset"
+    },
+    {
+      "source_dataset": "sheets_data",
+      "target_dataset": "video_short_metadata",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 131,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "sheets_data",
+      "target": "video_short_metadata"
+    },
+    {
+      "source_dataset": "video_metadata",
+      "target_dataset": "video_short_content",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 221,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "video_metadata",
+      "target": "video_short_content"
+    },
+    {
+      "source_dataset": "video_metadata",
+      "target_dataset": "video_short_thumbnail_small",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 311,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "video_metadata",
+      "target": "video_short_thumbnail_small"
+    },
+    {
+      "source_dataset": "video_metadata",
+      "target_dataset": "video_short_thumbnail_large",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 383,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "video_metadata",
+      "target": "video_short_thumbnail_large"
+    },
+    {
+      "source_dataset": "video_metadata",
+      "target_dataset": "video_short_webhook",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 463,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "video_metadata",
+      "target": "video_short_webhook"
+    },
+    {
+      "source_dataset": "video_content",
+      "target_dataset": "video_short_thumbnail_small",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 310,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "video_content",
+      "target": "video_short_thumbnail_small"
+    },
+    {
+      "source_dataset": "video_content",
+      "target_dataset": "video_short_thumbnail_large",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 382,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "video_content",
+      "target": "video_short_thumbnail_large"
+    },
+    {
+      "source_dataset": "video_content",
+      "target_dataset": "video_short_webhook",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 460,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "video_content",
+      "target": "video_short_webhook"
+    },
+    {
+      "source_dataset": "learn_api",
+      "target_dataset": "video_short_webhook",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 459,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "learn_api",
+      "target": "video_short_webhook"
+    },
+    {
+      "source_dataset": "video_thumbnail_small",
+      "target_dataset": "video_short_webhook",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 461,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "video_thumbnail_small",
+      "target": "video_short_webhook"
+    },
+    {
+      "source_dataset": "video_thumbnail_large",
+      "target_dataset": "video_short_webhook",
+      "source_file": "dg_projects\\learning_resources\\learning_resources\\assets\\video_shorts.py",
+      "source_line": 462,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "video_thumbnail_large",
+      "target": "video_short_webhook"
+    },
+    {
+      "source_dataset": "course_ids",
+      "target_dataset": "fetch_edx_course_structure_from_api",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 142,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "course_ids",
+      "target": "fetch_edx_course_structure_from_api"
+    },
+    {
+      "source_dataset": "edx_course_ids",
+      "target_dataset": "enrolled_users",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 205,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "edx_course_ids",
+      "target": "enrolled_users"
+    },
+    {
+      "source_dataset": "edx_course_ids",
+      "target_dataset": "student_submissions",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 267,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "edx_course_ids",
+      "target": "student_submissions"
+    },
+    {
+      "source_dataset": "edx_course_ids",
+      "target_dataset": "course_enrollments",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 335,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "edx_course_ids",
+      "target": "course_enrollments"
+    },
+    {
+      "source_dataset": "edx_course_ids",
+      "target_dataset": "course_roles",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 387,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "edx_course_ids",
+      "target": "course_roles"
+    },
+    {
+      "source_dataset": "edx_course_ids",
+      "target_dataset": "user_roles",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 435,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "edx_course_ids",
+      "target": "user_roles"
+    },
+    {
+      "source_dataset": "edx_course_ids",
+      "target_dataset": "export_edx_courses",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 573,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "edx_course_ids",
+      "target": "export_edx_courses"
+    },
+    {
+      "source_dataset": "edx_course_ids",
+      "target_dataset": "write_course_list_csv",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 634,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "edx_course_ids",
+      "target": "write_course_list_csv"
+    },
+    {
+      "source_dataset": "daily_extracts_dir",
+      "target_dataset": "export_edx_courses",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 574,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "daily_extracts_dir",
+      "target": "export_edx_courses"
+    },
+    {
+      "source_dataset": "uploads",
+      "target_dataset": "upload_extracted_data",
+      "source_file": "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py",
+      "source_line": 651,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "uploads",
+      "target": "upload_extracted_data"
+    },
+    {
+      "source_dataset": "courseware",
+      "target_dataset": "course_xml",
+      "source_file": "dg_projects\\openedx\\openedx\\assets\\openedx.py",
+      "source_line": 162,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "courseware",
+      "target": "course_xml"
+    },
+    {
+      "source_dataset": "log_date",
+      "target_dataset": "load_files_to_table",
+      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
+      "source_line": 62,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "log_date",
+      "target": "load_files_to_table"
+    },
+    {
+      "source_dataset": "log_date",
+      "target_dataset": "write_file_to_s3",
+      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
+      "source_line": 227,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "log_date",
+      "target": "write_file_to_s3"
+    },
+    {
+      "source_dataset": "columns",
+      "target_dataset": "write_file_to_s3",
+      "source_file": "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py",
+      "source_line": 226,
+      "transformation_type": "depends_on",
+      "confidence": "high",
+      "source": "columns",
+      "target": "write_file_to_s3"
     }
   ]
 }

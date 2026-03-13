@@ -27,7 +27,7 @@ class Surveyor:
         # Add all datasets (models/sources) as modules
         for node in results["datasets"]:
             repo_abs = os.path.abspath(self.repo_path)
-            file_abs = os.path.abspath(os.path.join(os.getcwd(), node.source_file))
+            file_abs = os.path.abspath(os.path.join(self.repo_path, node.source_file))
             file_in_repo = os.path.relpath(file_abs, repo_abs)
             
             velocity = get_git_change_velocity(self.repo_path, file_in_repo)
@@ -47,7 +47,7 @@ class Surveyor:
             logger.info(f"[Surveyor] Added Python module: {mod_node.id}")
             if hasattr(mod_node, 'source_file') and mod_node.source_file:
                 repo_abs = os.path.abspath(self.repo_path)
-                file_abs = os.path.abspath(os.path.join(os.getcwd(), mod_node.source_file))
+                file_abs = os.path.abspath(os.path.join(self.repo_path, mod_node.source_file))
                 file_in_repo = os.path.relpath(file_abs, repo_abs)
                 velocity = get_git_change_velocity(self.repo_path, file_in_repo)
                 graph.graph.nodes[mod_node.id]["git_change_velocity"] = velocity
