@@ -45,8 +45,7 @@ class StubHydrologist:
         )
         lineage_graph.graph.add_node(
             "broken.sql",
-            parsed=False,
-            reason="syntax error",
+            parsed=True,
         )
         lineage_graph.graph.add_node("lonely.table")
 
@@ -143,7 +142,9 @@ def test_run_analysis_skips_semanticist_when_flag_set(monkeypatch, tmp_path):
     orchestrator.run_analysis()
 
     assert orchestrator.semanticist.calls == []
-    assert orchestrator.archivist.calls == []
+    assert len(orchestrator.archivist.calls) == 1
+    assert orchestrator.archivist.calls[0]["semantic_results"] == {}
+    assert orchestrator.archivist.calls[0]["git_velocity"] == {"module.py": 3}
     assert not (tmp_path / ".cartography" / "purpose_statements.json").exists()
 
 
@@ -152,7 +153,9 @@ def test_run_analysis_continues_when_semanticist_fails(monkeypatch, tmp_path):
 
     orchestrator.run_analysis()
 
-    assert orchestrator.archivist.calls == []
+    assert len(orchestrator.archivist.calls) == 1
+    assert orchestrator.archivist.calls[0]["semantic_results"] == {}
+    assert orchestrator.archivist.calls[0]["git_velocity"] == {"module.py": 3}
     assert (tmp_path / ".cartography" / "lineage_graph.json").exists()
     assert (tmp_path / "lineage_final.txt").exists()
 

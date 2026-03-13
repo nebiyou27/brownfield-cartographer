@@ -150,6 +150,16 @@ class Archivist:
                 f.write("✅ No documentation drift detected.\n")
             f.write("\n")
 
+            # 4c. Orphaned nodes
+            orphaned = self._get_orphans(lineage_graph)
+            f.write(f"### Orphaned Nodes: {len(orphaned)}\n\n")
+            if orphaned:
+                for node_id in sorted(orphaned):
+                    f.write(f"- `{node_id}`\n")
+            else:
+                f.write("✅ No orphaned nodes detected.\n")
+            f.write("\n")
+
             # 4d. Semantic Anomalies
             anomalies = self._get_semantic_anomalies(lineage_graph, purpose_statements)
             f.write(f"### Semantic Anomalies: {len(anomalies)}\n\n")
