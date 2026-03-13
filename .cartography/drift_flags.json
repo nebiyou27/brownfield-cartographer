@@ -1,29 +1,625 @@
 {
-  "load\\loaders.py": {
+  "dg_projects\\__init__.py": {
     "verdict": "MISSING",
     "explanation": "No docstring found."
   },
-  "load\\__init__.py": {
+  "dg_projects\\b2b_organization\\__init__.py": {
     "verdict": "MISSING",
     "explanation": "No docstring found."
   },
-  "tests\\conftest.py": {
+  "dg_projects\\b2b_organization\\b2b_organization\\definitions.py": {
     "verdict": "MISSING",
     "explanation": "No docstring found."
   },
-  "tests\\__init__.py": {
+  "dg_projects\\b2b_organization\\b2b_organization\\__init__.py": {
     "verdict": "MISSING",
     "explanation": "No docstring found."
   },
-  "tests\\fixtures\\__init__.py": {
+  "dg_projects\\b2b_organization\\b2b_organization\\assets\\data_export.py": {
     "verdict": "MISSING",
     "explanation": "No docstring found."
   },
-  "tests\\load\\test_loaders.py": {
+  "dg_projects\\b2b_organization\\b2b_organization\\assets\\__init__.py": {
     "verdict": "MISSING",
     "explanation": "No docstring found."
   },
-  "tests\\load\\__init__.py": {
+  "dg_projects\\b2b_organization\\b2b_organization\\defs\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\b2b_organization\\b2b_organization\\partitions\\b2b_organization.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\b2b_organization\\b2b_organization\\partitions\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\b2b_organization\\b2b_organization\\sensors\\b2b_organization.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\b2b_organization\\b2b_organization\\sensors\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\b2b_organization\\b2b_organization_tests\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\canvas\\canvas\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\canvas\\canvas\\assets\\canvas.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\canvas\\canvas\\assets\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\canvas\\canvas\\defs\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\canvas\\canvas\\lib\\canvas.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\canvas\\canvas\\lib\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\canvas\\canvas\\resources\\api_client_factory.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\canvas\\canvas\\resources\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\canvas\\canvas\\sensors\\canvas.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\canvas\\canvas\\sensors\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\canvas\\canvas_tests\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\data_loading\\data_loading\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\data_loading\\data_loading\\components\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\data_loading\\data_loading\\defs\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\data_loading\\data_loading\\defs\\edxorg_s3_ingest\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\data_loading\\data_loading_tests\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\data_platform\\data_platform\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\data_platform\\data_platform\\assets\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\data_platform\\data_platform\\assets\\metadata\\databases.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\data_platform\\data_platform\\assets\\metadata\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\data_platform\\data_platform\\defs\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\data_platform\\data_platform\\lib\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\data_platform\\orchestration_platform_tests\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\edxorg\\edxorg\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\edxorg\\edxorg\\assets\\edxorg_api.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\edxorg\\edxorg\\assets\\edxorg_archive.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\edxorg\\edxorg\\assets\\openedx_course_archives.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\edxorg\\edxorg\\assets\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\edxorg\\edxorg\\defs\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\edxorg\\edxorg\\io_managers\\gcs.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\edxorg\\edxorg\\io_managers\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\edxorg\\edxorg\\jobs\\edx_gcs_courses.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\edxorg\\edxorg\\jobs\\retrieve_edx_exports.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\edxorg\\edxorg\\jobs\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\edxorg\\edxorg\\lib\\edxorg.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\edxorg\\edxorg\\lib\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\edxorg\\edxorg\\ops\\edx_gcs_courses.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\edxorg\\edxorg\\ops\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\edxorg\\edxorg\\sensors\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\edxorg\\edxorg_tests\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\lakehouse\\lakehouse\\definitions.py": {
+    "verdict": "DRIFT",
+    "explanation": "The DOCSTRING is a brief summary stating the purpose of the code but does not accurately describe its implementation details, such as the assets, resources, and configurations defined in the implementation."
+  },
+  "dg_projects\\lakehouse\\lakehouse\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\lakehouse\\lakehouse\\assets\\superset.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\lakehouse\\lakehouse\\assets\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\lakehouse\\lakehouse\\assets\\lakehouse\\dbt.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\lakehouse\\lakehouse\\assets\\lakehouse\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\lakehouse\\lakehouse\\defs\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\lakehouse\\lakehouse\\lib\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\lakehouse\\lakehouse\\resources\\airbyte.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\lakehouse\\lakehouse\\resources\\superset_api.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\lakehouse\\lakehouse\\resources\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\lakehouse\\lakehouse_tests\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\learning_resources\\learning_resources\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\learning_resources\\learning_resources\\assets\\sloan_api.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\learning_resources\\learning_resources\\assets\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\learning_resources\\learning_resources\\defs\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\learning_resources\\learning_resources\\lib\\google_sheets.py": {
+    "verdict": "MISSING",
+    "explanation": "The DOCSTRING is missing because it only states that the function is a helper for Google Sheets data processing without detailing the actual implementation steps, such as authentication, data fetching, and parsing. The implementation provides the detailed code logic."
+  },
+  "dg_projects\\learning_resources\\learning_resources\\lib\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\learning_resources\\learning_resources\\resources\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\learning_resources\\learning_resources\\sensors\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\learning_resources\\learning_resources_tests\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\legacy_openedx\\legacy_openedx\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\legacy_openedx\\legacy_openedx\\jobs\\open_edx.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\legacy_openedx\\legacy_openedx\\jobs\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\legacy_openedx\\legacy_openedx\\lib\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\open_edx.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\legacy_openedx\\legacy_openedx\\ops\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\legacy_openedx\\legacy_openedx\\repositories\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\legacy_openedx\\legacy_openedx\\resources\\healthchecks.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\legacy_openedx\\legacy_openedx\\resources\\mysql_db.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\legacy_openedx\\legacy_openedx\\resources\\sqlite_db.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\legacy_openedx\\legacy_openedx\\resources\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\legacy_openedx\\legacy_openedx\\schedules\\open_edx.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\legacy_openedx\\legacy_openedx\\schedules\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\legacy_openedx\\legacy_openedx\\sensors\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\legacy_openedx\\legacy_openedx_tests\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\openedx\\openedx\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\openedx\\openedx\\assets\\openedx.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\openedx\\openedx\\assets\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\openedx\\openedx\\components\\__init__.py": {
+    "verdict": "DRIFT",
+    "explanation": "The docstring inaccurately describes the file's purpose, as it merely states \"Components for OpenEdX data extraction\" without specifying the actual code or components implemented, which contradicts the implementation details."
+  },
+  "dg_projects\\openedx\\openedx\\jobs\\normalize_logs.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\openedx\\openedx\\jobs\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\openedx\\openedx\\lib\\assets_helper.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\openedx\\openedx\\lib\\magic_numbers.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\openedx\\openedx\\lib\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\openedx\\openedx\\ops\\normalize_logs.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\openedx\\openedx\\ops\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\openedx\\openedx\\partitions\\openedx.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\openedx\\openedx\\partitions\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\openedx\\openedx\\schedules\\open_edx.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\openedx\\openedx\\schedules\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\openedx\\openedx\\sensors\\openedx.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\openedx\\openedx\\sensors\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\openedx\\openedx_tests\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\student_risk_probability\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\student_risk_probability\\student_risk_probability\\definitions.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\student_risk_probability\\student_risk_probability\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\student_risk_probability\\student_risk_probability\\assets\\risk_probability.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\student_risk_probability\\student_risk_probability\\assets\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\student_risk_probability\\student_risk_probability\\lib\\helper.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\student_risk_probability\\student_risk_probability\\lib\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "dg_projects\\student_risk_probability\\student_risk_probability\\resources\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\assets\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\io_managers\\filepath.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\io_managers\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\jobs\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\automation_policies.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\constants.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\dagster_helpers.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\file_rendering.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\hooks.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\openedx.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\utils.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\yaml_config_helper.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\dagster_types\\files.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\dagster_types\\google.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\dagster_types\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\lib\\postgres\\event_log.py": {
+    "verdict": "DRIFT",
+    "explanation": "The docstring states \"Postgres event log storage with connection pooling,\" but it doesn't explain the connection pooling mechanism or its implementation details. The code indeed uses connection pooling (via QueuePool), but the docstring lacks specific details about how the pooling is managed or why it's important. This discrepancy means the docstring misrepresents the code's purpose and functionality."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\ops\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\partitions\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\api_client.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\api_client_factory.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\athena_db.py": {
+    "verdict": "DRIFT",
+    "explanation": "The docstring states \"Resource for connection to athena.\" but the implementation includes a detailed class definition with parameters and methods related to connecting to Athena, including parameters like `work_group`, `region_name`, and `schema_name`. The docstring is overly brief and fails to capture the full functionality of the implementation, making it misleading."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\canvas_api.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\learn_api.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\oauth.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\openedx.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\outputs.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\secrets\\vault.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\resources\\secrets\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\schedules\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\sensors\\object_storage.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "packages\\ol-orchestrate-lib\\src\\ol_orchestrate\\sensors\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "src\\ol_superset\\ol_superset\\commands\\sync.py": {
+    "verdict": "MISSING",
+    "explanation": "The docstring is missing entirely, while the implementation provides detailed description of the sync command's functionality."
+  },
+  "src\\ol_superset\\ol_superset\\commands\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "src\\ol_superset\\ol_superset\\lib\\role_management.py": {
+    "verdict": "DRIFT",
+    "explanation": "The DOCSTRING claims the function manages dataset access from governance policy, but the implementation loads role definitions from a JSON file, unrelated to dataset synchronization."
+  },
+  "src\\ol_superset\\ol_superset\\lib\\utils.py": {
+    "verdict": "DRIFT",
+    "explanation": "The DOCSTRING is a general overview of the file's purpose but does not specify the exact functions or their purposes. The implementation details (e.g., functions like `get_repo_root`, `count_assets`, `run_sup_command`) provide specific functionality, which the DOCSTRING does not accurately describe. Thus, the DOCSTRING contradicts or significantly misrepresents the code."
+  },
+  "src\\ol_superset\\ol_superset\\lib\\__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "DROP TABLE IF EXISTS tracking_logs": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "INSTALL json;": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "UPDATE tracking_logs\n            SET time = to_timestamp(CAST(time AS BIGINT))\n            WHERE TRY_CAST(time AS BIGINT) IS NOT NULL\n            ": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "\n            UPDATE tracking_logs\n            SET time = strftime(TRY_CAST(time AS TIMESTAMP), '%Y-%m-%d %H:%M:%S.%f')\n            ": {
     "verdict": "MISSING",
     "explanation": "No docstring found."
   }

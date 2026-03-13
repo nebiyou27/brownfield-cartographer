@@ -1,32 +1,29 @@
 # FDE Day-One Onboarding Brief
 
-Q1: The primary data ingestion path begins with the `dvf_default` and `dvf_?[2014-2024]_dev` datasets, which are selected via SQL and ingested into the `ventes_immobilieres` table. This table is then enriched to produce `ventes_immobilieres_enrichies`. The ingestion process is handled by the `load` module, which uses configurations from a YAML file to orchestrate the loading of data into PostgreSQL.  
-**Primary Ingestion Path**:  
-`dvf_default`/`dvf_?[2014-2024]_dev` --> `ventes_immobilieres` (via SQL select) --> `ventes_immobilieres_enrichies` (via SQL select)  
-[load\loaders.py orchestrates ingestion from DVF sources into PostgreSQL]
+**Q1: What is the primary data ingestion path?**  
+The primary data ingestion path involves AWS Glue tables, managed via `brownfield-cartographer\bin\dbt-local-dev.py` to register and interact with them [brownfield-cartographer\bin\dbt-local-dev.py]. The system leverages `httpfs` and `aws` modules for Glue/external storage access [brownfield-cartographer\bin\dbt-local-dev.py]. The `edxorg_archive.py` processes tracking logs but is likely a transformation/sink, not the primary ingestion source [brownfield-cartographer\dg_projects\edxorg\edxorg\assets\edxorg_archive.py].
 
-Q2: The 3-5 most critical output datasets/endpoints are:  
-1. `ventes_immobilieres_enrichies` (central enrichment point for real estate data).  
-2. `cog_communes`, `cog_departements`, `cog_regions` (geographic reference datasets).  
-3. `activite_communes`, `demographie_communes`, `habitat_communes`, `mobilite_communes` (derived from `logement_2020` and `logement_2020_dev`).  
-4. `revenu_commune` (derived from `filosofi_commune_2021`).  
-5. `shape_commune_2024`, `shape_arrondissement_municipal_2024`, `shape_iris_2024` (geospatial datasets).  
-[These datasets are central to downstream processes and are referenced in multiple lineage edges]
+**Q2: What are the 3-5 most critical output datasets/endpoints?**  
+1. **AWS Glue tables** (ingested and registered via `dbt-local-dev.py`) [brownfield-cartographer\bin\dbt-local-dev.py].  
+2. **Tracking Logs (`tracking_logs`)** processed by `edxorg_archive.py` [brownfield-cartographer\dg_projects\edxorg\edxorg\assets\edxorg_archive.py].  
+3. **Corrected S3 partitions** via `reconcile_edxorg_partitions.py` [brownfield-cartographer\dg_deployments\reconcile_edxorg_partitions.py].  
+4. **DuckDB views** created by `dbt-local-dev.py` for local testing [brownfield-cartographer\bin\dbt-local-dev.py].  
+5. **Exported CSVs** from `data_export.py` for organizational data [brownfield-cartographer\dg_projects\b2b_organization\b2b_organization\assets\data_export.py].
 
-Q3: If the most critical module (`load\loaders.py`) changes its interface, the blast radius would include all data ingestion points (DVF, LOGEMENT, SCOT, etc.), as this module orchestrates the loading of multiple datasets into PostgreSQL. Changes here could disrupt ingestion for all sources, including `dvf_?[2014-2024]`, `logement_2020`, `logement_2020_dev`, and others.  
-**Blast Radius**: All datasets ingested via `load\loaders.py`, including `ventes_immobilieres`, `logement_2020`, `logement_2020_dev`, and geospatial datasets.  
-[load\loaders.py orchestrates ingestion for multiple sources]
+**Q3: What is the blast radius if the most critical module changes its interface?**  
+The most critical module is `brownfield-cartographer\bin\dbt-local-dev.py`, which handles Glue table registration and dbt operations. A change here would affect:  
+- **AWS Glue table interactions** (used by `dbt` models and Glue-dependent systems) [brownfield-cartographer\bin\dbt-local-dev.py].  
+- **DuckDB view creation** (critical for local testing) [brownfield-cartographer\bin\dbt-local-dev.py].  
+- **External storage access** (via `httpfs/aws` modules) [brownfield-cartographer\bin\dbt-local-dev.py].  
+Blast radius includes all dbt models, Glue tables, and systems relying on DuckDB views for testing/transformation.
 
-Q4: Business logic is concentrated in the `load` module (orchestration) and distributed across the `prepare` modules (data transformation and schema definition).  
-- **Concentration**: The `load` module handles ingestion orchestration, while the `prepare` modules (e.g., `1_data/prepare/recensement/`) contain schema definitions and transformations.  
-- **Distribution**: The `prepare` modules are distributed across different subdirectories (e.g., `geographie`, `foncier`, `recensement`) for specific data domains.  
-[1_data/prepare/* directories contain schema and transformation logic]
+**Q4: Where is the business logic concentrated vs distributed?**  
+- **Concentrated**: AWS Glue tables and `dbt` models (not fully visible in the provided code).  
+- **Distributed**:  
+  - `edxorg_archive.py` handles tracking log processing [brownfield-cartographer\dg_projects\edxorg\edxorg\assets\edxorg_archive.py].  
+  - `reconcile_edxorg_partitions.py` manages S3 partition corrections [brownfield-cartographer\dg_deployments\reconcile_edxorg_partitions.py].  
+  - `data_export.py` exports organizational CSVs [brownfield-cartographer\dg_projects\b2b_organization\b2b_organization\assets\data_export.py].  
+The provided code lacks centralized business logic; instead, it’s modularized into specific-purpose files.
 
-Q5: The most frequent changes in the last 30 days are in the `schema.yml` files under `1_data/prepare/`, particularly in the `recensement` subdirectories.  
-**Ranked by Commit Count**:  
-1. `1_data/prepare/geographie/schema.yml` (3 commits)  
-2. `1_data/prepare/foncier/schema.yml` (3 commits)  
-3. `1_data/prepare/revenu/schema.yml` (3 commits)  
-4. `1_data/prepare/sante/schema.yml` (3 commits)  
-5. `1_data/prepare/recensement/activite/schema.yml` (2 commits)  
-[Git Velocity data: 1_data/sources/schema.yml has 26 commits, but the provided data lists `1_data/prepare/` files with commit counts]
+**Q5: What has changed most frequently in the last 30 days?**  
+All listed files show **0 commits** in the last 30 days [brownfield-cartographer\bin\dbt-local-dev.py, `edxorg_archive.py`, `reconcile_edxorg_partitions.py`, etc.]. No changes detected in the provided files.

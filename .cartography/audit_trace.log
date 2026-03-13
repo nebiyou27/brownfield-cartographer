@@ -1,19 +1,170 @@
-CARTOGRAPHER AUDIT TRACE — 2026-03-13T04:40:01.374446
-Target: D:\TRP-1\Week-4\brownfield-cartographer\make-open-data
-Modules Scanned:            92
-Lineage Nodes:              114
-Lineage Edges:              121
+CARTOGRAPHER AUDIT TRACE — 2026-03-13T06:59:05.512630
+Target: d:\TRP-1\Week-4\ol-data-platform
+Modules Scanned:            263
+Lineage Nodes:              73
+Lineage Edges:              66
 Parse Failures:             0
-Purpose Statements:         12
-Doc Drift Flags:            7
-  [MISSING] load\__init__.py
-  [MISSING] load\loaders.py
-  [MISSING] tests\__init__.py
-  [MISSING] tests\conftest.py
-  [MISSING] tests\fixtures\__init__.py
-  [MISSING] tests\load\__init__.py
-  [MISSING] tests\load\test_loaders.py
+Purpose Statements:         219
+Doc Drift Flags:            155
+  [MISSING] 
+            UPDATE tracking_logs
+            SET time = strftime(TRY_CAST(time AS TIMESTAMP), '%Y-%m-%d %H:%M:%S.%f')
+            
+  [MISSING] DROP TABLE IF EXISTS tracking_logs
+  [MISSING] INSTALL json;
+  [MISSING] dg_projects\__init__.py
+  [MISSING] dg_projects\b2b_organization\__init__.py
+  [MISSING] dg_projects\b2b_organization\b2b_organization\__init__.py
+  [MISSING] dg_projects\b2b_organization\b2b_organization\assets\__init__.py
+  [MISSING] dg_projects\b2b_organization\b2b_organization\assets\data_export.py
+  [MISSING] dg_projects\b2b_organization\b2b_organization\definitions.py
+  [MISSING] dg_projects\b2b_organization\b2b_organization\defs\__init__.py
+  [MISSING] dg_projects\b2b_organization\b2b_organization\partitions\__init__.py
+  [MISSING] dg_projects\b2b_organization\b2b_organization\partitions\b2b_organization.py
+  [MISSING] dg_projects\b2b_organization\b2b_organization\sensors\__init__.py
+  [MISSING] dg_projects\b2b_organization\b2b_organization\sensors\b2b_organization.py
+  [MISSING] dg_projects\b2b_organization\b2b_organization_tests\__init__.py
+  [MISSING] dg_projects\canvas\canvas\__init__.py
+  [MISSING] dg_projects\canvas\canvas\assets\__init__.py
+  [MISSING] dg_projects\canvas\canvas\assets\canvas.py
+  [MISSING] dg_projects\canvas\canvas\defs\__init__.py
+  [MISSING] dg_projects\canvas\canvas\lib\__init__.py
+  [MISSING] dg_projects\canvas\canvas\lib\canvas.py
+  [MISSING] dg_projects\canvas\canvas\resources\__init__.py
+  [MISSING] dg_projects\canvas\canvas\resources\api_client_factory.py
+  [MISSING] dg_projects\canvas\canvas\sensors\__init__.py
+  [MISSING] dg_projects\canvas\canvas\sensors\canvas.py
+  [MISSING] dg_projects\canvas\canvas_tests\__init__.py
+  [MISSING] dg_projects\data_loading\data_loading\__init__.py
+  [MISSING] dg_projects\data_loading\data_loading\components\__init__.py
+  [MISSING] dg_projects\data_loading\data_loading\defs\__init__.py
+  [MISSING] dg_projects\data_loading\data_loading\defs\edxorg_s3_ingest\__init__.py
+  [MISSING] dg_projects\data_loading\data_loading_tests\__init__.py
+  [MISSING] dg_projects\data_platform\data_platform\__init__.py
+  [MISSING] dg_projects\data_platform\data_platform\assets\__init__.py
+  [MISSING] dg_projects\data_platform\data_platform\assets\metadata\__init__.py
+  [MISSING] dg_projects\data_platform\data_platform\assets\metadata\databases.py
+  [MISSING] dg_projects\data_platform\data_platform\defs\__init__.py
+  [MISSING] dg_projects\data_platform\data_platform\lib\__init__.py
+  [MISSING] dg_projects\data_platform\orchestration_platform_tests\__init__.py
+  [MISSING] dg_projects\edxorg\edxorg\__init__.py
+  [MISSING] dg_projects\edxorg\edxorg\assets\__init__.py
+  [MISSING] dg_projects\edxorg\edxorg\assets\edxorg_api.py
+  [MISSING] dg_projects\edxorg\edxorg\assets\edxorg_archive.py
+  [MISSING] dg_projects\edxorg\edxorg\assets\openedx_course_archives.py
+  [MISSING] dg_projects\edxorg\edxorg\defs\__init__.py
+  [MISSING] dg_projects\edxorg\edxorg\io_managers\__init__.py
+  [MISSING] dg_projects\edxorg\edxorg\io_managers\gcs.py
+  [MISSING] dg_projects\edxorg\edxorg\jobs\__init__.py
+  [MISSING] dg_projects\edxorg\edxorg\jobs\edx_gcs_courses.py
+  [MISSING] dg_projects\edxorg\edxorg\jobs\retrieve_edx_exports.py
+  [MISSING] dg_projects\edxorg\edxorg\lib\__init__.py
+  [MISSING] dg_projects\edxorg\edxorg\lib\edxorg.py
+  [MISSING] dg_projects\edxorg\edxorg\ops\__init__.py
+  [MISSING] dg_projects\edxorg\edxorg\ops\edx_gcs_courses.py
+  [MISSING] dg_projects\edxorg\edxorg\sensors\__init__.py
+  [MISSING] dg_projects\edxorg\edxorg_tests\__init__.py
+  [MISSING] dg_projects\lakehouse\lakehouse\__init__.py
+  [MISSING] dg_projects\lakehouse\lakehouse\assets\__init__.py
+  [MISSING] dg_projects\lakehouse\lakehouse\assets\lakehouse\__init__.py
+  [MISSING] dg_projects\lakehouse\lakehouse\assets\lakehouse\dbt.py
+  [MISSING] dg_projects\lakehouse\lakehouse\assets\superset.py
+  [DRIFT] dg_projects\lakehouse\lakehouse\definitions.py
+  [MISSING] dg_projects\lakehouse\lakehouse\defs\__init__.py
+  [MISSING] dg_projects\lakehouse\lakehouse\lib\__init__.py
+  [MISSING] dg_projects\lakehouse\lakehouse\resources\__init__.py
+  [MISSING] dg_projects\lakehouse\lakehouse\resources\airbyte.py
+  [MISSING] dg_projects\lakehouse\lakehouse\resources\superset_api.py
+  [MISSING] dg_projects\lakehouse\lakehouse_tests\__init__.py
+  [MISSING] dg_projects\learning_resources\learning_resources\__init__.py
+  [MISSING] dg_projects\learning_resources\learning_resources\assets\__init__.py
+  [MISSING] dg_projects\learning_resources\learning_resources\assets\sloan_api.py
+  [MISSING] dg_projects\learning_resources\learning_resources\defs\__init__.py
+  [MISSING] dg_projects\learning_resources\learning_resources\lib\__init__.py
+  [MISSING] dg_projects\learning_resources\learning_resources\lib\google_sheets.py
+  [MISSING] dg_projects\learning_resources\learning_resources\resources\__init__.py
+  [MISSING] dg_projects\learning_resources\learning_resources\sensors\__init__.py
+  [MISSING] dg_projects\learning_resources\learning_resources_tests\__init__.py
+  [MISSING] dg_projects\legacy_openedx\legacy_openedx\__init__.py
+  [MISSING] dg_projects\legacy_openedx\legacy_openedx\jobs\__init__.py
+  [MISSING] dg_projects\legacy_openedx\legacy_openedx\jobs\open_edx.py
+  [MISSING] dg_projects\legacy_openedx\legacy_openedx\lib\__init__.py
+  [MISSING] dg_projects\legacy_openedx\legacy_openedx\ops\__init__.py
+  [MISSING] dg_projects\legacy_openedx\legacy_openedx\ops\open_edx.py
+  [MISSING] dg_projects\legacy_openedx\legacy_openedx\repositories\__init__.py
+  [MISSING] dg_projects\legacy_openedx\legacy_openedx\resources\__init__.py
+  [MISSING] dg_projects\legacy_openedx\legacy_openedx\resources\healthchecks.py
+  [MISSING] dg_projects\legacy_openedx\legacy_openedx\resources\mysql_db.py
+  [MISSING] dg_projects\legacy_openedx\legacy_openedx\resources\sqlite_db.py
+  [MISSING] dg_projects\legacy_openedx\legacy_openedx\schedules\__init__.py
+  [MISSING] dg_projects\legacy_openedx\legacy_openedx\schedules\open_edx.py
+  [MISSING] dg_projects\legacy_openedx\legacy_openedx\sensors\__init__.py
+  [MISSING] dg_projects\legacy_openedx\legacy_openedx_tests\__init__.py
+  [MISSING] dg_projects\openedx\openedx\__init__.py
+  [MISSING] dg_projects\openedx\openedx\assets\__init__.py
+  [MISSING] dg_projects\openedx\openedx\assets\openedx.py
+  [DRIFT] dg_projects\openedx\openedx\components\__init__.py
+  [MISSING] dg_projects\openedx\openedx\jobs\__init__.py
+  [MISSING] dg_projects\openedx\openedx\jobs\normalize_logs.py
+  [MISSING] dg_projects\openedx\openedx\lib\__init__.py
+  [MISSING] dg_projects\openedx\openedx\lib\assets_helper.py
+  [MISSING] dg_projects\openedx\openedx\lib\magic_numbers.py
+  [MISSING] dg_projects\openedx\openedx\ops\__init__.py
+  [MISSING] dg_projects\openedx\openedx\ops\normalize_logs.py
+  [MISSING] dg_projects\openedx\openedx\partitions\__init__.py
+  [MISSING] dg_projects\openedx\openedx\partitions\openedx.py
+  [MISSING] dg_projects\openedx\openedx\schedules\__init__.py
+  [MISSING] dg_projects\openedx\openedx\schedules\open_edx.py
+  [MISSING] dg_projects\openedx\openedx\sensors\__init__.py
+  [MISSING] dg_projects\openedx\openedx\sensors\openedx.py
+  [MISSING] dg_projects\openedx\openedx_tests\__init__.py
+  [MISSING] dg_projects\student_risk_probability\__init__.py
+  [MISSING] dg_projects\student_risk_probability\student_risk_probability\__init__.py
+  [MISSING] dg_projects\student_risk_probability\student_risk_probability\assets\__init__.py
+  [MISSING] dg_projects\student_risk_probability\student_risk_probability\assets\risk_probability.py
+  [MISSING] dg_projects\student_risk_probability\student_risk_probability\definitions.py
+  [MISSING] dg_projects\student_risk_probability\student_risk_probability\lib\__init__.py
+  [MISSING] dg_projects\student_risk_probability\student_risk_probability\lib\helper.py
+  [MISSING] dg_projects\student_risk_probability\student_risk_probability\resources\__init__.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\assets\__init__.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\io_managers\__init__.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\io_managers\filepath.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\jobs\__init__.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\lib\__init__.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\lib\automation_policies.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\lib\constants.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\lib\dagster_helpers.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\lib\dagster_types\__init__.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\lib\dagster_types\files.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\lib\dagster_types\google.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\lib\file_rendering.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\lib\hooks.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\lib\openedx.py
+  [DRIFT] packages\ol-orchestrate-lib\src\ol_orchestrate\lib\postgres\event_log.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\lib\utils.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\lib\yaml_config_helper.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\ops\__init__.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\partitions\__init__.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\__init__.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\api_client.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\api_client_factory.py
+  [DRIFT] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\athena_db.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\canvas_api.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\learn_api.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\oauth.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\openedx.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\outputs.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\secrets\__init__.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\resources\secrets\vault.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\schedules\__init__.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\sensors\__init__.py
+  [MISSING] packages\ol-orchestrate-lib\src\ol_orchestrate\sensors\object_storage.py
+  [MISSING] src\ol_superset\ol_superset\commands\__init__.py
+  [MISSING] src\ol_superset\ol_superset\commands\sync.py
+  [MISSING] src\ol_superset\ol_superset\lib\__init__.py
+  [DRIFT] src\ol_superset\ol_superset\lib\role_management.py
+  [DRIFT] src\ol_superset\ol_superset\lib\utils.py
 
 LLM Budget:
-  qwen3:1.7b: 17 calls, ~6961 tokens
-  deepseek-r1:8b: 1 calls, ~2238 tokens
+  qwen3:1.7b: 290 calls, ~207315 tokens
+  deepseek-r1:8b: 1 calls, ~3210 tokens
