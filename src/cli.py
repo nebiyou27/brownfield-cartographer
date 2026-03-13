@@ -1,7 +1,11 @@
-import sys
-import os
 import argparse
+import os
+import sys
+
+from .logger import get_logger
 from .orchestrator import Orchestrator
+
+logger = get_logger(__name__)
 
 
 def main():
@@ -23,14 +27,13 @@ def main():
         "analyze", help="Run the full analysis pipeline on a repository"
     )
     analyze_parser.add_argument(
-        "repo_path",
-        help="Path to the repository to analyze (local path or GitHub URL)"
+        "repo_path", help="Path to the repository to analyze (local path or GitHub URL)"
     )
     analyze_parser.add_argument(
         "--no-semanticist",
         action="store_true",
         default=False,
-        help="Skip the Semanticist agent (faster iteration, no LLM calls)"
+        help="Skip the Semanticist agent (faster iteration, no LLM calls)",
     )
 
     # ── query ─────────────────────────────────────────────────────────────
@@ -38,15 +41,14 @@ def main():
         "query", help="Query the knowledge graph interactively via the Navigator agent"
     )
     query_parser.add_argument(
-        "repo_path",
-        help="Path to the repository whose .cartography/ artifacts to query"
+        "repo_path", help="Path to the repository whose .cartography/ artifacts to query"
     )
     query_parser.add_argument(
         "--ask",
         metavar="QUESTION",
         default=None,
         help="Run a single query and exit (non-interactive). "
-             "e.g. --ask 'What produces ventes_immobilieres?'"
+        "e.g. --ask 'What produces ventes_immobilieres?'",
     )
 
     args = parser.parse_args()
@@ -55,7 +57,7 @@ def main():
     if args.command == "analyze":
         target_path = os.path.abspath(args.repo_path)
         if not os.path.exists(target_path):
-            print(f"[ERROR] Repository path does not exist: {target_path}")
+            logger.error("Repository path does not exist: %s", target_path)
             sys.exit(1)
 
         orchestrator = Orchestrator(
@@ -76,13 +78,13 @@ def main():
         try:
             from .agents.navigator import Navigator
         except ImportError as e:
-            print(f"[ERROR] Navigator dependencies missing: {e}")
-            print("Run: uv pip install langgraph langchain-core langchain-ollama")
+            logger.error("Navigator dependencies missing: %s", e)
+            logger.info("Run: uv pip install langgraph langchain-core langchain-ollama")
             sys.exit(1)
 
         if not os.path.exists(os.path.join(cartography_dir, "lineage_graph.json")):
-            print(f"[ERROR] No .cartography/ artifacts found.")
-            print(f"Run 'analyze' first: uv run python -m src.cli analyze {args.repo_path}")
+            logger.error("No .cartography/ artifacts found.")
+            logger.info("Run 'analyze' first: uv run python -m src.cli analyze %s", args.repo_path)
             sys.exit(1)
 
         navigator = Navigator()
@@ -94,7 +96,7 @@ def main():
                 answer = navigator.query(args.ask)
                 print(answer)
             except Exception as e:
-                print(f"[Navigator] Error: {e}")
+                logger.error("Navigator Query Error: %s", e)
                 sys.exit(1)
         else:
             # Interactive mode

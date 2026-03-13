@@ -3,24 +3,18 @@ Tests for P0/P1 graph correctness improvements.
 Covers: depends_on extraction, macro expansion, Python import edges,
 and multi-directory macro merging.
 """
-import os
-import re
-import tempfile
-import pytest
-from pathlib import Path
 
 from src.analyzers.sql_lineage import (
-    strip_jinja,
     analyze_sql_file,
     get_macros_map,
-    analyze_all_sql_files,
+    strip_jinja,
 )
 from src.analyzers.tree_sitter_analyzer import PythonAnalyzer
-
 
 # ---------------------------------------------------------------------------
 # depends_on extraction
 # ---------------------------------------------------------------------------
+
 
 class TestDependsOnExtraction:
     """Verify that -- depends_on: {{ ref('...') }} comments create edges."""
@@ -28,8 +22,7 @@ class TestDependsOnExtraction:
     def test_single_depends_on(self, tmp_path):
         sql = tmp_path / "demo.sql"
         sql.write_text(
-            "--- depends_on: {{ ref('logement_2020_valeurs') }}\n"
-            "SELECT * FROM infos_communes\n",
+            "--- depends_on: {{ ref('logement_2020_valeurs') }}\nSELECT * FROM infos_communes\n",
             encoding="utf-8",
         )
         edges = analyze_sql_file(str(sql))
@@ -63,6 +56,7 @@ class TestDependsOnExtraction:
 # aggreger_supra_commune macro expansion
 # ---------------------------------------------------------------------------
 
+
 class TestMacroExpansion:
     """Verify that aggreger_supra_commune is expanded before Jinja is stripped."""
 
@@ -83,6 +77,7 @@ class TestMacroExpansion:
 # Python import edges
 # ---------------------------------------------------------------------------
 
+
 class TestPythonImportEdges:
     """Verify that PythonAnalyzer emits import edges for internal modules."""
 
@@ -101,9 +96,7 @@ class TestPythonImportEdges:
         _nodes, edges, imports = analyzer.analyze()
 
         targets = {e.source_dataset for e in edges if e.transformation_type == "imports"}
-        assert "mypkg/utils.py" in targets, (
-            "Should create an import edge from mypkg/utils.py"
-        )
+        assert "mypkg/utils.py" in targets, "Should create an import edge from mypkg/utils.py"
 
     def test_no_edge_for_external_import(self, tmp_path):
         (tmp_path / "standalone.py").write_text(
@@ -114,14 +107,13 @@ class TestPythonImportEdges:
         _nodes, edges, imports = analyzer.analyze()
 
         import_edges = [e for e in edges if e.transformation_type == "imports"]
-        assert len(import_edges) == 0, (
-            "External stdlib imports should not produce import edges"
-        )
+        assert len(import_edges) == 0, "External stdlib imports should not produce import edges"
 
 
 # ---------------------------------------------------------------------------
 # Multi-directory macro merging
 # ---------------------------------------------------------------------------
+
 
 class TestMultiMacroDirMerging:
     """Verify that macros from multiple directories are merged."""

@@ -2,19 +2,19 @@
 Tree-sitter based analyzer for Python files.
 Extracts data flow patterns (pandas I/O, SQLAlchemy, psycopg) and import statements.
 """
+
+import glob
 import os
 import re
-import glob
-import logging
 from pathlib import Path
-from typing import List, Dict, Optional, Tuple
 
 import tree_sitter_python as tspython
 from tree_sitter import Language, Parser
 
-from ..models.schemas import ModuleNode, DatasetNode, TransformationEdge
+from ..logger import get_logger
+from ..models.schemas import DatasetNode, ModuleNode, TransformationEdge
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 # ---------------------------------------------------------------------------
 # Tree-sitter setup
@@ -29,13 +29,22 @@ _parser = Parser(PY_LANGUAGE)
 
 # pandas read functions  →  CONSUMES
 PANDAS_READ_PATTERNS = {
-    "read_csv", "read_json", "read_sql", "read_excel",
-    "read_parquet", "read_sql_query", "read_sql_table",
+    "read_csv",
+    "read_json",
+    "read_sql",
+    "read_excel",
+    "read_parquet",
+    "read_sql_query",
+    "read_sql_table",
 }
 
 # pandas/geopandas write functions  →  PRODUCES
 PANDAS_WRITE_PATTERNS = {
-    "to_csv", "to_sql", "to_parquet", "to_excel", "to_postgis",
+    "to_csv",
+    "to_sql",
+    "to_parquet",
+    "to_excel",
+    "to_postgis",
 }
 
 # SQLAlchemy / psycopg patterns
@@ -47,6 +56,7 @@ DB_EXECUTE_PATTERNS = {"execute"}
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _node_text(node) -> str:
     """Return the UTF-8 text of a tree-sitter node."""
     return node.text.decode("utf-8")
@@ -54,7 +64,7 @@ def _node_text(node) -> str:
 
 def _is_dynamic(text: str) -> bool:
     """Check if a string argument is dynamic (f-string, variable, concat)."""
-    if text.startswith("f\"") or text.startswith("f'"):
+    if text.startswith('f"') or text.startswith("f'"):
         return True
     # No quotes at all → it's a variable reference
     if not (text.startswith("'") or text.startswith('"')):
@@ -62,18 +72,19 @@ def _is_dynamic(text: str) -> bool:
     return False
 
 
-def _extract_string_value(text: str) -> Optional[str]:
+def _extract_string_value(text: str) -> str | None:
     """Extract the literal string value, stripping quotes."""
     text = text.strip()
     for q in ('"""', "'''", '"', "'"):
         if text.startswith(q) and text.endswith(q):
-            return text[len(q):-len(q)]
+            return text[len(q) : -len(q)]
     return None
 
 
 # ---------------------------------------------------------------------------
 # PythonAnalyzer
 # ---------------------------------------------------------------------------
+
 
 class PythonAnalyzer:
     """
@@ -92,18 +103,18 @@ class PythonAnalyzer:
         except ValueError:
             self.rel_path = file_path
 
-        self.imports: List[str] = []
-        self.nodes: List[DatasetNode] = []
-        self.edges: List[TransformationEdge] = []
+        self.imports: list[str] = []
+        self.nodes: list[DatasetNode] = []
+        self.edges: list[TransformationEdge] = []
 
     # ---- public API --------------------------------------------------------
 
-    def analyze(self) -> Tuple[List[DatasetNode], List[TransformationEdge], List[str]]:
+    def analyze(self) -> tuple[list[DatasetNode], list[TransformationEdge], list[str]]:
         """
         Parse the file and return (nodes, edges, imports).
         """
         try:
-            with open(self.file_path, "r", encoding="utf-8") as f:
+            with open(self.file_path, encoding="utf-8") as f:
                 source = f.read()
         except Exception as e:
             logger.warning(f"Could not read {self.file_path}: {e}")
@@ -137,20 +148,17 @@ class PythonAnalyzer:
 
     def _check_and_add_import_edge(self, module_path_str: str, node):
         """Check if the imported module exists in the repo and add an edge."""
-        parts = module_path_str.split('.')
+        parts = module_path_str.split(".")
         # Check both file.py and dir/__init__.py
-        rel_paths_to_check = [
-            os.path.join(*parts) + ".py",
-            os.path.join(*parts, "__init__.py")
-        ]
-        
+        rel_paths_to_check = [os.path.join(*parts) + ".py", os.path.join(*parts, "__init__.py")]
+
         for rel_check in rel_paths_to_check:
             abs_path = os.path.join(self.repo_root, rel_check)
             if os.path.exists(abs_path):
                 line_no = node.start_point[0] + 1
                 source_id = Path(rel_check).as_posix()
                 target_id = Path(self.rel_path).as_posix()
-                
+
                 edge = TransformationEdge(
                     source_dataset=source_id,
                     target_dataset=target_id,
@@ -186,7 +194,9 @@ class PythonAnalyzer:
         for pattern in PANDAS_READ_PATTERNS:
             if func_text.endswith(pattern):
                 self._handle_data_call(
-                    call_node, pattern, "consumes",
+                    call_node,
+                    pattern,
+                    "consumes",
                     dataset_type="file_source",
                 )
                 return
@@ -195,7 +205,9 @@ class PythonAnalyzer:
         for pattern in PANDAS_WRITE_PATTERNS:
             if func_text.endswith(pattern):
                 self._handle_data_call(
-                    call_node, pattern, "produces",
+                    call_node,
+                    pattern,
+                    "produces",
                     dataset_type="file_sink",
                 )
                 return
@@ -203,7 +215,9 @@ class PythonAnalyzer:
         # --- SQLAlchemy create_engine(...) ----------------------------------
         if func_text.endswith("create_engine"):
             self._handle_data_call(
-                call_node, "create_engine", "consumes",
+                call_node,
+                "create_engine",
+                "consumes",
                 dataset_type="database",
             )
             return
@@ -211,7 +225,9 @@ class PythonAnalyzer:
         # --- cursor.execute(...) / connection.execute(...) ------------------
         if func_text.endswith("execute"):
             self._handle_data_call(
-                call_node, "execute", "consumes",
+                call_node,
+                "execute",
+                "consumes",
                 dataset_type="database_query",
             )
             return
@@ -220,7 +236,7 @@ class PythonAnalyzer:
         self,
         call_node,
         call_name: str,
-        edge_type: str,          # "produces" or "consumes"
+        edge_type: str,  # "produces" or "consumes"
         dataset_type: str = "unknown",
     ):
         """
@@ -246,7 +262,13 @@ class PythonAnalyzer:
         line_no = call_node.start_point[0] + 1  # 1-indexed
 
         if _is_dynamic(arg_text):
-            print(f"  [WARNING] Unresolved dynamic reference in {self.rel_path}:{line_no} — {call_name}({arg_text})")
+            logger.warning(
+                "Unresolved dynamic reference in %s:%d — %s(%s)",
+                self.rel_path,
+                line_no,
+                call_name,
+                arg_text,
+            )
             # Still create an edge with a placeholder so the graph is complete
             dataset_id = f"<dynamic>:{call_name}:{self.rel_path}:{line_no}"
             confidence = "inferred"
@@ -258,7 +280,9 @@ class PythonAnalyzer:
             # Filter ephemeral SQL commands
             if call_name == "execute":
                 upper_lit = literal.strip().upper()
-                if upper_lit.startswith(("INSTALL", "LOAD", "DROP", "SET", "PRAGMA", "VACUUM", "CHECKPOINT", "CALL")):
+                if upper_lit.startswith(
+                    ("INSTALL", "LOAD", "DROP", "SET", "PRAGMA", "VACUUM", "CHECKPOINT", "CALL")
+                ):
                     return
 
             dataset_id = literal
@@ -376,6 +400,7 @@ class PythonAnalyzer:
 # LanguageRouter
 # ---------------------------------------------------------------------------
 
+
 class LanguageRouter:
     """
     Routes source files to the appropriate language-specific analyzer.
@@ -389,10 +414,12 @@ class LanguageRouter:
     def __init__(self, repo_root: str):
         self.repo_root = repo_root
 
-    def analyze_file(self, file_path: str) -> Tuple[
-        Optional[ModuleNode],
-        List[DatasetNode],
-        List[TransformationEdge],
+    def analyze_file(
+        self, file_path: str
+    ) -> tuple[
+        ModuleNode | None,
+        list[DatasetNode],
+        list[TransformationEdge],
     ]:
         """
         Analyze a single file and return (module_node, dataset_nodes, edges).
@@ -409,17 +436,19 @@ class LanguageRouter:
 
         return None, [], []
 
-    def analyze_directory(self, directory: str) -> Tuple[
-        List[ModuleNode],
-        List[DatasetNode],
-        List[TransformationEdge],
+    def analyze_directory(
+        self, directory: str
+    ) -> tuple[
+        list[ModuleNode],
+        list[DatasetNode],
+        list[TransformationEdge],
     ]:
         """
         Recursively analyze all supported files in a directory.
         """
-        all_modules: List[ModuleNode] = []
-        all_datasets: List[DatasetNode] = []
-        all_edges: List[TransformationEdge] = []
+        all_modules: list[ModuleNode] = []
+        all_datasets: list[DatasetNode] = []
+        all_edges: list[TransformationEdge] = []
 
         py_files = glob.glob(os.path.join(directory, "**", "*.py"), recursive=True)
 
@@ -435,10 +464,12 @@ class LanguageRouter:
 
     # ---- private -----------------------------------------------------------
 
-    def _analyze_python(self, file_path: str) -> Tuple[
-        Optional[ModuleNode],
-        List[DatasetNode],
-        List[TransformationEdge],
+    def _analyze_python(
+        self, file_path: str
+    ) -> tuple[
+        ModuleNode | None,
+        list[DatasetNode],
+        list[TransformationEdge],
     ]:
         try:
             rel_path = str(Path(file_path).relative_to(Path(self.repo_root)))
@@ -454,8 +485,7 @@ class LanguageRouter:
             source_file=rel_path,
             file_type="python",
             logical_name=Path(file_path).stem,
-            description=f"Python module with {len(imports)} imports, "
-                        f"{len(edges)} data-flow edges",
+            description=f"Python module with {len(imports)} imports, {len(edges)} data-flow edges",
         )
 
         return mod_node, datasets, edges

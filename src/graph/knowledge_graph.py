@@ -1,36 +1,38 @@
 import json
 import os
+
 import networkx as nx
-from typing import List, Union
-from ..models.schemas import ModuleNode, DatasetNode, TransformationEdge
+
+from ..logger import get_logger
+from ..models.schemas import DatasetNode, ModuleNode, TransformationEdge
+
+logger = get_logger(__name__)
+
 
 class KnowledgeGraph:
     """
     Wraps networkx DiGraph to manage and serialize our codebase maps.
     Handles both the Module Graph and the Data Lineage Graph.
     """
+
     def __init__(self, name: str):
         self.name = name
         self.graph = nx.DiGraph()
 
-    def add_node(self, node: Union[ModuleNode, DatasetNode]):
+    def add_node(self, node: ModuleNode | DatasetNode):
         """
         Adds a node to the graph using its Pydantic schema data.
         """
         self.graph.add_node(
-            node.id, 
-            **node.model_dump() # Stores all pydantic fields as node attributes
+            node.id,
+            **node.model_dump(),  # Stores all pydantic fields as node attributes
         )
 
     def add_edge(self, edge: TransformationEdge):
         """
         Adds a directional edge between datasets.
         """
-        self.graph.add_edge(
-            edge.source_dataset, 
-            edge.target_dataset, 
-            **edge.model_dump()
-        )
+        self.graph.add_edge(edge.source_dataset, edge.target_dataset, **edge.model_dump())
 
     def save_json(self, output_path: str):
         """
@@ -38,20 +40,20 @@ class KnowledgeGraph:
         """
         # Ensure the directory exists
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        
+
         # networkx provides an adjacency representation that is easy to serialize
         data = nx.node_link_data(self.graph)
-        
+
         # Ensure 'edges' key is used instead of 'links' for compatibility with other tools
-        if 'links' in data:
-            data['edges'] = data.pop('links')
-        
+        if "links" in data:
+            data["edges"] = data.pop("links")
+
         try:
-            with open(output_path, 'w', encoding='utf-8') as f:
+            with open(output_path, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2)
-            print(f"[Graph] Saved {self.name} to {output_path}")
+            logger.info("Saved %s to %s", self.name, output_path)
         except Exception as e:
-            print(f"[ERROR] Failed to save graph to {output_path}: {e}")
+            logger.error("Failed to save graph to %s: %s", output_path, e)
 
     def export_lineage_text(self) -> str:
         """

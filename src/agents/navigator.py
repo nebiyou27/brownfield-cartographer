@@ -18,9 +18,7 @@ from __future__ import annotations
 
 import json
 import os
-import re
 from pathlib import Path
-from typing import Annotated, Any, Dict, List, Optional
 
 import httpx
 import networkx as nx
@@ -28,14 +26,18 @@ from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.tools import tool
 from langgraph.graph import END, START, MessagesState, StateGraph
 
+from ..logger import get_logger
+
+logger = get_logger(__name__)
+
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
 
-OLLAMA_BASE     = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
-REASON_MODEL    = "deepseek-r1:8b"   # explain_module — needs reasoning
-FAST_MODEL      = "qwen3:1.7b"       # tool routing + lightweight responses
-EMBED_MODEL     = "nomic-embed-text" # find_implementation semantic search
+OLLAMA_BASE = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
+REASON_MODEL = "deepseek-r1:8b"  # explain_module — needs reasoning
+FAST_MODEL = "qwen3:1.7b"  # tool routing + lightweight responses
+EMBED_MODEL = "nomic-embed-text"  # find_implementation semantic search
 
 CARTOGRAPHY_DIR = Path(__file__).resolve().parent.parent.parent / ".cartography"
 
@@ -55,7 +57,8 @@ static analysis or LLM inference. Be concise and precise."""
 # Helpers — load cartography artifacts
 # ---------------------------------------------------------------------------
 
-def _load_json(filename: str) -> Dict:
+
+def _load_json(filename: str) -> dict:
     path = CARTOGRAPHY_DIR / filename
     if path.exists():
         return json.loads(path.read_text(encoding="utf-8"))
@@ -78,18 +81,19 @@ def _load_lineage_graph() -> nx.DiGraph:
     return G
 
 
-def _embed(text: str) -> List[float]:
+def _embed(text: str) -> list[float]:
     url = f"{OLLAMA_BASE}/api/embeddings"
     r = httpx.post(url, json={"model": EMBED_MODEL, "prompt": text}, timeout=60)
     r.raise_for_status()
     return r.json().get("embedding", [])
 
 
-def _cosine(a: List[float], b: List[float]) -> float:
+def _cosine(a: list[float], b: list[float]) -> float:
     if not a or not b:
         return 0.0
     import math
-    dot   = sum(x * y for x, y in zip(a, b))
+
+    dot = sum(x * y for x, y in zip(a, b, strict=True))
     normA = math.sqrt(sum(x * x for x in a))
     normB = math.sqrt(sum(x * x for x in b))
     return dot / (normA * normB) if normA and normB else 0.0
@@ -106,6 +110,7 @@ def _ollama_generate(model: str, prompt: str, timeout: int = 180) -> str:
 # Tool 1 — find_implementation
 # ---------------------------------------------------------------------------
 
+
 @tool
 def find_implementation(concept: str) -> str:
     """
@@ -120,7 +125,7 @@ def find_implementation(concept: str) -> str:
         Ranked list of modules most likely to implement the concept,
         with purpose statements and evidence source.
     """
-    purpose_statements: Dict[str, str] = _load_json("purpose_statements.json")
+    purpose_statements: dict[str, str] = _load_json("purpose_statements.json")
     if not purpose_statements:
         return "[find_implementation] No purpose statements found. Run full analysis first."
 
@@ -135,8 +140,10 @@ def find_implementation(concept: str) -> str:
         scores.sort(key=lambda x: x[1], reverse=True)
         top = scores[:5]
 
-        lines = [f"[find_implementation] Top matches for: '{concept}'\n"
-                 f"Evidence source: semantic search (nomic-embed-text embeddings)\n"]
+        lines = [
+            f"[find_implementation] Top matches for: '{concept}'\n"
+            f"Evidence source: semantic search (nomic-embed-text embeddings)\n"
+        ]
         for rank, (mod_id, score, stmt) in enumerate(top, 1):
             lines.append(f"{rank}. [{score:.3f}] {mod_id}")
             lines.append(f"   Purpose: {stmt[:200]}")
@@ -149,6 +156,7 @@ def find_implementation(concept: str) -> str:
 # ---------------------------------------------------------------------------
 # Tool 2 — trace_lineage
 # ---------------------------------------------------------------------------
+
 
 @tool
 def trace_lineage(dataset: str, direction: str = "upstream") -> str:
@@ -184,8 +192,8 @@ def trace_lineage(dataset: str, direction: str = "upstream") -> str:
         for u, v in reachable.edges():
             # u is downstream, v is upstream in reversed BFS
             edge_data = G.get_edge_data(v, u) or {}
-            tf_type   = edge_data.get("transformation_type", "->")
-            src_file  = edge_data.get("source_file", "unknown")
+            tf_type = edge_data.get("transformation_type", "->")
+            src_file = edge_data.get("source_file", "unknown")
             edges_info.append(f"  {v} --[{tf_type}]--> {u}  [file: {src_file}]")
         nodes = list(reachable.nodes())
         nodes.remove(dataset)
@@ -194,19 +202,21 @@ def trace_lineage(dataset: str, direction: str = "upstream") -> str:
         edges_info = []
         for u, v in reachable.edges():
             edge_data = G.get_edge_data(u, v) or {}
-            tf_type   = edge_data.get("transformation_type", "->")
-            src_file  = edge_data.get("source_file", "unknown")
+            tf_type = edge_data.get("transformation_type", "->")
+            src_file = edge_data.get("source_file", "unknown")
             edges_info.append(f"  {u} --[{tf_type}]--> {v}  [file: {src_file}]")
         nodes = list(reachable.nodes())
         nodes.remove(dataset)
 
     if not nodes:
-        return (f"[trace_lineage] '{dataset}' {note} has no {direction} dependencies.\n"
-                f"Evidence source: static analysis (lineage_graph.json)")
+        return (
+            f"[trace_lineage] '{dataset}' {note} has no {direction} dependencies.\n"
+            f"Evidence source: static analysis (lineage_graph.json)"
+        )
 
     result = [
         f"[trace_lineage] {direction.upper()} of '{dataset}' {note}",
-        f"Evidence source: static analysis (lineage_graph.json)",
+        "Evidence source: static analysis (lineage_graph.json)",
         f"Found {len(nodes)} node(s):\n",
     ]
     result.extend(edges_info[:40])  # cap output length
@@ -218,6 +228,7 @@ def trace_lineage(dataset: str, direction: str = "upstream") -> str:
 # ---------------------------------------------------------------------------
 # Tool 3 — blast_radius
 # ---------------------------------------------------------------------------
+
 
 @tool
 def blast_radius(module_path: str) -> str:
@@ -250,8 +261,10 @@ def blast_radius(module_path: str) -> str:
     # DFS downstream
     descendants = nx.descendants(G, node)
     if not descendants:
-        return (f"[blast_radius] '{node}' has no downstream dependents — safe to change.\n"
-                f"Evidence source: static analysis (lineage_graph.json)")
+        return (
+            f"[blast_radius] '{node}' has no downstream dependents — safe to change.\n"
+            f"Evidence source: static analysis (lineage_graph.json)"
+        )
 
     # BFS layers for distance
     layers = dict(nx.single_source_shortest_path_length(G, node))
@@ -259,11 +272,11 @@ def blast_radius(module_path: str) -> str:
 
     result = [
         f"[blast_radius] Impact of changing '{node}'",
-        f"Evidence source: static analysis (lineage_graph.json)",
+        "Evidence source: static analysis (lineage_graph.json)",
         f"Blast radius: {len(descendants)} downstream node(s)\n",
     ]
 
-    by_distance: Dict[int, List[str]] = {}
+    by_distance: dict[int, list[str]] = {}
     for n, dist in sorted(layers.items(), key=lambda x: x[1]):
         by_distance.setdefault(dist, []).append(n)
 
@@ -284,6 +297,7 @@ def blast_radius(module_path: str) -> str:
 # ---------------------------------------------------------------------------
 # Tool 4 — explain_module
 # ---------------------------------------------------------------------------
+
 
 @tool
 def explain_module(path: str) -> str:
@@ -335,15 +349,15 @@ def explain_module(path: str) -> str:
     # Get lineage context
     G = _load_lineage_graph()
     mod_name = Path(path).stem
-    upstream   = [u for u, _ in G.in_edges(mod_name)][:5]
+    upstream = [u for u, _ in G.in_edges(mod_name)][:5]
     downstream = [v for _, v in G.out_edges(mod_name)][:5]
 
     prompt = f"""You are a senior data engineer explaining a codebase module to a new team member.
 
 File: {path}
-Upstream dependencies: {upstream or 'none'}
-Downstream dependents: {downstream or 'none'}
-Existing purpose summary: {existing_purpose or 'none'}
+Upstream dependencies: {upstream or "none"}
+Downstream dependents: {downstream or "none"}
+Existing purpose summary: {existing_purpose or "none"}
 
 Source code:
 ---
@@ -361,7 +375,9 @@ Evidence source: static analysis + LLM inference (deepseek-r1:8b)"""
 
     try:
         explanation = _ollama_generate(REASON_MODEL, prompt, timeout=240)
-        return f"[explain_module] {path}\nEvidence: static analysis + LLM inference\n\n{explanation}"
+        return (
+            f"[explain_module] {path}\nEvidence: static analysis + LLM inference\n\n{explanation}"
+        )
     except Exception as e:
         return f"[explain_module] Error generating explanation: {e}"
 
@@ -390,25 +406,56 @@ def _route(question: str) -> tuple[str, dict]:
     q = question.lower()
 
     # blast_radius — must check before lineage
-    if any(w in q for w in ["blast", "breaks", "break if", "impact of changing", "affect if", "what breaks"]):
+    if any(
+        w in q
+        for w in ["blast", "breaks", "break if", "impact of changing", "affect if", "what breaks"]
+    ):
         words = question.replace("?", "").split()
         module = next(
-            (w for w in reversed(words) if "/" in w or "\\" in w or ".py" in w or ".sql" in w or "_" in w),
-            words[-1]
+            (
+                w
+                for w in reversed(words)
+                if "/" in w or "\\" in w or ".py" in w or ".sql" in w or "_" in w
+            ),
+            words[-1],
         )
         return "blast_radius", {"module_path": module}
 
     # trace_lineage — upstream/downstream/sources/produces/how does X reach Y
-    if any(w in q for w in ["upstream", "downstream", "feed", "feeds", "sources", "produces", "consumer",
-                             "depends on", "what produces", "what feeds", "where does", "lineage",
-                             "how does", "walk through", "transformation", "transformed", "reaches",
-                             "get to", "flow", "pipeline"]):
-        direction = "downstream" if any(w in q for w in ["downstream", "consumer", "depends on"]) else "upstream"
+    if any(
+        w in q
+        for w in [
+            "upstream",
+            "downstream",
+            "feed",
+            "feeds",
+            "sources",
+            "produces",
+            "consumer",
+            "depends on",
+            "what produces",
+            "what feeds",
+            "where does",
+            "lineage",
+            "how does",
+            "walk through",
+            "transformation",
+            "transformed",
+            "reaches",
+            "get to",
+            "flow",
+            "pipeline",
+        ]
+    ):
+        direction = (
+            "downstream"
+            if any(w in q for w in ["downstream", "consumer", "depends on"])
+            else "upstream"
+        )
         # For "how does X reach Y" — prefer the destination node (last snake_case token)
         words = question.replace("?", "").split()
         dataset = next(
-            (w.strip("'\"`,") for w in reversed(words) if "_" in w and len(w) > 3),
-            words[-1]
+            (w.strip("'\"`,") for w in reversed(words) if "_" in w and len(w) > 3), words[-1]
         )
         return "trace_lineage", {"dataset": dataset, "direction": direction}
 
@@ -416,8 +463,12 @@ def _route(question: str) -> tuple[str, dict]:
     if any(w in q for w in ["explain", "describe", "what does", "purpose of", "what is"]):
         words = question.replace("?", "").split()
         path = next(
-            (w for w in reversed(words) if "/" in w or "\\" in w or ".py" in w or ".sql" in w or "_" in w),
-            words[-1]
+            (
+                w
+                for w in reversed(words)
+                if "/" in w or "\\" in w or ".py" in w or ".sql" in w or "_" in w
+            ),
+            words[-1],
         )
         return "explain_module", {"path": path}
 
@@ -464,11 +515,13 @@ def _route_multi(question: str) -> list[tuple[str, dict]]:
 def _call_tool(tool_name: str, args: dict) -> str:
     """Directly invoke a tool function by name."""
     if tool_name not in _TOOL_MAP:
-        return f"[Navigator] No tool matched for this query."
+        logger.warning("No tool matched for query: %s", tool_name)
+        return "[Navigator] No tool matched for this query."
     tool_fn = _TOOL_MAP[tool_name]
     try:
         return tool_fn.invoke(args)
     except Exception as e:
+        logger.error("Tool '%s' error: %s", tool_name, e)
         return f"[Navigator] Tool '{tool_name}' error: {e}"
 
 
@@ -486,10 +539,11 @@ def _synthesise(question: str, tool_result: str) -> str:
 # LangGraph state graph (route → tool → synthesise)
 # ---------------------------------------------------------------------------
 
+
 class NavState(MessagesState):
-    tool_calls: list    # list of (tool_name, args) tuples to execute
+    tool_calls: list  # list of (tool_name, args) tuples to execute
     tool_results: list  # accumulated results
-    tool_result: str    # final combined result for synthesis
+    tool_result: str  # final combined result for synthesis
 
 
 def _node_route(state: NavState) -> dict:
@@ -508,9 +562,9 @@ def _node_tool(state: NavState) -> dict:
     remaining = calls[1:]
     combined = "\n\n---\n\n".join(results)
     return {
-        "tool_calls":   remaining,
+        "tool_calls": remaining,
         "tool_results": results,
-        "tool_result":  combined,
+        "tool_result": combined,
     }
 
 
@@ -531,19 +585,27 @@ def _more_tools(state: NavState) -> str:
 
 def _build_graph():
     graph = StateGraph(NavState)
-    graph.add_node("route",      _node_route)
-    graph.add_node("tool",       _node_tool)
+    graph.add_node("route", _node_route)
+    graph.add_node("tool", _node_tool)
     graph.add_node("synthesise", _node_synthesise)
 
     graph.add_edge(START, "route")
-    graph.add_conditional_edges("route", _should_run_tool, {
-        "tool":       "tool",
-        "synthesise": "synthesise",
-    })
-    graph.add_conditional_edges("tool", _more_tools, {
-        "tool":       "tool",
-        "synthesise": "synthesise",
-    })
+    graph.add_conditional_edges(
+        "route",
+        _should_run_tool,
+        {
+            "tool": "tool",
+            "synthesise": "synthesise",
+        },
+    )
+    graph.add_conditional_edges(
+        "tool",
+        _more_tools,
+        {
+            "tool": "tool",
+            "synthesise": "synthesise",
+        },
+    )
     graph.add_edge("synthesise", END)
 
     return graph.compile()
@@ -554,12 +616,14 @@ class Navigator:
         self.graph = _build_graph()
 
     def query(self, question: str) -> str:
-        result = self.graph.invoke({
-            "messages":     [HumanMessage(content=question)],
-            "tool_calls":   [],
-            "tool_results": [],
-            "tool_result":  "",
-        })
+        result = self.graph.invoke(
+            {
+                "messages": [HumanMessage(content=question)],
+                "tool_calls": [],
+                "tool_results": [],
+                "tool_result": "",
+            }
+        )
         return result["messages"][-1].content
 
     def run_interactive(self):

@@ -17,13 +17,14 @@ import json
 import os
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import httpx
 
 from ..graph.knowledge_graph import KnowledgeGraph
-from ..models.schemas import DatasetNode, ModuleNode
+from ..logger import get_logger
 
+logger = get_logger(__name__)
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -31,11 +32,11 @@ from ..models.schemas import DatasetNode, ModuleNode
 
 OLLAMA_BASE = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
 
-BULK_MODEL      = "qwen3:1.7b"        # many calls — purpose statements, drift
-SYNTHESIS_MODEL = "deepseek-r1:8b"    # few calls  — Day-One answers, brief
-EMBED_MODEL     = "nomic-embed-text"  # embeddings — domain clustering
+BULK_MODEL = "qwen3:1.7b"  # many calls — purpose statements, drift
+SYNTHESIS_MODEL = "deepseek-r1:8b"  # few calls  — Day-One answers, brief
+EMBED_MODEL = "nomic-embed-text"  # embeddings — domain clustering
 
-BULK_TIMEOUT      = 60   # seconds
+BULK_TIMEOUT = 60  # seconds
 SYNTHESIS_TIMEOUT = 300  # deepseek-r1 reasons, give it time
 
 
@@ -43,31 +44,33 @@ SYNTHESIS_TIMEOUT = 300  # deepseek-r1 reasons, give it time
 # ContextWindowBudget — tracks calls and estimated token spend
 # ---------------------------------------------------------------------------
 
+
 class ContextWindowBudget:
     """Lightweight tracker so we know how much we've spent per model."""
 
     def __init__(self):
-        self._calls: Dict[str, int] = {}
-        self._est_tokens: Dict[str, int] = {}
+        self._calls: dict[str, int] = {}
+        self._est_tokens: dict[str, int] = {}
 
     def record(self, model: str, prompt_len: int):
         self._calls[model] = self._calls.get(model, 0) + 1
         # rough estimate: 1 token ≈ 4 chars
         self._est_tokens[model] = self._est_tokens.get(model, 0) + (prompt_len // 4)
 
-    def summary(self) -> Dict[str, Any]:
+    def summary(self) -> dict[str, Any]:
         return {
             "calls_per_model": dict(self._calls),
             "estimated_tokens_per_model": dict(self._est_tokens),
         }
 
     def log(self):
-        print("[ContextWindowBudget]", json.dumps(self.summary(), indent=2))
+        logger.info("[ContextWindowBudget] %s", json.dumps(self.summary(), indent=2))
 
 
 # ---------------------------------------------------------------------------
 # Low-level Ollama helpers
 # ---------------------------------------------------------------------------
+
 
 def _ollama_generate(model: str, prompt: str, timeout: int = BULK_TIMEOUT) -> str:
     """
@@ -82,13 +85,13 @@ def _ollama_generate(model: str, prompt: str, timeout: int = BULK_TIMEOUT) -> st
         return r.json().get("response", "").strip()
     except httpx.HTTPStatusError as e:
         raise RuntimeError(f"Ollama HTTP error {e.response.status_code}: {e.response.text}") from e
-    except httpx.ConnectError:
+    except httpx.ConnectError as e:
         raise RuntimeError(
             f"Cannot reach Ollama at {OLLAMA_BASE}. Is `ollama serve` running?"
-        )
+        ) from e
 
 
-def _ollama_embed(text: str) -> List[float]:
+def _ollama_embed(text: str) -> list[float]:
     """
     Call Ollama /api/embeddings with nomic-embed-text.
     Returns a float vector.
@@ -164,7 +167,7 @@ def detect_doc_drift(
     docstring: str,
     code: str,
     budget: ContextWindowBudget,
-) -> Tuple[str, str]:
+) -> tuple[str, str]:
     """
     Returns (verdict, explanation) where verdict is ALIGNED | DRIFT | MISSING.
     """
@@ -179,7 +182,7 @@ def detect_doc_drift(
     budget.record(BULK_MODEL, len(prompt))
     try:
         raw = _ollama_generate(BULK_MODEL, prompt, timeout=BULK_TIMEOUT)
-        lines = [l.strip() for l in raw.strip().splitlines() if l.strip()]
+        lines = [line.strip() for line in raw.strip().splitlines() if line.strip()]
         verdict = lines[0].upper() if lines else "UNKNOWN"
         explanation = lines[1] if len(lines) > 1 else ""
         # Normalise — model might say "DRIFT: ..." on one line
@@ -196,10 +199,11 @@ def detect_doc_drift(
 # Domain clustering  (nomic-embed-text + k-means)
 # ---------------------------------------------------------------------------
 
+
 def cluster_into_domains(
-    purpose_statements: Dict[str, str],
+    purpose_statements: dict[str, str],
     k: int = 6,
-) -> Dict[str, str]:
+) -> dict[str, str]:
     """
     Embed all purpose statements with nomic-embed-text, run k-means,
     then label each cluster with a short domain name using the bulk model.
@@ -213,21 +217,22 @@ def cluster_into_domains(
         import numpy as np
         from sklearn.cluster import KMeans
     except ImportError:
-        print("[Semanticist] sklearn/numpy not available — skipping domain clustering. "
-              "Run: uv add scikit-learn numpy")
+        logger.warning(
+            "sklearn/numpy not available — skipping domain clustering. Run: uv add scikit-learn numpy"
+        )
         return {mid: "unclustered" for mid in purpose_statements}
 
     ids = list(purpose_statements.keys())
     texts = [purpose_statements[i] for i in ids]
 
-    print(f"[Semanticist] Embedding {len(texts)} purpose statements...")
+    logger.info("Embedding %d purpose statements...", len(texts))
     embeddings = []
     for text in texts:
         try:
             vec = _ollama_embed(text)
             embeddings.append(vec)
         except Exception as e:
-            print(f"[WARNING] Embedding failed: {e}")
+            logger.warning("Embedding failed: %s", e)
             embeddings.append([0.0] * 768)
 
     X = np.array(embeddings)
@@ -240,11 +245,11 @@ def cluster_into_domains(
     labels = km.fit_predict(X)
 
     # Label each cluster: take up to 3 representative statements and ask the model
-    cluster_texts: Dict[int, List[str]] = {}
+    cluster_texts: dict[int, list[str]] = {}
     for idx, label in enumerate(labels):
         cluster_texts.setdefault(int(label), []).append(texts[idx])
 
-    cluster_names: Dict[int, str] = {}
+    cluster_names: dict[int, str] = {}
     for cluster_id, samples in cluster_texts.items():
         sample_block = "\n".join(f"- {s}" for s in samples[:3])
         label_prompt = (
@@ -301,9 +306,9 @@ For Q5, rank files by commit count from the velocity data provided.
 
 def answer_day_one_questions(
     graph: KnowledgeGraph,
-    purpose_statements: Dict[str, str],
+    purpose_statements: dict[str, str],
     budget: ContextWindowBudget,
-    git_velocity: Optional[Dict[str, int]] = None,
+    git_velocity: dict[str, int] | None = None,
 ) -> str:
     """
     Uses deepseek-r1:8b to synthesise Day-One answers from the full graph context.
@@ -312,14 +317,15 @@ def answer_day_one_questions(
     module_summary = _summarise_modules(graph)
     lineage_summary = _summarise_lineage(graph)
     purpose_block = "\n".join(
-        f"[{mid}]: {stmt[:200]}"
-        for mid, stmt in list(purpose_statements.items())[:40]
+        f"[{mid}]: {stmt[:200]}" for mid, stmt in list(purpose_statements.items())[:40]
     )
 
     # Format git velocity — top 20 by commit count, real data for Q5
     if git_velocity:
         top_files = sorted(git_velocity.items(), key=lambda x: x[1], reverse=True)[:20]
-        velocity_block = "\n".join(f"  {commits:3d} commits — {path}" for path, commits in top_files)
+        velocity_block = "\n".join(
+            f"  {commits:3d} commits — {path}" for path, commits in top_files
+        )
     else:
         velocity_block = "  (no git history available)"
 
@@ -330,11 +336,10 @@ def answer_day_one_questions(
         velocity_block=velocity_block,
     )
     budget.record(SYNTHESIS_MODEL, len(prompt))
-    print(f"[Semanticist] Running Day-One synthesis with {SYNTHESIS_MODEL} "
-          f"(this may take 30-90s)...")
+    logger.info("Running Day-One synthesis with %s (this may take 30-90s)...", SYNTHESIS_MODEL)
     t0 = time.time()
     result = _ollama_generate(SYNTHESIS_MODEL, prompt, timeout=SYNTHESIS_TIMEOUT)
-    print(f"[Semanticist] Synthesis completed in {time.time() - t0:.1f}s")
+    logger.info("Synthesis completed in %.1fs", time.time() - t0)
     return result
 
 
@@ -360,6 +365,7 @@ def _summarise_lineage(graph: KnowledgeGraph) -> str:
 # Main Semanticist agent class
 # ---------------------------------------------------------------------------
 
+
 class Semanticist:
     """
     Phase 3 agent. Reads ModuleNodes from the KnowledgeGraph, enriches them
@@ -380,9 +386,9 @@ class Semanticist:
     def analyse(
         self,
         graph: KnowledgeGraph,
-        module_graph: Optional[KnowledgeGraph] = None,
-        git_velocity: Optional[Dict[str, int]] = None,
-    ) -> Dict[str, Any]:
+        module_graph: KnowledgeGraph | None = None,
+        git_velocity: dict[str, int] | None = None,
+    ) -> dict[str, Any]:
         """
         Full Semanticist pipeline. Returns enriched data dict.
         Batches calls by model to avoid VRAM thrashing.
@@ -391,43 +397,45 @@ class Semanticist:
                       Passed into the Day-One synthesis so Q5 is grounded
                       in real git history rather than filename heuristics.
         """
-        print("\n[Semanticist] ===== Phase 3 Starting =====")
+        logger.info("===== Phase 3 Starting =====")
 
         # Collect modules with readable source files
         modules = self._collect_readable_modules(graph, module_graph=module_graph)
-        print(f"[Semanticist] Found {len(modules)} readable modules")
+        logger.info("Found %d readable modules", len(modules))
 
         # ---- BATCH 1: nomic-embed prereqs (purpose statements needed first) ----
         # ---- BATCH 2: qwen3:1.7b — purpose statements (bulk) ------------------
-        print(f"\n[Semanticist] Generating purpose statements ({BULK_MODEL})...")
-        purpose_statements: Dict[str, str] = {}
+        logger.info("Generating purpose statements (%s)...", BULK_MODEL)
+        purpose_statements: dict[str, str] = {}
         for mod_id, code, _ in modules:
             stmt = generate_purpose_statement(mod_id, code, self.budget)
             purpose_statements[mod_id] = stmt
-            print(f"  ✓ {mod_id[:60]}")
+            logger.info("  ✓ %s", mod_id[:60])
 
         # ---- BATCH 3: qwen3:1.7b — doc drift detection (bulk) -----------------
-        print(f"\n[Semanticist] Detecting doc drift ({BULK_MODEL})...")
-        drift_flags: Dict[str, Dict[str, str]] = {}
+        logger.info("Detecting doc drift (%s)...", BULK_MODEL)
+        drift_flags: dict[str, dict[str, str]] = {}
         for mod_id, code, docstring in modules:
             verdict, explanation = detect_doc_drift(mod_id, docstring, code, self.budget)
             if verdict in ("DRIFT", "MISSING"):
                 drift_flags[mod_id] = {"verdict": verdict, "explanation": explanation}
-                print(f"  ⚠ {verdict}: {mod_id[:60]}")
+                logger.info("  ⚠ %s: %s", verdict, mod_id[:60])
 
         # ---- BATCH 4: nomic-embed-text — domain clustering --------------------
-        print(f"\n[Semanticist] Clustering into domains ({EMBED_MODEL})...")
+        logger.info("Clustering into domains (%s)...", EMBED_MODEL)
         domain_map = cluster_into_domains(purpose_statements)
 
         # ---- BATCH 5: deepseek-r1:8b — Day-One synthesis (once) --------------
-        print(f"\n[Semanticist] Synthesising Day-One answers ({SYNTHESIS_MODEL})...")
+        logger.info("Synthesising Day-One answers (%s)...", SYNTHESIS_MODEL)
         day_one_answers = answer_day_one_questions(
-            graph, purpose_statements, self.budget,
+            graph,
+            purpose_statements,
+            self.budget,
             git_velocity=git_velocity or {},
         )
 
         self.budget.log()
-        print("[Semanticist] ===== Phase 3 Complete =====\n")
+        logger.info("===== Phase 3 Complete =====")
 
         return {
             "purpose_statements": purpose_statements,
@@ -439,8 +447,10 @@ class Semanticist:
 
     # ------------------------------------------------------------------
     def _collect_readable_modules(
-        self, graph: KnowledgeGraph, module_graph: Optional[KnowledgeGraph] = None,
-    ) -> List[Tuple[str, str, str]]:
+        self,
+        graph: KnowledgeGraph,
+        module_graph: KnowledgeGraph | None = None,
+    ) -> list[tuple[str, str, str]]:
         """
         Returns [(module_id, code_text, docstring), ...] for every node
         whose source file can be read from disk.
@@ -484,6 +494,7 @@ class Semanticist:
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _extract_docstring(code: str, suffix: str) -> str:
     """
     Best-effort docstring extraction.
@@ -492,6 +503,7 @@ def _extract_docstring(code: str, suffix: str) -> str:
     """
     if suffix == ".py":
         import ast
+
         try:
             tree = ast.parse(code)
             return ast.get_docstring(tree) or ""

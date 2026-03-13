@@ -8,99 +8,65 @@
 
 ## 1. Architecture Overview
 
-`d:\TRP-1\Week-4\ol-data-platform` is a dbt-based data engineering project comprising **278 Python modules** and **88 SQL/dataset nodes** across **6 inferred business domains**. The lineage graph contains **108 transformation edges** tracing data from raw sources through intermediary models to enriched output datasets. The primary ingestion layer loads CSV, JSON, and shapefiles into PostgreSQL via `load/loaders.py`; transformation logic lives in the `1_data/` dbt model tree.
+`make-open-data` is a dbt-based data engineering project comprising **82 Python modules** and **104 SQL/dataset nodes** across **5 inferred business domains**. The lineage graph contains **121 transformation edges** tracing data from raw sources through intermediary models to enriched output datasets. The primary ingestion layer loads CSV, JSON, and shapefiles into PostgreSQL via `load/loaders.py`; transformation logic lives in the `1_data/` dbt model tree.
 
 ## 2. Critical Path
 
 *Top modules by PageRank — highest architectural impact if changed.*
 
-1. **`bin\dbt-local-dev.py`** (score: 0.1103) — This module enables developers to create local environments for dbt projects using DuckDB, allowing them to efficiently ...
-2. **`dg_projects\openedx\openedx\ops\normalize_logs.py`** (score: 0.0471) — The module ingests log data from S3 buckets, normalizes and transforms it into a consistent format for further analysis,...
-3. **`dg_projects\edxorg\edxorg\assets\edxorg_archive.py`** (score: 0.0302) — The module processes raw data archives from edx.org to extract per-course assets and model them according to their type,...
-4. **`video_short_webhook`** (score: 0.0201) — This module processes video metadata from Google Sheets, extracts the top 12 most recent videos, generates thumbnails, a...
-5. **`course_content_metadata`** (score: 0.0134) — This module exports structured course metadata and content from Canvas, storing them in S3 for integration with external...
+1. **`ventes_immobilieres`** (score: 0.0973)
+2. **`ventes_immobilieres_enrichies`** (score: 0.0874)
+3. **`load\loaders.py`** (score: 0.0329) — The module facilitates the ingestion of structured data from various sources (CSV, JSON, and shapefiles) into a PostgreS...
+4. **`infos_communes`** (score: 0.0245)
+5. **`habitat_departements`** (score: 0.0172)
 
 ## 3. Data Sources & Sinks
 
 ### Sources (no upstream dependencies)
 
-- `
-                    SELECT view_name, metadata_location
-                    FROM _glue_source_registry
-                    WHERE glue_database = ?
-                `
-- `
-            CREATE TABLE IF NOT EXISTS _glue_source_registry (
-                view_name VARCHAR PRIMARY KEY,
-                glue_database VARCHAR,
-                glue_table VARCHAR,
-                metadata_location VARCHAR,
-                registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        `
-- `
-            INSERT OR REPLACE INTO _glue_source_registry
-            (view_name, glue_database, glue_table, metadata_location, registered_at)
-            VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
-        `
-- `
-            SELECT
-                glue_database,
-                COUNT(*) as table_count
-            FROM _glue_source_registry
-            GROUP BY glue_database
-            ORDER BY glue_database
-        `
-- `
-            SELECT
-                view_name,
-                glue_database,
-                glue_table,
-                registered_at
-            FROM _glue_source_registry
-            ORDER BY registered_at DESC
-        `
-- `
-            UPDATE tracking_logs
-            SET time = strftime(TRY_CAST(time AS TIMESTAMP), '%Y-%m-%d %H:%M:%S.%f')
-            `
-- `CALL load_aws_credentials()`
-- `CHECKPOINT`
-- `VACUUM`
-- `canvas_content_export`
-- `columns`
-- `config`
-- `course_archive`
-- `course_ids`
-- `course_metadata_export`
-- `courseware`
-- `daily_extracts_dir`
-- `downloaded_objects`
-- `dummy_edxorg_course_structure`
-- `dummy_edxorg_course_xml`
+- `4_seeds/logement_2020_valeurs.csv`
+- `bmo_2024`
+- `bpe_2023`
+- `bpe_metadata`
+- `cog_arrondissements`
+- `cog_communes`
+- `cog_departements`
+- `cog_poste`
+- `cog_regions`
+- `communes_to_scot`
+- `datatourisme_place`
+- `dvf_2014`
+- `dvf_2014_dev`
+- `dvf_2015`
+- `dvf_2015_dev`
+- `dvf_2016`
+- `dvf_2016_dev`
+- `dvf_2017`
+- `dvf_2017_dev`
+- `dvf_2018`
 
 ### Sinks (no downstream dependents)
 
-- `_superset_dataset`
-- `bin\dbt-local-dev.py`
-- `course_content_metadata`
-- `course_enrollments`
-- `course_roles`
-- `dg_projects\edxorg\edxorg\assets\edxorg_archive.py`
-- `dg_projects\lakehouse\lakehouse\assets\instructor_onboarding.py`
-- `dg_projects\legacy_openedx\legacy_openedx\resources\mysql_db.py`
-- `dg_projects\legacy_openedx\legacy_openedx\resources\sqlite_db.py`
-- `dg_projects\openedx\openedx\ops\normalize_logs.py`
-- `download_edx_gcs_course_data`
-- `download_file_from_gcs`
-- `download_files_from_s3`
-- `dummy_edxorg_course_structure`
-- `dummy_edxorg_course_xml`
-- `edxorg_course_content_webhook`
-- `edxorg_raw_tracking_logs`
-- `enrolled_users`
-- `export_b2b_organization_data`
-- `export_edx_courses`
+- `activite_departements`
+- `activite_iris`
+- `activite_renomee`
+- `besoin_main_oeuvre_departement`
+- `bpe_2023`
+- `bpe_metadata`
+- `commune_centroid_poste`
+- `demographie_departements`
+- `demographie_iris`
+- `demographie_renomee`
+- `filosofi_iris_2021`
+- `habitat_departements`
+- `habitat_iris`
+- `infos_postes`
+- `infos_scot`
+- `load/__main__.py`
+- `mobilite_departements`
+- `mobilite_iris`
+- `mobilite_renomee`
+- `place`
 
 ## 4. Known Debt
 
@@ -108,2155 +74,554 @@
 
 ✅ No circular dependencies detected.
 
-### Documentation Drift: 189 flag(s)
+### Documentation Drift: 9 flag(s)
 
-- ❌ **MISSING** `
-            UPDATE tracking_logs
-            SET time = strftime(TRY_CAST(time AS TIMESTAMP), '%Y-%m-%d %H:%M:%S.%f')
-            ` — No docstring found.
-- ❌ **MISSING** `_superset_dataset` — No docstring found.
-- ❌ **MISSING** `bin\dbt-create-staging-models.py` — The docstring is missing, indicating that the code's functionality and details are not documented.
-- ❌ **MISSING** `course_content_metadata` — No docstring found.
-- ❌ **MISSING** `course_enrollments` — No docstring found.
-- ❌ **MISSING** `course_roles` — No docstring found.
-- ❌ **MISSING** `course_xml` — No docstring found.
-- ❌ **MISSING** `dg_projects\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\b2b_organization\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\b2b_organization\b2b_organization\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\b2b_organization\b2b_organization\assets\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\b2b_organization\b2b_organization\assets\data_export.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\b2b_organization\b2b_organization\definitions.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\b2b_organization\b2b_organization\defs\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\b2b_organization\b2b_organization\partitions\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\b2b_organization\b2b_organization\partitions\b2b_organization.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\b2b_organization\b2b_organization\sensors\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\b2b_organization\b2b_organization\sensors\b2b_organization.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\b2b_organization\b2b_organization_tests\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\canvas\canvas\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\canvas\canvas\assets\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\canvas\canvas\assets\canvas.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\canvas\canvas\defs\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\canvas\canvas\lib\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\canvas\canvas\lib\canvas.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\canvas\canvas\resources\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\canvas\canvas\resources\api_client_factory.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\canvas\canvas\sensors\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\canvas\canvas\sensors\canvas.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\canvas\canvas_tests\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\data_loading\data_loading\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\data_loading\data_loading\components\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\data_loading\data_loading\defs\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\data_loading\data_loading\defs\edxorg_s3_ingest\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\data_loading\data_loading_tests\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\data_platform\data_platform\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\data_platform\data_platform\assets\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\data_platform\data_platform\assets\metadata\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\data_platform\data_platform\assets\metadata\databases.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\data_platform\data_platform\defs\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\data_platform\data_platform\lib\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\data_platform\orchestration_platform_tests\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\edxorg\edxorg\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\edxorg\edxorg\assets\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\edxorg\edxorg\assets\edxorg_api.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\edxorg\edxorg\assets\edxorg_archive.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\edxorg\edxorg\assets\openedx_course_archives.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\edxorg\edxorg\defs\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\edxorg\edxorg\io_managers\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\edxorg\edxorg\io_managers\gcs.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\edxorg\edxorg\jobs\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\edxorg\edxorg\jobs\edx_gcs_courses.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\edxorg\edxorg\jobs\retrieve_edx_exports.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\edxorg\edxorg\lib\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\edxorg\edxorg\lib\edxorg.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\edxorg\edxorg\ops\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\edxorg\edxorg\ops\edx_gcs_courses.py` — No docstring found.
-- ⚠️ **DRIFT** `dg_projects\edxorg\edxorg\ops\object_storage.py` — The docstring is a deprecation notice informing users that the code is outdated and should be replaced, but it does not describe the actual functionality of the code. The implementation, however, defines the operations (sync_files_to_s3, download_files_from_s3, upload_files_to_s3) which are the actual implementations of the deprecated functionality. The docstring does not accurately reflect the code's purpose or functionality.
-- ❌ **MISSING** `dg_projects\edxorg\edxorg\sensors\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\edxorg\edxorg_tests\__init__.py` — No docstring found.
-- ⚠️ **DRIFT** `dg_projects\edxorg\edxorg_tests\test_edxorg_lib.py` — The docstring incorrectly states that the file contains tests for parsing utilities, but the implementation is a set of test cases for those utilities. The docstring does not accurately describe the code's functionality, as it focuses on the test file's purpose rather than the actual implementation.
-- ❌ **MISSING** `dg_projects\lakehouse\lakehouse\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\lakehouse\lakehouse\assets\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\lakehouse\lakehouse\assets\lakehouse\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\lakehouse\lakehouse\assets\lakehouse\dbt.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\lakehouse\lakehouse\assets\superset.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\lakehouse\lakehouse\definitions.py` — The DOCSTRING is missing, as it only states "ELT assets for the data lakehouse" without any detailed explanation of the code's functionality or purpose. The implementation contains extensive code for setting up environments, configuring airbyte, vault, and other resources, but the docstring does not reflect this.
-- ❌ **MISSING** `dg_projects\lakehouse\lakehouse\defs\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\lakehouse\lakehouse\lib\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\lakehouse\lakehouse\resources\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\lakehouse\lakehouse\resources\airbyte.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\lakehouse\lakehouse\resources\superset_api.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\lakehouse\lakehouse_tests\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\learning_resources\learning_resources\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\learning_resources\learning_resources\assets\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\learning_resources\learning_resources\assets\sloan_api.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\learning_resources\learning_resources\defs\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\learning_resources\learning_resources\lib\__init__.py` — No docstring found.
-- ⚠️ **DRIFT** `dg_projects\learning_resources\learning_resources\lib\contants.py` — The docstring lacks specific details about the constants' values or purpose, while the implementation defines them explicitly.
-- ❌ **MISSING** `dg_projects\learning_resources\learning_resources\resources\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\learning_resources\learning_resources\sensors\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\learning_resources\learning_resources_tests\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\legacy_openedx\legacy_openedx\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\legacy_openedx\legacy_openedx\jobs\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\legacy_openedx\legacy_openedx\jobs\open_edx.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\legacy_openedx\legacy_openedx\lib\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\legacy_openedx\legacy_openedx\ops\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\legacy_openedx\legacy_openedx\ops\open_edx.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\legacy_openedx\legacy_openedx\repositories\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\legacy_openedx\legacy_openedx\resources\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\legacy_openedx\legacy_openedx\resources\healthchecks.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\legacy_openedx\legacy_openedx\resources\mysql_db.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\legacy_openedx\legacy_openedx\resources\sqlite_db.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\legacy_openedx\legacy_openedx\schedules\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\legacy_openedx\legacy_openedx\schedules\open_edx.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\legacy_openedx\legacy_openedx\sensors\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\legacy_openedx\legacy_openedx_tests\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\openedx\openedx\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\openedx\openedx\assets\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\openedx\openedx\assets\openedx.py` — No docstring found.
-- ⚠️ **DRIFT** `dg_projects\openedx\openedx\components\__init__.py` — The docstring mentions "Components for OpenEdX data extraction," but the implementation is about importing a module and defining an entry point, which does not accurately describe the code's actual purpose.
-- ❌ **MISSING** `dg_projects\openedx\openedx\jobs\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\openedx\openedx\jobs\normalize_logs.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\openedx\openedx\lib\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\openedx\openedx\lib\assets_helper.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\openedx\openedx\lib\magic_numbers.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\openedx\openedx\ops\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\openedx\openedx\ops\normalize_logs.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\openedx\openedx\partitions\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\openedx\openedx\partitions\openedx.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\openedx\openedx\schedules\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\openedx\openedx\schedules\open_edx.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\openedx\openedx\sensors\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\openedx\openedx\sensors\openedx.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\openedx\openedx_tests\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\student_risk_probability\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\student_risk_probability\student_risk_probability\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\student_risk_probability\student_risk_probability\assets\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\student_risk_probability\student_risk_probability\assets\risk_probability.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\student_risk_probability\student_risk_probability\definitions.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\student_risk_probability\student_risk_probability\lib\__init__.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\student_risk_probability\student_risk_probability\lib\helper.py` — No docstring found.
-- ❌ **MISSING** `dg_projects\student_risk_probability\student_risk_probability\resources\__init__.py` — No docstring found.
-- ❌ **MISSING** `download_edx_gcs_course_data` — No docstring found.
-- ⚠️ **DRIFT** `download_file_from_gcs` — The docstring is a deprecation notice explaining that the code is outdated and suggests using the IO Manager interface. It does not describe the actual functionality of the code, nor does it accurately reflect what the implementation does. The implementation's code is the actual logic, which is not mentioned in the docstring.
-- ❌ **MISSING** `dummy_edxorg_course_structure` — No docstring found.
-- ❌ **MISSING** `dummy_edxorg_course_xml` — No docstring found.
-- ❌ **MISSING** `edxorg_course_content_webhook` — No docstring found.
-- ❌ **MISSING** `edxorg_raw_data_archive` — No docstring found.
-- ❌ **MISSING** `edxorg_raw_tracking_logs` — No docstring found.
-- ❌ **MISSING** `enrolled_users` — No docstring found.
-- ❌ **MISSING** `export_b2b_organization_data` — No docstring found.
-- ❌ **MISSING** `export_edx_courses` — No docstring found.
-- ❌ **MISSING** `export_edx_forum_database` — No docstring found.
-- ❌ **MISSING** `fetch_edx_course_structure_from_api` — No docstring found.
-- ❌ **MISSING** `jsonify_log_data` — No docstring found.
-- ❌ **MISSING** `list_courses` — No docstring found.
-- ❌ **MISSING** `load_files_to_table` — No docstring found.
-- ❌ **MISSING** `normalize_edxorg_tracking_log` — No docstring found.
-- ❌ **MISSING** `openedx_course_content_webhook` — No docstring found.
-- ❌ **MISSING** `openedx_live_courseware` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\assets\__init__.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\io_managers\__init__.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\io_managers\filepath.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\jobs\__init__.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\__init__.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\automation_policies.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\constants.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\dagster_helpers.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\dagster_types\__init__.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\dagster_types\files.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\dagster_types\google.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\file_rendering.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\hooks.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\openedx.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\utils.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\yaml_config_helper.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\ops\__init__.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\partitions\__init__.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\__init__.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\api_client.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\api_client_factory.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\canvas_api.py` — No docstring found.
-- ⚠️ **DRIFT** `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\gcp_gcs.py` — The DOCSTRING is overly vague and does not accurately describe the code's implementation. It merely states "Resource for connecting to a gcs" without detailing the class's fields, context manager, or client property, which are critical to understanding the code's functionality.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\learn_api.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\oauth.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\openedx.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\outputs.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\postgres_db.py` — The docstring is missing, and it does not describe the resource's purpose or usage in the Dagster framework, which is evident from the implementation.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\secrets\__init__.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\secrets\vault.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\schedules\__init__.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\sensors\__init__.py` — No docstring found.
-- ❌ **MISSING** `packages\ol-orchestrate-lib\src\ol_orchestrate\sensors\object_storage.py` — No docstring found.
-- ❌ **MISSING** `process_edxorg_archive_bundle` — No docstring found.
-- ❌ **MISSING** `src\ol_superset\ol_superset\commands\__init__.py` — No docstring found.
-- ⚠️ **DRIFT** `src\ol_superset\ol_superset\commands\lock.py` — 
-- ❌ **MISSING** `src\ol_superset\ol_superset\lib\__init__.py` — No docstring found.
-- ⚠️ **DRIFT** `src\ol_superset\ol_superset\lib\utils.py` — The DOCSTRING is too vague and does not accurately describe the specific functions and purposes of the code. It only states that the code is for "Superset CLI" without detailing the actual implementations, such as handling repository roots, asset counting, or running CLI commands. The code's functionality is significantly more detailed than the DOCSTRING provides.
-- ❌ **MISSING** `student_risk_probability` — No docstring found.
-- ❌ **MISSING** `student_submissions` — No docstring found.
-- ❌ **MISSING** `transform_log_data` — No docstring found.
-- ⚠️ **DRIFT** `update_access_forge_repo` — The docstring incorrectly claims the module pushes data to a private GitHub repository, but the implementation does not perform any GitHub operations; it simply generates a CSV file.
-- ❌ **MISSING** `upload_edx_gcs_course_data_to_s3` — No docstring found.
-- ❌ **MISSING** `upload_extracted_data` — No docstring found.
-- ❌ **MISSING** `user_roles` — No docstring found.
-- ⚠️ **DRIFT** `video_short_thumbnail_small` — The docstring claims the code processes Video Shorts videos from Google Sheets, but the implementation merely fetches the metadata without processing it. The code does not actually handle the videos, contradicting the docstring's description.
-- ❌ **MISSING** `write_course_list_csv` — No docstring found.
-- ❌ **MISSING** `write_file_to_s3` — No docstring found.
+- ❌ **MISSING** `4_seeds/logement_2020_valeurs.csv` — The DOCSTRING is not a proper Python docstring (no class/function definition), while the IMPLEMENTATION code is accurately described in the terminal instructions and code comments.
+- ❌ **MISSING** `load\__init__.py` — No docstring found.
+- ❌ **MISSING** `load\loaders.py` — No docstring found.
+- ❌ **MISSING** `tests\__init__.py` — No docstring found.
+- ❌ **MISSING** `tests\conftest.py` — No docstring found.
+- ❌ **MISSING** `tests\fixtures\__init__.py` — No docstring found.
+- ❌ **MISSING** `tests\load\__init__.py` — No docstring found.
+- ❌ **MISSING** `tests\load\test_loaders.py` — No docstring found.
+- ⚠️ **DRIFT** `utils\generer_doc_recenssement.py` — The DOCSTRING provides a general overview but lacks specific details about the code's functionality, such as how it processes data, the parameters it uses, or the output it generates. It also misrepresents the code's purpose by focusing on a single example (labels with multiple modalities) without explaining the broader context of generating schema documentation.
 
-### Orphaned Nodes: 10
+### Orphaned Nodes: 3
 
-- `dummy_edxorg_course_structure`
-- `dummy_edxorg_course_xml`
-- `edxorg_raw_tracking_logs`
-- `export_b2b_organization_data`
-- `generate_instructor_onboarding_user_list`
-- `google_sheets_api`
-- `jsonify_log_data`
-- `openedx_live_courseware`
-- `student_risk_probability`
-- `transform_log_data`
+- `bpe_2023`
+- `bpe_metadata`
+- `filosofi_iris_2021`
 
 ## 5. High-Velocity Files
 
 *Files with the most commits in the last 30 days — likely pain points.*
 
-- `dg_projects\edxorg\edxorg\definitions.py` — **14** commits ██████████████
-- `dg_projects\lakehouse\lakehouse\assets\instructor_onboarding.py` — **11** commits ███████████
-- `dg_projects\edxorg\edxorg\assets\edxorg_archive.py` — **10** commits ██████████
-- `bin\utils\chunk_tracking_logs_by_day.py` — **8** commits ████████
-- `bin\dbt-create-staging-models.py` — **7** commits ███████
-- `dg_deployments\reconcile_edxorg_partitions.py` — **6** commits ██████
-- `dg_projects\edxorg\edxorg\assets\openedx_course_archives.py` — **6** commits ██████
-- `src\ol_superset\ol_superset\cli.py` — **6** commits ██████
-- `dg_projects\lakehouse\lakehouse\definitions.py` — **5** commits █████
-- `dg_projects\openedx\openedx\assets\openedx.py` — **5** commits █████
-- `dg_projects\openedx\openedx\components\openedx_deployment.py` — **5** commits █████
-- `dg_projects\edxorg\edxorg\lib\edxorg.py` — **4** commits ████
-- `dg_projects\learning_resources\learning_resources\definitions.py` — **4** commits ████
-- `dg_projects\learning_resources\learning_resources\assets\video_shorts.py` — **4** commits ████
-- `dg_projects\legacy_openedx\legacy_openedx\definitions.py` — **4** commits ████
+- `load\loaders.py` — **5** commits █████
+- `load\__main__.py` — **3** commits ███
+- `tests\load\test_loaders.py` — **3** commits ███
+- `extract\__init__.py` — **2** commits ██
+- `load\__init__.py` — **1** commits █
+- `tests\conftest.py` — **1** commits █
+- `tests\__init__.py` — **1** commits █
+- `tests\fixtures\db.py` — **1** commits █
+- `tests\fixtures\__init__.py` — **1** commits █
+- `tests\load\__init__.py` — **1** commits █
+- `utils\generer_doc_recenssement.py` — **1** commits █
+- `make-open-data\1_data\intermediaires\foncier\schema.yml` — **0** commits 
+- `make-open-data\1_data\intermediaires\geographie\schema.yml` — **0** commits 
+- `make-open-data\1_data\prepare\foncier\schema.yml` — **0** commits 
+- `make-open-data\1_data\prepare\geographie\schema.yml` — **0** commits 
 
 ## 6. Module Purpose Index
 
 *Grouped by inferred business domain. Purpose statements grounded in code, not docstrings.*
 
-### Domain: **Access**
+### Domain: **Aggregation**
 
-#### `dg_projects\canvas\canvas\resources\api_client_factory.py` [python]
+#### `4_seeds\logement_2020_valeurs.csv` [unknown]
 
-**Purpose:** The module enables the application to dynamically instantiate secure API clients for different services (e.g., CanvasApiClient or MITLearnApiClient) by retrieving vault-backed credentials, ensuring compliance with secret management requirements and enabling flexible deployment configurations. It centralizes client initialization logic, allowing seamless switching between client types based on deployment settings and vault secret paths.
+**Purpose:** This module generates structured documentation for demographic data related to communes, aggregating and formatting statistics from a CSV file to provide clear, standardized summaries of household responses to surveys. It extracts relevant metadata and presents key statistics in a readable format, facilitating easy interpretation of demographic trends and values for stakeholders.
+
+> [!WARNING]
+> **Docstring MISSING:** The DOCSTRING is not a proper Python docstring (no class/function definition), while the IMPLEMENTATION code is accurately described in the terminal instructions and code comments.
+
+**Downstream:** `utils\generer_doc_recenssement.py`
+
+#### `utils\generer_doc_recenssement.py` [python]
+
+**Purpose:** This module generates structured documentation for demographic data in a specific geographic scope (e.g., a commune or IRIS), aggregating and presenting statistics such as the number of households that answered specific survey questions. It formats the data into a readable table, highlighting key metrics like code values and survey responses, which aids in understanding and validating the dataset for downstream use.
+
+> [!WARNING]
+> **Docstring DRIFT:** The DOCSTRING provides a general overview but lacks specific details about the code's functionality, such as how it processes data, the parameters it uses, or the output it generates. It also misrepresents the code's purpose by focusing on a single example (labels with multiple modalities) without explaining the broader context of generating schema documentation.
+
+**Upstream:** `4_seeds/logement_2020_valeurs.csv`
+
+---
+
+### Domain: **Dbsetup**
+
+#### `tests\conftest.py` [python]
+
+**Purpose:** This module configures pytest to use the database fixtures from the specified module, enabling tests to run against the database environment, ensuring that the application's database interactions are properly set up and validated.
 
 > [!WARNING]
 > **Docstring MISSING:** No docstring found.
 
-#### `dg_projects\lakehouse\lakehouse\assets\instructor_onboarding.py` [python]
+#### `tests\fixtures\db.py` [python]
 
-**Purpose:** The module generates a CSV file containing unique email addresses of users eligible for instructor access in the access-forge repository, ensuring accurate and up-to-date data for permission management. It pulls data from a dbt model, filters and processes user information, and pushes the formatted list to a private GitHub repository for tracking and maintenance. The process avoids duplicates while preserving existing entries, facilitating efficient instructor access control.
+**Purpose:** This module sets up the necessary environment variables and connection parameters for a PostgreSQL test database, enabling test suites to securely connect to the database. It ensures the database is ready for use by waiting until the service is responsive, facilitating reliable test execution. The module abstracts database connection management, allowing tests to rely on a consistent and secure connection to the test environment.
 
-#### `dg_projects\lakehouse\lakehouse\assets\lakehouse\__init__.py` [python]
+---
+
+### Domain: **Ingestion**
+
+#### `load\__init__.py` [python]
+
+**Purpose:** The module enables the application to load data from various sources, ensuring data is properly initialized and configured for use. It provides functions for connecting to databases, loading data records, and managing data imports, facilitating data integration and ensuring data availability for application use.
+
+> [!WARNING]
+> **Docstring MISSING:** No docstring found.
+
+**Downstream:** `tests/load/test_loaders.py`
+
+#### `load\__main__.py` [python]
+
+**Purpose:** This module extracts data from storage systems (CSV, JSON, shapefiles) and loads it into PostgreSQL, ensuring compliance with production settings and handling different data formats. It processes tables defined in a YAML configuration file, skipping non-production environments and verifying table existence before loading.
+
+**Upstream:** `load/loaders.py`
+
+#### `tests\load\test_loaders.py` [python]
+
+**Purpose:** This module loads CSV files into a PostgreSQL database table, ensuring data integrity by verifying the number of rows and the first row's data against predefined scenarios. It uses a fixed set of scenarios to validate the loading process, ensuring accurate data insertion and consistency with expected formats.
+
+> [!WARNING]
+> **Docstring MISSING:** No docstring found.
+
+---
+
+### Domain: **Integration**
+
+#### `extract\__init__.py` [python]
+
+**Purpose:** The module facilitates manual extraction of data from source systems into a storage format, leveraging the Lake House approach to manage data flow, especially when automation is impractical due to complexity and infrequent changes. This ensures flexibility and control in data integration processes, aligning with the business need for reliable and customizable data pipelines.
+
+#### `load\loaders.py` [python]
+
+**Purpose:** The module facilitates the ingestion of structured data from various sources (CSV, JSON, and shapefiles) into a PostgreSQL database, enabling data integration for analysis and reporting. It handles data retrieval, formatting, and storage while ensuring compatibility with different file types and formats.
+
+> [!WARNING]
+> **Docstring MISSING:** No docstring found.
+
+#### `tests\__init__.py` [python]
+
+**Purpose:** This module sets up the test environment by importing necessary test cases and configuring test parameters, ensuring that all required tests can be executed efficiently. It prepares data and configurations to facilitate consistent and reliable test execution across different environments.
+
+> [!WARNING]
+> **Docstring MISSING:** No docstring found.
+
+#### `tests\load\__init__.py` [python]
+
+**Purpose:** The module facilitates the loading of data from various sources, ensuring compatibility and proper processing, which is critical for data integration and analysis workflows. It enables the system to handle different data formats and sources, supporting efficient data retrieval and transformation. This allows for scalable data processing and ensures that data is ready for analysis or storage.
+
+> [!WARNING]
+> **Docstring MISSING:** No docstring found.
+
+---
+
+### Domain: **Transformation**
+
+#### `tests\fixtures\__init__.py` [python]
 
 **Purpose:** [purpose extraction failed: timed out]
 
 > [!WARNING]
 > **Docstring MISSING:** No docstring found.
 
-#### `dg_projects\legacy_openedx\legacy_openedx\resources\mysql_db.py` [python]
-
-**Purpose:** This module provides a reusable, persistent MySQL database connection resource, enabling applications to execute SQL queries and retrieve data from a MySQL database. It ensures secure and efficient access to the database by configuring parameters such as host, port, username, password, and database name, and maintaining a stable connection for consistent data retrieval operations.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `generate_instructor_onboarding_user_list` [unknown]
-
-**Purpose:** The module generates a CSV file containing unique email addresses from the combined user course roles database, preparing them for upload to the access-forge repository to manage instructor access. It ensures accurate and up-to-date user lists by filtering emails, adding role and invite status fields, and merging existing entries with new data to avoid duplicates. This supports efficient instructor access management by providing structured, permission-aware user data for the repository.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\utils.py` [python]
-
-**Purpose:** The module handles secure authentication with Vault based on the Dagster environment, determining S3 bucket configurations for different deployment stages, and computing hash values for ZIP files to ensure data integrity.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\api_client.py` [python]
-
-**Purpose:** The module provides an API client for interacting with a backend service, managing authentication via token type, and handling HTTP requests with timeout settings. It enables the application to securely make GET and POST requests to the API, ensuring reliable and error-checked communication with the backend.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\api_client_factory.py` [python]
-
-**Purpose:** The module enables secure creation of API clients with Vault secrets, allowing different client types (e.g., CanvasApiClient or MITLearnApiClient) to be configured and used across various deployment environments, ensuring proper authentication and versioning of secrets. It provides a flexible, configurable interface for managing API credentials through Vault, supporting multiple KV versions to accommodate evolving infrastructure needs.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\bigquery_db.py` [python]
-
-**Purpose:** This module provides a secure connection to a BigQuery database using service account credentials, enabling efficient data retrieval and analysis for business intelligence and reporting workflows. It ensures compliance with security standards by leveraging OAuth2 authentication and manages access to large-scale data stores for real-time insights.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\gcp_gcs.py` [python]
-
-**Purpose:** This module provides a configurable resource for establishing secure connections to Google Cloud Storage (GCS) using service account credentials, enabling applications to authenticate and interact with GCS resources such as buckets and objects. It centralizes credential management and ensures compliance with GCP's authentication requirements, facilitating data ingestion, storage, and retrieval workflows in cloud-based environments.
-
-> [!WARNING]
-> **Docstring DRIFT:** The DOCSTRING is overly vague and does not accurately describe the code's implementation. It merely states "Resource for connecting to a gcs" without detailing the class's fields, context manager, or client property, which are critical to understanding the code's functionality.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\github.py` [python]
-
-**Purpose:** This module enables secure access to GitHub APIs by retrieving authentication tokens from Vault, allowing Dagster pipelines to interact with GitHub repositories and resources. It ensures sensitive credentials are managed securely, facilitating seamless integration with GitHub services for pipeline operations. The module provides a reliable, factory-based approach to authenticate against the GitHub API, critical for orchestrating workflows and accessing repository data.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\learn_api.py` [python]
-
-**Purpose:** This module provides a secure interface for sending webhook notifications to the MIT Learn platform's API, enabling the application to track and synchronize events related to course exports and video shorts. It ensures data integrity and authorization through HMAC signing using a shared secret token, facilitating seamless integration with the platform's webhook endpoints.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\oauth.py` [python]
-
-**Purpose:** The module enables secure authentication and authorization for API interactions by managing OAuth2 token acquisition and maintenance. It ensures the application can retrieve valid access tokens required to make authenticated requests to external services, while handling rate limiting and retries to maintain system reliability.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\secrets\__init__.py` [python]
-
-**Purpose:** The module enables secure management of secrets across different environments, allowing developers to store and retrieve sensitive data such as API keys or configuration values in a controlled manner. It ensures that secrets are properly isolated and accessed only when necessary, enhancing overall system security and compliance.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\secrets\vault.py` [python]
-
-**Purpose:** This module enables secure, multi-tenancy authentication for accessing AWS Vault, allowing different authentication methods (e.g., IAM, GitHub, Kubernetes, OIDC, JWT) based on the environment. It manages token caching and validation to ensure secure access to sensitive data, adapting to diverse deployment scenarios while maintaining reliability and performance.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `src\ol_superset\ol_superset\lib\superset_api.py` [python]
-
-**Purpose:** The module manages OAuth authentication for accessing Superset instance APIs, enabling secure communication by obtaining tokens and handling the PKCE flow. It retrieves instance configurations, handles authorization redirects, and creates authenticated requests sessions to interact with Superset's backend services.
-
-#### `update_access_forge_repo` [unknown]
-
-**Purpose:** The module manages instructor onboarding by generating a structured CSV file of user emails from a database, which is then merged into a private GitHub repository to maintain up-to-date access controls. It ensures accurate data integration by avoiding duplicates and preserving existing entries, while logging the number of new users added.
-
-> [!WARNING]
-> **Docstring DRIFT:** The docstring incorrectly claims the module pushes data to a private GitHub repository, but the implementation does not perform any GitHub operations; it simply generates a CSV file.
-
-**Upstream:** `github_api`, `instructor_onboarding_user_list`
-
----
-
-### Domain: **Config**
-
-#### `dg_projects\__init__.py` [python]
-
-**Purpose:** The module initializes the project by setting up configurations, registering necessary classes, and ensuring the project is ready for use. It handles dependencies and setup tasks required for the project to function correctly.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\b2b_organization\b2b_organization\__init__.py` [python]
-
-**Purpose:** This module initializes the core infrastructure for managing project organizations, enabling the application to handle structured data about project categories, types, and their relationships, thereby supporting efficient project management and data integrity within the business.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\canvas\canvas\__init__.py` [python]
-
-**Purpose:** The module provides configuration and metadata for the package, ensuring it is properly set up and documented for use in the broader system. It defines essential parameters such as version numbers, author information, and dependencies, which are critical for deployment, maintenance, and integration with external systems.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\canvas\canvas\assets\__init__.py` [python]
-
-**Purpose:** The module manages and initializes the assets directory for the Canvas application, ensuring that all required files (e.g., images, CSS, JS) are properly configured and available for use. It facilitates the deployment and versioning of assets, enabling the application to load and render content efficiently across different environments. By organizing and standardizing asset management, the module supports the business goal of delivering a reliable and performant Canvas interface.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\canvas\canvas\lib\__init__.py` [python]
-
-**Purpose:** This module provides the foundational structure for managing projects and canvas elements, enabling efficient data processing and resource allocation within the canvas environment, thereby supporting business operations such as project tracking and resource management.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\canvas\canvas\resources\__init__.py` [python]
-
-**Purpose:** This module initializes the package for the canvas application, providing a structured framework to manage and access resources related to projects, ensuring efficient data handling and interaction within the application's business logic. It enables the organization of project-related data and resources, supporting critical operations such as project creation, resource allocation, and data retrieval for the canvas platform.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\canvas\canvas_tests\__init__.py` [python]
-
-**Purpose:** The module is designed to test various aspects of the canvas functionality, ensuring that all features work as intended and maintaining the quality of the product. It provides the necessary utilities and test cases to validate the canvas's performance and reliability, which are critical for the business.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\edxorg\edxorg\defs\__init__.py` [python]
-
-**Purpose:** The module initializes the package by defining metadata and registering necessary classes, ensuring consistent configuration and proper dependency management for the application. This helps maintain structure and facilitates easy extension and maintenance, supporting efficient development and scalability.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\edxorg\edxorg\ops\__init__.py` [python]
-
-**Purpose:** This module manages project operations, configuring and maintaining project data, facilitating interactions with external systems, and ensuring proper setup and management of projects within the EDX org ecosystem.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\edxorg\edxorg_tests\__init__.py` [python]
-
-**Purpose:** This module provides essential utilities and fixtures for testing the edxorg application, enabling developers to simulate various scenarios and validate functionality across different test cases. It ensures that test environments are robust and reliable, facilitating comprehensive regression and feature verification.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\lakehouse\lakehouse\resources\__init__.py` [python]
-
-**Purpose:** The module serves as a central point for managing resources and configurations within the lakehouse project, ensuring that necessary data and settings are properly initialized and accessible to the application. It supports the project's objectives by providing a structured way to handle resource imports, configuration management, and data storage.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\lakehouse\lakehouse_tests\__init__.py` [python]
-
-**Purpose:** The module provides the necessary configurations and utilities to support testing of the lakehouse project, enabling developers to run tests in various environments and data sources, thereby ensuring the reliability and correctness of the system.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\learning_resources\learning_resources\lib\contants.py` [python]
-
-**Purpose:** This module defines standard thumbnail dimensions for video content, ensuring consistent visual presentation across different platforms and devices, which is critical for maintaining user experience and optimizing image rendering efficiency.
-
-> [!WARNING]
-> **Docstring DRIFT:** The docstring lacks specific details about the constants' values or purpose, while the implementation defines them explicitly.
-
-#### `dg_projects\learning_resources\learning_resources_tests\__init__.py` [python]
-
-**Purpose:** The module organizes test resources into structured directories, facilitating better management and accessibility of test data and cases. It ensures a clean and maintainable test environment by structuring test cases and data into logical groups, enhancing productivity and reducing complexity in the testing process.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\legacy_openedx\legacy_openedx\__init__.py` [python]
-
-**Purpose:** The module initializes the legacy OpenEdX package by setting up necessary configurations, importing required modules, and ensuring compatibility with older system versions, enabling seamless integration and operation within the legacy platform's architecture.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\legacy_openedx\legacy_openedx\lib\__init__.py` [python]
-
-**Purpose:** This module initializes the legacy Open edX platform by importing critical components such as utilities, tools, and REST handlers, ensuring the application can function correctly across its historical infrastructure. It configures essential settings and dependencies to maintain compatibility with the Open edX ecosystem, enabling the platform to operate as intended despite its legacy nature.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\legacy_openedx\legacy_openedx\ops\__init__.py` [python]
-
-**Purpose:** The module initializes the legacy Open edX environment by configuring dependencies, setting up directories, and ensuring compatibility with the legacy system, enabling the application to run correctly on the specified infrastructure.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\legacy_openedx\legacy_openedx\repositories\__init__.py` [python]
-
-**Purpose:** The module initializes the repository structure, sets up database connections, and manages configuration settings for the legacy OpenEdX system, enabling the application to access different repositories and databases as needed.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\legacy_openedx\legacy_openedx\resources\__init__.py` [python]
-
-**Purpose:** The module provides utilities for managing and processing resources within the legacy Open edX platform, facilitating data storage, retrieval, and integration with existing systems. It enables efficient handling of historical data and ensures compatibility with older system architectures, supporting the platform's long-term maintenance and evolution.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\legacy_openedx\legacy_openedx_tests\__init__.py` [python]
-
-**Purpose:** The module serves as a test suite for the legacy Open edX platform, providing test cases and fixtures to verify the functionality and reliability of the codebase. It ensures that the legacy system meets the required standards and handles various scenarios correctly.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\openedx\openedx\__init__.py` [python]
-
-**Purpose:** The module initializes the openedx project by importing essential modules, configuring default settings, and ensuring the package is properly set up for use in the application, enabling seamless integration with the broader system. It establishes foundational dependencies and configurations that are critical for the package's functionality and interoperability with other components.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\openedx\openedx\assets\__init__.py` [python]
-
-**Purpose:** The module manages the registration and configuration of assets within the openedx environment, ensuring they are properly cached and initialized for use, which is critical for efficient system performance and correctness. It enables the platform to dynamically load and organize assets, facilitating seamless integration and retrieval across different components.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\openedx\openedx\components\__init__.py` [python]
-
-**Purpose:** The module provides a component for managing deployment configurations in the OpenEdX platform, enabling the orchestration of deployment settings across different environments. It ensures consistency and correctness in the system's operational context, which is critical for maintaining the platform's stability and functionality.
-
-> [!WARNING]
-> **Docstring DRIFT:** The docstring mentions "Components for OpenEdX data extraction," but the implementation is about importing a module and defining an entry point, which does not accurately describe the code's actual purpose.
-
-#### `dg_projects\openedx\openedx\lib\__init__.py` [python]
-
-**Purpose:** The module initializes the project configuration, registers essential components, and ensures proper setup for the application to function correctly across different environments and configurations. It enables the system to operate seamlessly by defining necessary dependencies and settings, facilitating the integration of various modules and features.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\openedx\openedx_tests\__init__.py` [python]
-
-**Purpose:** This module initializes and manages the test suite for the OpenEdX platform, ensuring that tests are properly configured and run across different environments to validate functionality and ensure quality. It provides the necessary setup and dependencies for test cases, enabling comprehensive validation of the platform's features and stability.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\assets\__init__.py` [python]
-
-**Purpose:** The module provides access to static assets essential for rendering the user interface, ensuring efficient delivery and maintaining the application's performance and scalability. These assets are organized in a structured manner to support the application's requirements, enabling seamless functionality and ease of maintenance.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\__init__.py` [python]
-
-**Purpose:** This module initializes the package by setting up configurations, registering core modules, and ensuring the package is ready for use in orchestrating data workflows, enabling seamless integration with external systems and services.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\constants.py` [python]
-
-**Purpose:** The module defines environment-specific constants for configuration, such as development vs. production settings, vault addresses, openedx deployments, export types, and database tables, ensuring consistent behavior across different environments and systems.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\yaml_config_helper.py` [python]
-
-**Purpose:** The module enables applications to retrieve YAML configuration data from disk, allowing them to load environment-specific settings or custom configurations based on file paths. It ensures robust handling of missing files by returning an empty dictionary, which is critical for maintaining application stability in varying deployment scenarios. The module provides a standardized interface for accessing configuration data, facilitating easy integration with other systems or services that require dynamic configuration management.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `src\ol_superset\ol_superset\lib\__init__.py` [python]
-
-**Purpose:** This module sets up the package structure by importing essential dependencies, configuring the package version, and defining a utility class to manage core business operations, such as data handling and configuration management, ensuring the library is properly initialized and organized for use across its components.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
----
-
-### Domain: **Dbt**
-
-#### `
-                    SELECT view_name, metadata_location
-                    FROM _glue_source_registry
-                    WHERE glue_database = ?
-                ` [unknown]
-
-**Purpose:** The module registers AWS Glue Iceberg tables as DuckDB views, enabling efficient data exploration and analysis by providing structured access to raw data. It ensures consistency between Glue and DuckDB by linking metadata locations and facilitating seamless integration into data pipelines.
-
-**Downstream:** `bin\dbt-local-dev.py`
-
-#### `
-            CREATE TABLE IF NOT EXISTS _glue_source_registry (
-                view_name VARCHAR PRIMARY KEY,
-                glue_database VARCHAR,
-                glue_table VARCHAR,
-                metadata_location VARCHAR,
-                registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        ` [unknown]
-
-**Purpose:** The module registers AWS Glue Iceberg tables as DuckDB views, enabling efficient data exploration and development in dbt projects by abstracting connectivity to distributed data sources. It supports testing Glue/Iceberg compatibility and cleanup of Trino development schemas, facilitating consistent data workflows across environments.
-
-**Downstream:** `bin\dbt-local-dev.py`
-
-#### `
-            INSERT OR REPLACE INTO _glue_source_registry
-            (view_name, glue_database, glue_table, metadata_location, registered_at)
-            VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
-        ` [unknown]
-
-**Purpose:** The module registers AWS Glue Iceberg tables as DuckDB views, enabling efficient data exploration and integration across development environments by mapping structured data sources to accessible views. It ensures consistent data representation and facilitates seamless querying of distributed datasets.
-
-**Downstream:** `bin\dbt-local-dev.py`
-
-#### `
-            SELECT
-                glue_database,
-                COUNT(*) as table_count
-            FROM _glue_source_registry
-            GROUP BY glue_database
-            ORDER BY glue_database
-        ` [unknown]
-
-**Purpose:** The module registers AWS Glue Iceberg tables as DuckDB views, enabling efficient data exploration and analysis by converting structured data into query-friendly formats. It ensures consistency across development environments by properly registering tables, and supports testing and cleaning up data workflows.
-
-**Downstream:** `bin\dbt-local-dev.py`
-
-#### `
-            SELECT
-                view_name,
-                glue_database,
-                glue_table,
-                registered_at
-            FROM _glue_source_registry
-            ORDER BY registered_at DESC
-        ` [unknown]
-
-**Purpose:** The module registers AWS Glue Iceberg tables as DuckDB views, enabling efficient data exploration and analysis by providing quick access to recent data without requiring full ETL processes. It ensures that developers can query raw Iceberg data directly, facilitating rapid insights and integration into analytical workflows.
-
-**Downstream:** `bin\dbt-local-dev.py`
-
-#### `
-            UPDATE tracking_logs
-            SET time = strftime(TRY_CAST(time AS TIMESTAMP), '%Y-%m-%d %H:%M:%S.%f')
-            ` [unknown]
-
-**Purpose:** The module processes log data from S3, transforming it into a structured format for analysis, ensuring consistency in data representation, and enabling efficient querying and transformation of tracking logs. It automates the ingestion of log files into a DuckDB table, with subsequent transformations to normalize data and prepare it for use in downstream workflows.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Downstream:** `dg_projects\edxorg\edxorg\assets\edxorg_archive.py`, `dg_projects\openedx\openedx\ops\normalize_logs.py`
-
-#### `CALL load_aws_credentials()` [unknown]
-
-**Purpose:** This module enables developers to register AWS Glue Iceberg tables as DuckDB views, facilitating efficient data integration and analytics by providing structured access to distributed data sources. It simplifies data exploration and transformation by creating reusable views, enhancing productivity in data-driven workflows. The module ensures consistent data availability across development environments, supporting reliable data processing and reporting tasks.
-
-**Downstream:** `bin\dbt-local-dev.py`
-
-#### `CHECKPOINT` [unknown]
-
-**Purpose:** This module enables efficient data integration and management for dbt development by registering AWS Glue Iceberg tables as DuckDB views, testing connectivity to production data sources, and cleaning up Trino development schemas to ensure consistent and accurate data environments.
-
-**Downstream:** `bin\dbt-local-dev.py`
-
-#### `VACUUM` [unknown]
-
-**Purpose:** The module enables developers to register AWS Glue Iceberg tables as DuckDB views for efficient data access, test connectivity to Glue/Iceberg systems, and clean up Trino development schemas, ensuring streamlined data management and environment organization.
-
-**Downstream:** `bin\dbt-local-dev.py`
-
-#### `_superset_dataset` [unknown]
-
-**Purpose:** The module automates the refresh of Superset datasets by triggering updates when code changes or specific conditions are met, ensuring data consistency across different models. It interacts with the Superset API to create, refresh, and update dataset metadata, providing status indicators to track refreshes and handle errors gracefully. This supports maintaining up-to-date data in the lakehouse environment for analytical workflows.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `superset_api`
-
-#### `bin\dbt-create-staging-models.py` [python]
-
-**Purpose:** This module enables users to generate staging models for dbt projects by creating YAML files that define source tables based on specified schemas and table prefixes. It leverages dbt commands to discover relevant tables and automate the generation of source configurations, streamlining the process of building data pipelines. The module supports customizable parameters like database names and targets, allowing for flexible integration with existing dbt workflows.
-
-> [!WARNING]
-> **Docstring MISSING:** The docstring is missing, indicating that the code's functionality and details are not documented.
-
-#### `bin\dbt-local-dev.py` [python]
-
-**Purpose:** This module enables developers to create local environments for dbt projects using DuckDB, allowing them to efficiently explore and analyze Iceberg tables from AWS Glue. It facilitates seamless integration between Trino and DuckDB, ensuring accurate data manipulation and querying without impacting production schemas. The tool also provides robust connectivity testing and cleanup capabilities to manage development environments effectively.
-
-**Upstream:** `
-                    SELECT view_name, metadata_location
-                    FROM _glue_source_registry
-                    WHERE glue_database = ?
-                `, `
-            CREATE TABLE IF NOT EXISTS _glue_source_registry (
-                view_name VARCHAR PRIMARY KEY,
-                glue_database VARCHAR,
-                glue_table VARCHAR,
-                metadata_location VARCHAR,
-                registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        `, `
-            INSERT OR REPLACE INTO _glue_source_registry
-            (view_name, glue_database, glue_table, metadata_location, registered_at)
-            VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
-        `, `
-            SELECT
-                glue_database,
-                COUNT(*) as table_count
-            FROM _glue_source_registry
-            GROUP BY glue_database
-            ORDER BY glue_database
-        `, `
-            SELECT
-                view_name,
-                glue_database,
-                glue_table,
-                registered_at
-            FROM _glue_source_registry
-            ORDER BY registered_at DESC
-        `, `CALL load_aws_credentials()`, `CHECKPOINT`, `VACUUM`
-
-#### `bin\utils\chunk_tracking_logs_by_day.py` [python]
-
-**Purpose:** The module processes tracking logs from a source bucket to a destination bucket, organizing them by date in chunked directories to ensure consistent path formatting across time boundaries. It allows for controlled operations like copying or moving files, with options to avoid actual modifications (dry run) or clear source files (destructive mode) after proper validation. This ensures efficient log management and reduces redundancy by structuring logs per date in a standardized format.
-
-#### `dg_projects\b2b_organization\b2b_organization\assets\__init__.py` [python]
-
-**Purpose:** The module initializes and manages organizational data structures, enabling the application to correctly process and utilize organizational data for business operations. It ensures the proper configuration and registration of assets, facilitating seamless integration with the broader system for data-driven decision-making and operational efficiency.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\b2b_organization\b2b_organization\defs\__init__.py` [python]
-
-**Purpose:** The module provides functions to retrieve organization data, enabling efficient access to organizational information based on project contexts. This supports the business needs by ensuring accurate and timely data retrieval for project management and user tracking.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\b2b_organization\b2b_organization\partitions\__init__.py` [python]
-
-**Purpose:** This module defines the organizational partitions within the b2b_organization project, enabling structured management of hierarchical data structures for business analysis and reporting. It facilitates modular organization of corporate entities, allowing efficient data processing and insights into organizational frameworks.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\b2b_organization\b2b_organization\partitions\b2b_organization.py` [python]
-
-**Purpose:** This module defines dynamic partitions for organizational data, enabling efficient processing and retrieval of business-related information across different entities. It supports scalable data handling by allowing flexible partitioning strategies tailored to organizational structures, facilitating targeted data analysis and reporting.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\b2b_organization\b2b_organization_tests\__init__.py` [python]
-
-**Purpose:** The module enables businesses to manage and organize projects and their associated organizations, facilitating efficient data integration and relationship maintenance across different project entities. It provides tools for creating, updating, and querying projects and organizations, ensuring consistency and integrity in how these entities are structured and accessed within the system.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\canvas\canvas\defs\__init__.py` [python]
-
-**Purpose:** The module defines core data structures and classes for managing canvas-related project data, enabling efficient organization, retrieval, and manipulation of project information. It supports business operations such as project planning, timeline tracking, and data validation by providing structured representations of canvas elements, ensuring consistency and facilitating seamless integration with broader system workflows.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\data_loading\data_loading\__init__.py` [python]
-
-**Purpose:** The module initializes and configures data loading pipelines, managing source connections, transformation rules, and storage destinations to ensure consistent and efficient data ingestion for business analytics and reporting. It handles critical setup tasks such as parameter validation and dependency resolution, enabling seamless integration with downstream data processing workflows.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\data_loading\data_loading\components\__init__.py` [python]
-
-**Purpose:** The module provides the foundational structures and classes for data loading operations, enabling the integration of various data sources, processing, and storage mechanisms. It ensures that data is efficiently retrieved, transformed, and stored according to business requirements, supporting data-driven decisions and analytics.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\data_loading\data_loading\definitions.py` [python]
-
-**Purpose:** This module configures Dagster to use the Dlt data load tool by merging definitions from the project's `defs` directory with a resource definition for the Dlt resource, enabling efficient data loading workflows and integrating the tool into the data ingestion pipeline.
-
-#### `dg_projects\data_loading\data_loading\defs\__init__.py` [python]
-
-**Purpose:** This module defines configuration parameters for data loading workflows, enabling the system to source data from various sources, specify target storage locations, and apply transformation rules tailored to business requirements. It ensures consistency and flexibility in data processing pipelines by centralizing parameters for data sourcing, targeting, and transformation logic.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\data_loading\data_loading\defs\edxorg_s3_ingest\dagster_assets.py` [python]
-
-**Purpose:** This module enables the efficient and consistent loading of EdX.org database tables from S3, consolidating data from all production courses into non-partitioned tables while ensuring only the latest, relevant data is processed each time. It leverages DLT's incremental loading capability to optimize performance and maintain data integrity by relying on upstream partitioned assets for accurate dependency management.
-
-#### `dg_projects\data_loading\data_loading\defs\edxorg_s3_ingest\loads.py` [python]
-
-**Purpose:** The module enables the ingestion of TSV files from S3, which contain database exports from edX.org courses, into a structured format for business analysis. It supports both local development and production environments, ensuring data is processed efficiently and reliably across different deployment scenarios. The module handles incremental loading and format-specific configurations to meet the needs of data warehousing and analytics workflows.
-
-#### `dg_projects\data_loading\data_loading_tests\__init__.py` [python]
-
-**Purpose:** This module initializes data loading configurations, sets up data sources, and manages the pipeline for efficiently retrieving and processing data from various sources, ensuring data integrity and proper storage. It enables the system to handle diverse data formats and sources, facilitating seamless data integration and availability for downstream processing.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\data_platform\data_platform\__init__.py` [python]
-
-**Purpose:** The module provides a comprehensive framework for managing data projects, enabling efficient data processing, storage, and integration, which supports business operations by facilitating scalable data workflows and enabling data-driven decision-making.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\data_platform\data_platform\assets\__init__.py` [python]
-
-**Purpose:** The module organizes and manages assets critical for the data platform's data processing and analysis workflows, ensuring these resources are properly initialized and accessible across different components of the system. It facilitates the distribution and configuration of datasets, models, and other dependencies required for the platform's core functionalities, enabling seamless integration and utilization of external data sources and models.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\data_platform\data_platform\assets\metadata\__init__.py` [python]
-
-**Purpose:** This module manages metadata for data projects, enabling the tracking and organization of data assets, which is crucial for data governance and analytics. It ensures that metadata is properly stored and accessible, supporting data integration and querying processes.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\data_platform\data_platform\assets\metadata\databases.py` [python]
-
-**Purpose:** This module facilitates the ingestion of database metadata into a metadata workflow, enabling organizations to manage and govern their data assets by capturing and organizing critical information about databases, tables, and schemas. It supports the integration of Trino-based data sources, allowing for efficient metadata retrieval and orchestration within a unified metadata management system.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\data_platform\data_platform\defs\__init__.py` [python]
-
-**Purpose:** The module provides a centralized namespace for defining and organizing data-related constants, types, and structures, enabling consistent and reusable definitions across the project's data processing and storage components. It ensures clarity and maintainability by encapsulating business-specific data definitions, facilitating uniformity in how data is represented and utilized throughout the system.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\data_platform\data_platform\lib\__init__.py` [python]
-
-**Purpose:** This module establishes the foundational structure for the data platform by importing critical components, configuring data sources, and setting up environment variables, enabling seamless integration of data pipelines and storage systems to support efficient data processing and management.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\edxorg\edxorg\assets\edxorg_db_table_specs.py` [python]
-
-**Purpose:** This module defines external asset specifications for database tables used in the EdX.org archive processing pipeline, enabling Dagster to track dependencies and manage data flow from the archive to the data lake. The assets are partitioned by course/source to align with upstream structure, ensuring consistent data retrieval and processing across different partitions. They provide structured TSV exports for each table, facilitating data extraction and transformation in downstream workflows.
-
-#### `dg_projects\edxorg\edxorg\io_managers\__init__.py` [python]
-
-**Purpose:** The module initializes the package structure, registering IO managers for data sources such as databases, files, or APIs, enabling seamless data import and export operations across different systems. It ensures proper configuration and registration of components, facilitating integration with external data pipelines and business processes.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\edxorg\edxorg\io_managers\gcs.py` [python]
-
-**Purpose:** This module enables the retrieval of data from Google Cloud Storage (GCS) for asset materialization events, ensuring that the correct bucket and blob are accessed based on the asset key or predefined settings. It handles both scenarios where an asset key is present (via event records) or when the bucket is explicitly configured, downloading files directly to the partition key location for data pipeline processing.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\edxorg\edxorg\ops\object_storage.py` [python]
-
-**Purpose:** This module enables data synchronization between different cloud storage services, such as S3 and GCS, allowing organizations to efficiently move and manage files across distributed storage systems. It provides configurable workflows for copying, downloading, and uploading files with controlled path handling and logging, ensuring data consistency and proper directory structure during transfers.
-
-> [!WARNING]
-> **Docstring DRIFT:** The docstring is a deprecation notice informing users that the code is outdated and should be replaced, but it does not describe the actual functionality of the code. The implementation, however, defines the operations (sync_files_to_s3, download_files_from_s3, upload_files_to_s3) which are the actual implementations of the deprecated functionality. The docstring does not accurately reflect the code's purpose or functionality.
-
-#### `dg_projects\lakehouse\lakehouse\__init__.py` [python]
-
-**Purpose:** This module establishes a foundational framework for data lake operations, enabling efficient ingestion, transformation, and storage of structured and unstructured data to support business analytics and decision-making processes. It ensures seamless integration with external systems and facilitates scalable data processing workflows critical for driving operational insights and enabling data-driven strategies.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\lakehouse\lakehouse\assets\__init__.py` [python]
-
-**Purpose:** The module organizes and manages data assets within the lakehouse environment, enabling structured handling of project-related data sources, transformations, and storage, thereby facilitating efficient data processing and analysis for business operations.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\lakehouse\lakehouse\assets\lakehouse\dbt.py` [python]
-
-**Purpose:** This module automates the deployment of dbt (Data Fabric Toolkit) projects into Dagster, generating assets for data pipeline orchestration. It prepares a dbt project directory based on the environment, configures build arguments for development, and runs the dbt build command to generate assets, ensuring alignment with code changes and schema requirements. The module leverages automation policies to trigger asset updates when code changes occur, facilitating seamless integration with Dagster's data pipeline ecosystem.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\lakehouse\lakehouse\assets\superset.py` [python]
-
-**Purpose:** The module enables automatic synchronization of database tables with Superset, ensuring that data sources are up-to-date for visualization and reporting. It triggers dataset refreshes based on dbt models, updates metadata to track changes, and handles errors during the process, maintaining consistency between the data lake and the Superset platform.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\lakehouse\lakehouse\definitions.py` [python]
-
-**Purpose:** This module manages Airbyte connections for the data lakehouse, enabling the materialization of tables and associated dbt staging models, which are critical for downstream data processing and analytics workflows. It ensures proper authentication and configuration across different environments, facilitating seamless data integration and pipeline execution.
-
-> [!WARNING]
-> **Docstring MISSING:** The DOCSTRING is missing, as it only states "ELT assets for the data lakehouse" without any detailed explanation of the code's functionality or purpose. The implementation contains extensive code for setting up environments, configuring airbyte, vault, and other resources, but the docstring does not reflect this.
-
-#### `dg_projects\lakehouse\lakehouse\defs\__init__.py` [python]
-
-**Purpose:** This module defines the data structures and configurations for managing and standardizing data resources within the lakehouse environment, enabling efficient data pipeline operations and ensuring consistency across data storage and processing workflows.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\lakehouse\lakehouse\lib\__init__.py` [python]
-
-**Purpose:** The module provides essential tools for managing data lakes, facilitating efficient data ingestion, transformation, and integration with other systems, thereby supporting scalable data processing and real-time analytics capabilities.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\lakehouse\lakehouse\resources\airbyte.py` [python]
-
-**Purpose:** The module provides a structured interface for interacting with Airbyte's REST API, enabling users to manage workspaces, authenticate via basic or OAuth, and execute paginated API requests with retry mechanisms. It abstracts low-level API details, allowing applications to focus on data integration workflows while leveraging Airbyte's capabilities for data sourcing and transformation.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\lakehouse\lakehouse\resources\superset_api.py` [python]
-
-**Purpose:** This module enables the system to interact with a Superset instance, facilitating the retrieval, creation, updating, and refreshing of datasets. It allows for paginated data fetching, dataset management, and authorization through OAuth and CSRF tokens, supporting data pipeline operations critical for data integration and analysis.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\learning_resources\learning_resources\assets\video_shorts.py` [python]
-
-**Purpose:** This module processes video metadata from Google Sheets to generate structured data for downstream video download and thumbnail generation, ensuring efficient partitioning and versioning of video content. It extracts key fields like publication date, video name, and Dropbox links, and prepares metadata for each video partition to support targeted processing and delivery.
-
-#### `dg_projects\learning_resources\learning_resources\lib\google_sheets.py` [python]
-
-**Purpose:** The module facilitates the retrieval and processing of video metadata from Google Sheets and Dropbox URLs, enabling efficient management and partitioning of media content for data pipelines. It handles credential authentication, date parsing, and URL conversion to ensure seamless integration with downstream systems.
-
-#### `dg_projects\learning_resources\learning_resources\lib\video_processing.py` [python]
-
-**Purpose:** The module provides tools for generating video thumbnails and compressing videos to meet size constraints, optimizing storage and retrieval efficiency. It enables users to create scalable thumbnails for video content and reduce file sizes for distribution, balancing quality and performance.
-
-#### `dg_projects\learning_resources\learning_resources\sensors\video_shorts.py` [python]
-
-**Purpose:** This module automates the discovery of new videos from Google Sheets by managing dynamic partitions and triggering processing workflows when new videos are added, ensuring efficient video content management and processing.
-
-#### `dg_projects\legacy_openedx\legacy_openedx\resources\sqlite_db.py` [python]
-
-**Purpose:** The module provides a Dagster resource for using SQLite databases in local development environments, enabling developers to execute SQL queries and retrieve data for testing and debugging purposes. It facilitates efficient database interaction without requiring a full MySQL server, supporting rapid development and maintenance of applications that rely on relational databases.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\openedx\openedx\jobs\normalize_logs.py` [python]
-
-**Purpose:** The module normalizes historical tracking log data from S3 by loading files into DuckDB, transforming them into a consistent format, and uploading them to designated paths in the same S3 bucket. It ensures data is standardized for use in downstream processing or analysis, supporting reliable operations across different consumer systems.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\openedx\openedx\lib\assets_helper.py` [python]
-
-**Purpose:** This module provides functions to customize asset definitions by modifying partitions and asset keys, enabling flexible data management across different partitions and naming conventions. It allows for dynamic adjustment of asset specifications to align with organizational data structures, facilitating seamless integration and scalability in data pipeline workflows.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\openedx\openedx\ops\normalize_logs.py` [python]
-
-**Purpose:** The module ingests log data from S3 buckets, normalizes and transforms it into a consistent format for further analysis, and ensures structured data is ready for processing or storage. It handles log aggregation, schema enforcement, and data standardization to support operational monitoring and analytics workflows.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `
-            UPDATE tracking_logs
-            SET time = strftime(TRY_CAST(time AS TIMESTAMP), '%Y-%m-%d %H:%M:%S.%f')
-            `
-
-#### `download_file_from_gcs` [unknown]
-
-**Purpose:** The module enables data engineers to retrieve files from Google Cloud Storage (GCS) to a specified destination path, facilitating data integration and analysis workflows. It ensures the destination directory is properly structured by creating missing parent directories and provides a targeted download mechanism for individual files. The module supports the migration of data from GCS to local storage, aligning with broader data pipeline requirements.
-
-> [!WARNING]
-> **Docstring DRIFT:** The docstring is a deprecation notice explaining that the code is outdated and suggests using the IO Manager interface. It does not describe the actual functionality of the code, nor does it accurately reflect what the implementation does. The implementation's code is the actual logic, which is not mentioned in the docstring.
-
-**Upstream:** `config`
-
-#### `download_files_from_s3` [unknown]
-
-**Purpose:** The module facilitates the retrieval of files from S3 buckets to a designated directory, ensuring proper directory creation and file handling, which is essential for data processing and analysis tasks. It enables data engineers and analysts to efficiently access and manage files stored in S3 buckets, supporting workflows that require data ingestion and preparation.
-
-**Upstream:** `config`
-
-#### `google_sheets_api` [unknown]
-
-**Purpose:** The module retrieves and processes video metadata from Google Sheets to support video download and thumbnail generation, enabling content delivery. It extracts partitioned metadata, versioned data, and generates thumbnails for each video, ensuring consistency and accessibility for downstream workflows.
-
-#### `jsonify_log_data` [unknown]
-
-**Purpose:** The `jsonify_log_data` module transforms string fields in the tracking_logs table into JSON format, enabling structured data processing for downstream systems. It converts previously VARCHAR columns back to JSON, standardizing data for easier analysis and integration with applications that require structured data representations.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `load_files_to_table` [unknown]
-
-**Purpose:** The module loads log files from an S3 bucket, transforms them into a structured DuckDB table, and ensures they are formatted for analysis, enabling efficient data processing and querying for monitoring and insights.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `config`, `log_date`
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\io_managers\filepath.py` [python]
-
-**Purpose:** The module provides a flexible interface for managing file operations across diverse storage systems (S3, GCS, local files), enabling data to be read from or written to various backend systems. It abstracts the underlying filesystems, allowing workflows to dynamically switch between storage options while maintaining consistency in data handling. The implementation supports secure credential management through vault integration, enhancing reliability and compliance in data processing pipelines.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\arrow_helper.py` [python]
-
-**Purpose:** The module enables the conversion of Arrow tables into Parquet files, facilitating efficient data storage and retrieval in a distributed environment. It supports both individual table writes and streaming of multiple tables, allowing for scalable data processing and integration across different systems.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\dagster_helpers.py` [python]
-
-**Purpose:** This module configures IO managers for Dagster to handle data storage and retrieval across different environments (e.g., development and production), ensuring compatibility with local file systems and cloud storage solutions. It sanitizes mapping keys to prevent invalid characters and validates partition strings to avoid errors in data processing workflows.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\dagster_types\__init__.py` [python]
-
-**Purpose:** This module provides essential data types for DAGster, enabling developers to define and manage their data pipelines effectively. By offering structured, type-safe representations of pipeline components, the module ensures consistency and correctness in workflow configurations, facilitating the creation of robust and scalable data processing pipelines.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\dagster_types\files.py` [python]
-
-**Purpose:** The module provides a Dagster-compatible type for representing file paths, enabling seamless integration with Dagster's workflow system. It wraps standard OS path operations to ensure consistency with Dagster's infrastructure, allowing developers to work with file paths in a structured, type-safe manner. This facilitates reliable handling of file paths in Dagster workflows, ensuring correct behavior across different environments and operations.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\dagster_types\google.py` [python]
-
-**Purpose:** This module enables the Dagster framework to represent and manipulate Google Cloud BigQuery dataset listings, facilitating integration with workflows that require handling BigQuery dataset metadata and structures. It allows workflows to efficiently reference and operate on BigQuery datasets through the Dagster type system, enhancing the scalability and flexibility of data orchestration tasks.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\file_rendering.py` [python]
-
-**Purpose:** The module enables the creation of structured CSV files from tabular data, facilitating data storage and manipulation for reporting, analytics, and integration purposes. It ensures consistent formatting of data fields and supports appending to existing files or generating temporary files as needed.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\glue_helper.py` [python]
-
-**Purpose:** This module enables the transformation of Arrow schemas into Glue-compatible formats and facilitates the creation or updating of AWS Glue tables from S3 data, supporting data integration and analysis workflows by bridging Arrow-based data sources with Glue's native data modeling capabilities.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\postgres\__init__.py` [python]
-
-**Purpose:** This module enables organizations to use proper connection pooling in their Dagster storage configurations, preventing database connection exhaustion and ensuring reliable operation of their Dagster workflows. It allows independent configuration of the run, event log, and schedule storage classes, providing flexibility in managing database resources across different workflows and environments.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\postgres\event_log.py` [python]
-
-**Purpose:** This module provides a PostgreSQL-backed event log storage system with connection pooling to efficiently manage database connections during Dagster jobs, ensuring reliable and scalable logging of event metadata. It acts as a drop-in replacement for the original storage mechanism, optimizing resource usage through configurable pool parameters like pool_size and max_overflow. The implementation ensures connections are reused safely, preventing exhaustion and maintaining performance even under heavy load.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\postgres\run_storage.py` [python]
-
-**Purpose:** This module provides a connection pooling solution for PostgreSQL-based run storage, ensuring efficient management of database connections during complex Dagster jobs. It supports configurable parameters like pool size, overflow capacity, and recycle timeouts to prevent connection exhaustion and maintain performance. The implementation enables seamless integration with Dagster's run storage system, optimizing resource utilization and reliability.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\postgres\schedule_storage.py` [python]
-
-**Purpose:** This module provides a scalable, connection-pooled PostgreSQL implementation for scheduling storage, ensuring efficient handling of database connections during complex Dagster jobs. It supports configuration parameters like pool size, overflow capacity, and recycle timeouts to optimize performance and prevent connection exhaustion. The module auto-creates necessary tables and handles migrations to maintain data integrity and consistency.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\partitions\__init__.py` [python]
-
-**Purpose:** The module manages partitioning logic for data distribution, enabling efficient processing and querying by dividing data into manageable subsets, which optimizes performance and scalability in distributed systems.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\athena_db.py` [python]
-
-**Purpose:** This module provides a reusable resource for connecting to an AWS Athena database, enabling data engineers to execute queries efficiently and securely. It centralizes configuration parameters such as work groups, regions, and schema names, ensuring consistent and reliable access to Athena databases. The resource supports optional credentials and defaults to a predefined region, facilitating easy integration into Dagster workflows for data processing tasks.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\postgres_db.py` [python]
-
-**Purpose:** This module provides a reusable resource for connecting to a PostgreSQL database, enabling efficient execution of read and write queries. It allows pipelines to perform large-scale data processing by chunking results and managing transactions, ensuring reliable and scalable data manipulation across distributed systems.
-
-> [!WARNING]
-> **Docstring MISSING:** The docstring is missing, and it does not describe the resource's purpose or usage in the Dagster framework, which is evident from the implementation.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\sensors\object_storage.py` [python]
-
-**Purpose:** This module enables automated monitoring of S3 and GCS buckets for new files, triggering data processing workflows when changes occur. It allows seamless integration with Dagster sensors to dynamically respond to file additions, ensuring timely execution of data pipelines. The module supports customizable filtering and configuration to adapt to diverse storage environments and data requirements.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `src\ol_orchestrate\__init__.py` [python]
-
-**Purpose:** This module was responsible for managing data extraction and processing across different code locations, such as lakehouse, openedx, and edxorg, enabling efficient data integration and management. The deprecated codebase facilitated the orchestration of data workflows for these locations, which is now handled by the new CLI structure.
-
-#### `src\ol_superset\ol_superset\__init__.py` [python]
-
-**Purpose:** This module provides a command-line interface (CLI) for managing assets in the OL Superset platform, enabling users to add, retrieve, and organize data assets critical for data visualization and content management. It supports streamlined asset handling within the Superset ecosystem, enhancing efficiency for developers and analysts working with visual data.
-
-#### `src\ol_superset\ol_superset\commands\__init__.py` [python]
-
-**Purpose:** This module provides command-line interfaces for managing datasets and data operations within the OL Superset, enabling users to import, export, and manipulate data efficiently, thereby facilitating data governance and operational flexibility.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `src\ol_superset\ol_superset\commands\dedupe.py` [python]
-
-**Purpose:** The module deduplicates and renames YAML asset files in a directory to ensure consistent UUID-based naming, preventing conflicts when exporting from different environments (e.g., QA vs Production) where files may share the same UUID but differ in database IDs. It maintains uniqueness by removing duplicate entries and aligns filenames with standardized UUID formats, facilitating accurate comparison and management of assets across environments.
-
-#### `src\ol_superset\ol_superset\commands\export.py` [python]
-
-**Purpose:** The module enables the export of all Superset assets (datasets, charts, dashboards, and database configurations) from a specified instance, ensuring data integrity through automatic pagination and optional deduplication to prevent duplicates. It allows users to customize output directories and control deduplication behavior, facilitating efficient data backup and transfer processes.
-
-#### `src\ol_superset\ol_superset\commands\refresh.py` [python]
-
-**Purpose:** The module refreshes physical dataset schemas in Superset to synchronize them with database table structures after dbt model changes, ensuring accurate data representation for charts and dashboards. It supports targeting specific datasets, all datasets, or datasets in the local assets directory, and operates in dry run mode to preview changes without actual execution.
-
-#### `src\ol_superset\ol_superset\lib\database_mapping.py` [python]
-
-**Purpose:** This module enables the alignment of database UUIDs between source and target Superset instances by fetching UUIDs from both environments, creating a mapping, and updating all asset files (e.g., YAML configuration files) to reflect the new UUIDs, ensuring consistent data representation across different instances.
-
-#### `sync_files_to_s3` [unknown]
-
-**Purpose:** The module synchronizes files between S3 buckets, enabling data migration and management by specifying source and destination locations, object keys, and prefixes. It ensures targeted data transfers with customizable configurations, supporting business needs for data replication, backup, and integration between cloud storage systems.
-
-**Upstream:** `config`
-
-#### `transform_log_data` [unknown]
-
-**Purpose:** The module processes log data from S3 buckets, transforming it into a consistent format for analytical use, by loading files into a DuckDB table, normalizing columns, extracting JSON data, and converting timestamps to ISO8601. It ensures data integrity and standardization across different log entries, facilitating further processing or querying.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `upload_file_to_s3` [unknown]
-
-**Purpose:** The module enables the transfer of files from local directories or individual files to S3 buckets, supporting both batch processing of multiple files and single-file uploads. It ensures efficient data migration between local and cloud storage environments, facilitating scalable data management and accessibility across distributed systems.
-
-**Upstream:** `config`, `output_file`
-
-#### `upload_files_to_s3` [unknown]
-
-**Purpose:** The module enables the synchronization of local files into S3 buckets by uploading contents of directories to specified destinations, leveraging configuration parameters to control the target bucket and prefix. It supports both direct file uploads and batch processing of directory contents, facilitating scalable data migration between on-premises systems and cloud storage.
-
-**Upstream:** `config`, `downloaded_objects`
-
-#### `video_short_content` [unknown]
-
-**Purpose:** This module extracts and processes video metadata from Google Sheets to identify and prioritize the top 12 most recent video shorts, generating structured metadata for downstream video download and thumbnail generation. It ensures versioning of metadata per video partition and maintains consistency across processing stages.
-
-**Upstream:** `video_metadata`
-
-#### `video_short_metadata` [unknown]
-
-**Purpose:** The module processes video metadata from Google Sheets to generate partition-based data for downstream video download and thumbnail generation, ensuring versioning and efficient data management for each video partition. It extracts critical fields like publication date, file name, and Dropbox link, and prepares structured metadata for use in subsequent processing steps.
-
-**Upstream:** `sheets_data`
-
-#### `video_short_thumbnail_large` [unknown]
-
-**Purpose:** The module processes video metadata from Google Sheets to generate partition-based video metadata with thumbnails, enabling efficient video download and thumbnail generation for downstream workflows. It ensures consistent data versioning and accurate metadata for each video partition, supporting scalable video processing from Google Sheets.
-
-**Upstream:** `video_content`, `video_metadata`
-
-#### `video_short_thumbnail_small` [unknown]
-
-**Purpose:** This module retrieves video metadata from Google Sheets, processes it to generate thumbnails and prepare data for downstream video download and thumbnail generation, and ensures efficient handling of the top 12 most recent videos. It enables the system to systematically extract and organize video data for further processing, supporting content delivery and user interaction.
-
-> [!WARNING]
-> **Docstring DRIFT:** The docstring claims the code processes Video Shorts videos from Google Sheets, but the implementation merely fetches the metadata without processing it. The code does not actually handle the videos, contradicting the docstring's description.
-
-**Upstream:** `video_content`, `video_metadata`
-
-#### `video_short_webhook` [unknown]
-
-**Purpose:** This module processes video metadata from Google Sheets, extracts the top 12 most recent videos, generates thumbnails, and stores structured metadata for downstream video downloads and thumbnail generation, ensuring efficient partitioning and versioning based on video IDs. It ensures data integrity through retries and metadata preservation for subsequent processing steps.
-
-**Upstream:** `learn_api`, `video_content`, `video_metadata`, `video_thumbnail_large`, `video_thumbnail_small`
-
-#### `write_file_to_s3` [unknown]
-
-**Purpose:** The module enables the ingestion and transformation of log data from S3 into a structured format for analysis, ensuring consistent data representation and accessibility for downstream processes. It automates the extraction of log files, their normalization, and integration into a unified database, facilitating efficient data processing and querying.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `columns`, `config`, `log_date`
-
----
-
-### Domain: **Export**
-
-#### `course_content_metadata` [unknown]
-
-**Purpose:** This module exports structured course metadata and content from Canvas, storing them in S3 for integration with external systems. It captures course details, files, assignments, and pages, ensuring consistent data representation for use in analytics, reporting, or other applications. The module ensures reliable export processes by monitoring status and handling errors, enabling seamless data flow between educational platforms and third-party systems.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `canvas_content_export`, `course_metadata_export`
-
-#### `course_enrollments` [unknown]
-
-**Purpose:** The module retrieves course IDs and their corresponding structure data from an edX instance to facilitate subsequent data extraction and processing, ensuring accurate and efficient retrieval of educational content for downstream workflows. It leverages REST API calls to gather course information and structured data, supporting the broader goal of enabling comprehensive data analysis and integration from edX environments.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `edx_course_ids`
-
-#### `course_roles` [unknown]
-
-**Purpose:** The module retrieves course IDs from an edX instance to facilitate subsequent data extraction operations, ensuring a non-empty list of course identifiers for processing. It also fetches the course structure via REST API to support data parsing and transformation, enabling accurate extraction of course-related information for further pipeline execution.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `edx_course_ids`
-
-#### `course_xml` [unknown]
-
-**Purpose:** This module retrieves and processes course data from the Open edX API to generate structured representations of course outlines and blocks, enabling the application to manage and analyze educational content effectively. It ensures accurate data synchronization and provides standardized formats for downstream use cases, such as content delivery or analytics.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `courseware`
-
-**Downstream:** `openedx_course_content_webhook`
-
-#### `dg_deployments\reconcile_edxorg_partitions.py` [python]
-
-**Purpose:** This module addresses the issue of incorrect course IDs in S3 paths for course-related assets, ensuring that partitions containing invalid suffixes (like `-course` or `-course_structure`) are corrected by stripping these suffixes. It identifies and resolves these issues by re-exporting assets with the proper partition keys and metadata, preventing data inconsistencies and ensuring accurate data retrieval. The module also efficiently manages S3 operations and partition deletions to maintain data integrity and optimize storage.
-
-#### `dg_projects\canvas\canvas\assets\canvas.py` [python]
-
-**Purpose:** This module enables the systematic export of course content and metadata from Canvas courses, ensuring structured data retrieval and storage for subsequent use. It manages the export process, including waiting for completion and downloading files, while organizing the data into predefined output locations for efficient access and integration. The module supports dynamic course partitions, ensuring scalability and flexibility in handling diverse course datasets.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\canvas\canvas\definitions.py` [python]
-
-**Purpose:** This module enables the periodic export of Canvas course content and metadata, facilitating data integration and analysis for educational analytics and reporting. It leverages Vault for secure access to sensitive credentials, Google Sheets for dynamic course ID retrieval, and S3 for scalable data storage, ensuring timely and accurate data availability for downstream processes.
-
-#### `dg_projects\canvas\canvas\lib\canvas.py` [python]
-
-**Purpose:** The module retrieves and filters numeric course IDs from a Google Sheet to populate a database or system that requires these IDs for operations like enrollment or course management. It ensures only valid numeric values are included, enhancing data integrity and reliability for downstream processes.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\canvas\canvas\sensors\canvas.py` [python]
-
-**Purpose:** This module monitors a Google Sheet to track Canvas course IDs and dynamically adjusts partitions whenever new or removed course IDs are detected, ensuring accurate and timely updates to the system's asset data. It enables efficient management of course content and metadata by synchronizing with the external source, maintaining consistency between the system and the external data source.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\edxorg\edxorg\assets\edxorg_api.py` [python]
-
-**Purpose:** The module retrieves and structures educational program and course metadata from the edxorg API, enabling downstream use in data-driven analytics, reporting, or integration with educational systems. It extracts program-level data (e.g., titles, organizations, course listings) and course metadata (e.g., course keys, types) into structured JSON files for storage and retrieval. This facilitates efficient access to educational data for applications requiring program and course information.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\edxorg\edxorg\assets\edxorg_archive.py` [python]
-
-**Purpose:** The module processes raw data archives from edx.org to extract per-course assets and model them according to their type, enabling the EDXorg system to organize and utilize educational data effectively. It retrieves archived files from GCS, extracts structured data, and creates assets like course structures, XMLs, and database tables, ensuring seamless integration with the system's data pipeline.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `
-            UPDATE tracking_logs
-            SET time = strftime(TRY_CAST(time AS TIMESTAMP), '%Y-%m-%d %H:%M:%S.%f')
-            `
-
-#### `dg_projects\edxorg\edxorg\assets\openedx_course_archives.py` [python]
-
-**Purpose:** The module extracts and processes XML data from course archives to generate structured metadata, video details, policy information, and certificate signatories, enabling comprehensive analysis of educational content for course management and analytics. It ensures data is organized into partitioned, versioned formats for efficient retrieval and integration with downstream systems.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\edxorg\edxorg\definitions.py` [python]
-
-**Purpose:** This module synchronizes and processes educational data from edx.org, including course exports, tracking logs, and program credential reports, ensuring they are stored in the OL data lake for further analysis or integration. It leverages S3 and GCS for scalable storage, with sensors to trigger data replication and processing workflows.
-
-#### `dg_projects\edxorg\edxorg\jobs\edx_gcs_courses.py` [python]
-
-**Purpose:** This module facilitates the nightly synchronization of Open edX course data from Google Cloud Storage (GCS) to Amazon S3, ensuring institutional research teams have access to the latest course information for analysis and reporting. The process automates data extraction and transfer, enabling platform engineering teams to maintain up-to-date educational datasets for downstream processing and decision-making.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\edxorg\edxorg\jobs\retrieve_edx_exports.py` [python]
-
-**Purpose:** The module schedules a weekly process to retrieve and extract edX.org course exports from a Google Cloud Storage (GCS) bucket into Amazon S3, enabling institutional research teams to analyze data for educational insights. This ensures timely access to structured course data, supporting the needs of platform-engineering consumers who require up-to-date educational resources for their workflows.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\edxorg\edxorg\lib\edxorg.py` [python]
-
-**Purpose:** This module categorizes and extracts structured data from educational archives, determining their data categories (e.g., course structures, database tables, XML exports) and extracting critical metadata such as course IDs, source systems, and archive dates. It enables efficient organization and retrieval of educational data assets, supporting data management and analysis workflows.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\edxorg\edxorg\ops\edx_gcs_courses.py` [python]
-
-**Purpose:** This module facilitates the transfer of course tarballs from Google Cloud Storage (GCS) to Amazon Simple Storage Service (S3) for educational content management, supporting the edX export pipeline by ensuring structured data movement between centralized storage systems. It enables institutional research to securely access and archive course materials, while maintaining compliance with data governance and storage efficiency requirements.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\edxorg\edxorg_tests\test_edxorg_lib.py` [python]
-
-**Purpose:** The module provides functionality to categorize archive types (e.g., SQL, JSON, XML) and extract a canonical course ID from filenames, enabling efficient processing of educational archives. It ensures consistent identification of course data across different file formats, supporting seamless integration with systems that require standardized course metadata.
-
-> [!WARNING]
-> **Docstring DRIFT:** The docstring incorrectly states that the file contains tests for parsing utilities, but the implementation is a set of test cases for those utilities. The docstring does not accurately describe the code's functionality, as it focuses on the test file's purpose rather than the actual implementation.
-
-#### `dg_projects\learning_resources\learning_resources\assets\open_learning_library.py` [python]
-
-**Purpose:** The module ensures synchronization between MIT GitHub repositories and S3 storage to provide up-to-date course content for the MIT Open application's search functionality, enabling users to access retired courses seamlessly.
-
-#### `dg_projects\learning_resources\learning_resources\assets\sloan_api.py` [python]
-
-**Purpose:** This module retrieves and stores course and course offering data from MIT Sloan Executive Education APIs, enabling organizations to analyze and leverage educational content for curriculum planning, analytics, and decision-making. It ensures structured data storage with versioning, facilitating future data retrieval and integration.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\learning_resources\learning_resources\definitions.py` [python]
-
-**Purpose:** This module extracts and organizes learning resource metadata from external platforms (MIT Sloan Executive Education API, Video Shorts, and future systems), transforming raw data into structured assets for use in downstream workflows, such as content discovery and analytics. It handles daily and hourly data extraction, ensuring timely availability of course materials, video content, and associated metadata for application integration and reporting.
-
-#### `dg_projects\legacy_openedx\legacy_openedx\definitions.py` [python]
-
-**Purpose:** This module defines the infrastructure for extracting and synchronizing course data from legacy Open edX systems, enabling data migration between environments and facilitating access to course materials for analysis or deployment. It handles configurations for multiple deployments (mitx, mitxonline, xpro) and ensures secure access to critical resources like GCS storage and vault credentials.
-
-#### `dg_projects\legacy_openedx\legacy_openedx\jobs\open_edx.py` [python]
-
-**Purpose:** This module extracts and processes data from Open edX courses, preparing structured datasets for institutional research use, and ensures these datasets are securely transferred to S3 for integration with tracking logs, enabling comprehensive analysis of educational outcomes and course structures.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\legacy_openedx\legacy_openedx\ops\open_edx.py` [python]
-
-**Purpose:** The module retrieves course IDs and their structural data from an edX instance to facilitate subsequent data extraction processes, ensuring accurate and efficient retrieval of course information for downstream operations.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\openedx\openedx\assets\openedx.py` [python]
-
-**Purpose:** This module retrieves and processes course data from the Open edX API to generate structured representations of course outlines and blocks, enabling the system to accurately model course structures and facilitate data-driven operations such as content delivery and analytics.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\openedx\openedx\components\openedx_deployment.py` [python]
-
-**Purpose:** This module enables the creation of Dagster definitions for OpenEdX deployments, facilitating the extraction of course data (e.g., structure, XML, content) and monitoring of course runs and versions via sensors. It ensures reliable asset management and resource configuration for educational platforms, supporting efficient course data retrieval and dynamic monitoring across OpenEdX environments.
-
-#### `dg_projects\openedx\openedx\sensors\openedx.py` [python]
-
-**Purpose:** The module enables the sensing of course runs and their versions from the OpenEdx platform, triggering asset materializations when changes occur, ensuring the correct course content is available for the specified partitions. It manages dynamic partition requests and updates assets based on version changes, facilitating timely and accurate data delivery for educational content.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `download_edx_gcs_course_data` [unknown]
-
-**Purpose:** The module facilitates the migration of edX course data between Google Cloud Storage (GCS) and Amazon S3, enabling the edX export pipeline to access and process course materials efficiently. It downloads tarballs from a designated GCS bucket, stores them locally, and uploads them to an S3 bucket for further processing, ensuring data consistency and accessibility across storage systems.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `config`
-
-#### `dummy_edxorg_course_structure` [unknown]
-
-**Purpose:** The module processes raw data from edx.org archives to extract structured course assets, including course structures and XML files, enabling downstream applications to analyze educational data. It models these assets according to their type and metadata, ensuring consistency and proper categorization for use in educational analytics and system integration.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dummy_edxorg_course_xml` [unknown]
-
-**Purpose:** The module extracts and processes course metadata from XML exports, generating structured data for video details, policies, certificate signatories, and course summaries, enabling efficient data retrieval and analysis for educational content management. It leverages partitioning to organize data by source system and course identifiers, ensuring scalable and targeted data processing.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `edxorg_course_content_webhook` [unknown]
-
-**Purpose:** This module extracts and processes structured metadata and details from XML exports of course content, enabling the system to aggregate critical course information (e.g., video elements, policies, certificates) for use in downstream workflows, such as analytics, reporting, or further data processing. It ensures consistent, standardized extraction of course-level data from source systems, facilitating integration with other components of the ecosystem.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `course_archive`
-
-#### `edxorg_raw_data_archive` [unknown]
-
-**Purpose:** The module retrieves and processes raw educational data from edx.org courses, transforming it into structured asset objects for use in the system. It extracts course-specific data, categorizes archive elements, and partitions data for efficient materialization and querying. The goal is to provide a consistent, standardized format for educational analytics and integration with the broader data pipeline.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Downstream:** `process_edxorg_archive_bundle`
-
-#### `edxorg_raw_tracking_logs` [unknown]
-
-**Purpose:** The module processes raw data archives from edx.org to extract per-course assets, enabling structured data analysis for educational insights. It models different asset types according to their structure, ensuring consistency and facilitating downstream data processing and reporting. By leveraging GCP's Cloud Storage and DuckDB, the module ensures efficient extraction, validation, and partitioning of course-related data for business analytics.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `enrolled_users` [unknown]
-
-**Purpose:** The module retrieves course IDs from an edX instance to facilitate data extraction, ensuring accurate and complete information for subsequent processing. It leverages REST APIs to gather course structures, which are essential for preparing data for analysis or export workflows. The module ensures data integrity by validating the number of course IDs and organizing them for efficient downstream operations.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `edx_course_ids`
-
-#### `export_edx_courses` [unknown]
-
-**Purpose:** The module retrieves course IDs from an edX instance to facilitate subsequent data extraction tasks, ensuring that each course's data is accessible for further processing. It also manages the retrieval of course structures via REST API, which is critical for accurately extracting course-related data.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `config`, `daily_extracts_dir`, `edx_course_ids`
-
-#### `export_edx_forum_database` [unknown]
-
-**Purpose:** The module retrieves course IDs from an edX instance to facilitate subsequent data extraction operations, ensuring accurate targeting of course-specific data. It then fetches the structural details of these courses via REST API, enabling comprehensive data preparation for export or analysis workflows.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `config`
-
-#### `fetch_edx_course_structure_from_api` [unknown]
-
-**Purpose:** This module retrieves course structures from an edX instance to facilitate data extraction for subsequent processing, generating structured JSON files that summarize course metadata and nested content for further analysis or integration.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `config`, `course_ids`
-
-#### `list_courses` [unknown]
-
-**Purpose:** The module retrieves the list of active course IDs from an edX instance to facilitate subsequent data extraction operations, ensuring accurate and efficient processing of course-specific data. It leverages the openedx resource to fetch course IDs in batches, optimizing performance while maintaining data integrity.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `config`
-
-#### `normalize_edxorg_tracking_log` [unknown]
-
-**Purpose:** The module processes raw edx.org data archives to extract and normalize per-course assets, enabling structured data for educational analytics and course management. It models different asset types according to their structure, facilitating efficient data integration and utilization in educational systems.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `edxorg_raw_tracking_log`
-
-#### `openedx_course_content_webhook` [unknown]
-
-**Purpose:** This module queries the Open edX API to retrieve course structure and block data, models these assets as JSON files with versioning and metadata, and enables content management by providing structured, hierarchical representations of course content for processing and delivery.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `course_xml`
-
-#### `openedx_live_courseware` [unknown]
-
-**Purpose:** This module retrieves and processes course data from an Open edX environment, modeling asset objects based on their type and exporting hierarchical course structure information in JSON format for subsequent use in educational analytics and content delivery. It ensures data is stored with versioning and metadata for accurate retrieval and integration into downstream systems.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\openedx.py` [python]
-
-**Purpose:** The module organizes course structure data by generating block indexes and unnesting course structures, enabling efficient retrieval of course details. It processes video and policy files from archives to extract relevant data, supporting educational content management and retrieval. This helps in structuring course data for use in learning platforms, ensuring accurate metadata and content handling.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\canvas_api.py` [python]
-
-**Purpose:** The module provides an API client for interacting with Canvas courses, enabling data retrieval and management tasks such as exporting course content, checking export statuses, and fetching paginated items like files, assignments, and pages. It facilitates seamless integration with educational systems by abstracting API calls and ensuring reliable data access for course-related operations.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\openedx.py` [python]
-
-**Purpose:** The module enables the system to retrieve and manage course data from edX platforms, facilitating efficient querying of course details, status checks, and export operations. It supports paginated data retrieval and automated export of course information to S3 buckets, enhancing scalability and streamlining educational content management.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `process_edxorg_archive_bundle` [unknown]
-
-**Purpose:** The module processes raw EdX.org archive data to extract per-course assets, enabling structured representation of course materials for analysis or integration into educational systems. It models different asset types according to their structure, facilitating efficient data retrieval and transformation for downstream applications.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `config`, `edxorg_raw_data_archive`
-
-#### `student_submissions` [unknown]
-
-**Purpose:** The module retrieves course IDs from an edX instance to facilitate data extraction, ensuring accurate and efficient processing of course structures for subsequent steps. It ensures the availability of course-specific data required for further pipeline execution, enabling targeted data retrieval and analysis.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `edx_course_ids`
-
-#### `upload_edx_gcs_course_data_to_s3` [unknown]
-
-**Purpose:** The module is responsible for migrating course tarballs from Google Cloud Storage (GCS) to Amazon Simple Storage Service (S3) to support the edX export pipeline. It downloads tarballs from GCS, prepares them in a local directory, and uploads them to S3 for further processing, ensuring data is moved efficiently between the two storage systems.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `config`, `edx_gcs_course_tarball_directory`
-
-#### `upload_extracted_data` [unknown]
-
-**Purpose:** The module facilitates the extraction and storage of educational data from edX instances, ensuring structured preservation of course information in a designated S3 bucket for subsequent processing. It ensures data integrity through hashing and metadata tagging, enabling efficient retrieval and utilization in downstream workflows.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `config`, `uploads`
-
-#### `user_roles` [unknown]
-
-**Purpose:** This module retrieves the list of active course IDs from an Open edX instance to facilitate subsequent data extraction operations, ensuring accurate and comprehensive course structure information is available for processing. It ensures the edX environment's course data is properly cataloged and prepared for further pipeline execution, supporting efficient data retrieval and analysis.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `edx_course_ids`
-
-#### `write_course_list_csv` [unknown]
-
-**Purpose:** The module `list_edx_courses` retrieves the list of active course IDs from an edX instance to facilitate subsequent data extraction operations, ensuring accurate and efficient processing of course-specific data. It leverages the `openedx` resource to paginate through course records, generating a structured output for further use in data pipeline workflows.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-**Upstream:** `edx_course_ids`
-
----
-
-### Domain: **Ingestion**
-
-#### `dg_projects\data_loading\data_loading\defs\edxorg_s3_ingest\__init__.py` [python]
-
-**Purpose:** This module enables the ingestion of educational data from Amazon S3 into a structured format, facilitating data processing and analysis for educational institutions. It provides configuration and management capabilities for S3 data ingestion, ensuring data is reliably loaded into a target system for further use.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\data_loading\data_loading\defs\edxorg_s3_ingest\defs.py` [python]
-
-**Purpose:** This module defines the Dagster assets required for ingesting educational organization (EdX.org) data from S3 buckets, enabling the data pipeline to process and store structured educational records efficiently. It ensures upstream dependencies are properly configured to facilitate seamless data integration and processing workflows.
-
-#### `dg_projects\edxorg\edxorg\__init__.py` [python]
-
-**Purpose:** The module initializes the educational organization's project structure, configuring essential settings, registering core models, and setting up necessary components to enable the development and management of educational projects within the platform.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\edxorg\edxorg\assets\__init__.py` [python]
-
-**Purpose:** This module provides essential utilities for managing educational resources, enabling the retrieval of projects and courses by abstracting interactions with external APIs and databases. It ensures seamless integration with the edxorg platform's data infrastructure, allowing developers to efficiently access and manipulate educational content while maintaining scalability and flexibility.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\edxorg\edxorg\lib\__init__.py` [python]
-
-**Purpose:** This module provides a centralized framework for managing and configuring educational projects, enabling efficient data handling, integration with external systems, and streamlined project management, thereby supporting the organization's goals of optimizing resource allocation and enhancing operational efficiency.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\learning_resources\learning_resources\__init__.py` [python]
-
-**Purpose:** The module initializes the learning resources package by importing necessary modules, configuring settings, and registering resources to enable access to educational materials, ensuring the package is ready for use in the application.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\learning_resources\learning_resources\assets\__init__.py` [python]
-
-**Purpose:** This module manages the assets for learning resources, organizing and providing access to educational materials such as images, videos, and other content, enabling the system to deliver structured and accessible learning resources to users.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\learning_resources\learning_resources\defs\__init__.py` [python]
-
-**Purpose:** This module provides a data structure to manage learning resources, enabling operations such as retrieving, updating, and deleting resources, which is critical for maintaining and organizing educational content within the learning platform.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\learning_resources\learning_resources\lib\__init__.py` [python]
-
-**Purpose:** The module provides a structured framework for managing educational learning resources, enabling organizations to store, access, and organize content efficiently. It supports the acquisition and dissemination of educational materials, ensuring alignment with learning objectives and facilitating knowledge retention through centralized resource management.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\learning_resources\learning_resources\resources\__init__.py` [python]
-
-**Purpose:** This module provides a structured framework for managing learning resources, enabling the application to add, retrieve, and organize educational materials efficiently. It ensures that resources are properly categorized and accessible to users, supporting educational content management and facilitating knowledge sharing within the learning ecosystem.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\learning_resources\learning_resources\sensors\__init__.py` [python]
-
-**Purpose:** This module provides essential functionality for managing sensor data in learning resources, enabling data collection, processing, and integration with external systems to support accurate and timely sensor data acquisition and analysis, thereby facilitating informed decision-making and operational efficiency in educational environments.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\legacy_openedx\legacy_openedx\schedules\__init__.py` [python]
-
-**Purpose:** This module provides the foundational infrastructure for scheduling and managing educational events, enabling the platform to organize and track timelines, events, and calendar data efficiently, supporting the business need for reliable and scalable event management within the OpenEdX ecosystem.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\legacy_openedx\legacy_openedx\schedules\open_edx.py` [python]
-
-**Purpose:** This module schedules daily runs for three distinct educational product pipelines—residential_edx, xpro_edx, and mitxonline_edx—each with its own unique run key and business unit tag. The purpose is to automate the execution of these pipelines on a daily basis, ensuring consistent processing of educational content for respective audiences.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\openedx\openedx\ops\__init__.py` [python]
-
-**Purpose:** This module provides a centralized framework for managing project configurations, workflows, and data processing, enabling efficient organization and execution of educational projects by standardizing operations and ensuring consistency across different components. It supports the integration of project states, resource allocation, and data handling, directly enhancing the scalability and maintainability of the educational platform's operational processes.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\openedx\openedx\partitions\__init__.py` [python]
-
-**Purpose:** This module organizes and manages partitions within a learning platform, enabling modular development and independent configuration of different components such as courses, modules, or user groups. It facilitates scalable management of educational content by allowing separate handling of distinct parts of the system, ensuring flexibility and maintainability in the platform's architecture. The module provides essential utilities for defining, querying, and configuring partitions, which are critical for building and maintaining the educational technology infrastructure.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\openedx\openedx\partitions\openedx.py` [python]
-
-**Purpose:** This module defines partitioning strategies for different deployment environments and course runs, enabling efficient data processing and querying across various instances. It supports static and dynamic partitioning to manage data across multiple deployments, facilitating scalable and flexible data management for educational content.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\openedx\openedx\schedules\__init__.py` [python]
-
-**Purpose:** This module manages scheduling data for educational courses, ensuring consistent time zone handling and proper generation of course schedules, supporting the business need for accurate and timely academic planning.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\openedx\openedx\schedules\open_edx.py` [python]
-
-**Purpose:** The module schedules daily job executions for educational courses, each targeting a specific business unit (residential, MITxPro, or MITxOnline). It generates unique RunRequests with identifiers tailored to each course, enabling automated pipeline triggers based on the daily cron schedule. This ensures consistent, business-aligned processing of educational content across different platforms.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\openedx\openedx\sensors\__init__.py` [python]
-
-**Purpose:** This module provides a framework for managing sensor data in a learning platform, enabling the collection, configuration, and processing of real-time data from various sensors. It ensures that sensor data is properly initialized, monitored, and integrated into the system's data pipeline, supporting features such as performance tracking, user behavior analysis, and system health monitoring.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\student_risk_probability\__init__.py` [python]
-
-**Purpose:** This module calculates student risk probabilities to assist in decision-making, such as determining eligibility for programs or services, thereby enabling institutions to manage risks effectively.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\student_risk_probability\student_risk_probability\__init__.py` [python]
-
-**Purpose:** The module initializes and registers classes for calculating student risk probabilities, enabling the system to assess and manage risks based on various factors. It provides a framework for evaluating student risk levels, which is crucial for decision-making in educational or financial contexts.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\student_risk_probability\student_risk_probability\assets\__init__.py` [python]
-
-**Purpose:** The module calculates risk probabilities for students based on their data, enabling decision-making in risk assessment scenarios, such as identifying students who may require additional support or intervention. It integrates data processing and probability modeling to support strategic decisions in educational or organizational contexts.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\student_risk_probability\student_risk_probability\assets\risk_probability.py` [python]
-
-**Purpose:** The module calculates student risk probabilities based on exam data from the `cheating_detection_report` table, scales numeric features using RobustScaler, and applies logistic regression weights to predict academic risk levels. It produces a structured output for reporting, enabling stakeholders to assess student risk for academic integrity and risk management purposes.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\student_risk_probability\student_risk_probability\definitions.py` [python]
-
-**Purpose:** This module defines the necessary resources and assets to execute a data export job for student risk probability, enabling the pipeline to process and report on risk-related data, which is critical for decision-making and analytics in the education sector.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\student_risk_probability\student_risk_probability\lib\__init__.py` [python]
-
-**Purpose:** The module initializes configurations and data structures to enable the system to assess student risk based on risk factors, facilitating the calculation and evaluation of probabilities associated with student risk levels.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\student_risk_probability\student_risk_probability\lib\helper.py` [python]
-
-**Purpose:** This module calculates student risk probabilities using logistic regression by scaling feature data and applying a sigmoid function to predict likelihoods, enabling decision-making in educational or risk management contexts. It ensures numerical stability through RobustScaler and integrates with pre-trained weights for accurate predictions.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\student_risk_probability\student_risk_probability\resources\__init__.py` [python]
-
-**Purpose:** The module provides a framework for calculating student risk probabilities based on structured data, enabling educators and administrators to identify at-risk students and allocate resources efficiently. It processes academic and behavioral data to generate risk scores, supporting decision-making in educational planning and intervention strategies.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\__init__.py` [python]
-
-**Purpose:** The module provides essential utilities for orchestrating Dagster workflows in the MIT Open Learning environment, facilitating the coordination of various components to ensure efficient and reliable process execution. It supports the development and management of educational workflows by offering tools that streamline the orchestration process, enabling educators and developers to focus on creating and managing learning content rather than底层 implementation details.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\partitions\edxorg.py` [python]
-
-**Purpose:** The module defines partitions for educational data, enabling the system to process different courses and sources efficiently, which supports scalable data handling and analysis across educational contexts.
-
-#### `student_risk_probability` [unknown]
-
-**Purpose:** The module calculates risk probabilities for students based on their exam data, scaling numeric features and applying logistic regression weights to identify potential cheaters. It generates a structured output containing student identifiers and risk scores, enabling targeted interventions or reporting decisions.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
----
-
-### Domain: **Org**
-
-#### `bin\uv-operations.py` [python]
-
-**Purpose:** The module automates dependency management for multiple projects by running `uv` commands across all code locations in the `dg_projects` directory. It discovers directories containing `pyproject.toml` files, executes specified commands like `sync` or `lock`, and handles errors with a continue-on-error feature to maintain workflow integrity.
-
-#### `dg_projects\b2b_organization\__init__.py` [python]
-
-**Purpose:** The module manages organizational structures for a B2B context, enabling entities to be organized into departments and hierarchies, which facilitates efficient management and communication. It provides methods to create, update, and retrieve organizational data, supporting business operations and decision-making.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\b2b_organization\b2b_organization\assets\data_export.py` [python]
-
-**Purpose:** This module exports administrative reports for organizations in a structured CSV format, ensuring data integrity and version control by generating unique filenames with timestamps and hash values. It facilitates timely access to organizational data for administrative purposes, enabling accurate reporting and record-keeping across different timeframes.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\b2b_organization\b2b_organization\definitions.py` [python]
-
-**Purpose:** This module defines a job to export B2B organization data securely, leveraging S3 and Vault authentication based on the environment, ensuring data is stored in the appropriate bucket and processed through the correct IO managers. It facilitates automated data exports across development, staging, and production environments while maintaining resilience through fallback mechanisms.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\b2b_organization\b2b_organization\sensors\__init__.py` [python]
-
-**Purpose:** This module manages organizational data sensors, processes real-time data from various sources, and integrates with external systems to ensure accurate and timely business insights, supporting decision-making and operational efficiency.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\b2b_organization\b2b_organization\sensors\b2b_organization.py` [python]
-
-**Purpose:** This module implements a sensor that retrieves a list of B2B organizational customers by querying a database table, identifies new entries not yet processed, and triggers dynamic partition creation and run requests to ensure timely data exports for analysis or reporting.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\canvas\canvas\sensors\__init__.py` [python]
-
-**Purpose:** The module manages sensor data collection, processing, and storage across multiple platforms, enabling reliable real-time monitoring and analysis for decision-making in operational environments. It ensures data integrity and security by handling sensor inputs, validating metrics, and facilitating cross-platform consistency. The module supports scalable deployment of sensors, allowing organizations to monitor critical systems and optimize performance through automated data processing.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\data_platform\data_platform\definitions.py` [python]
-
-**Purpose:** This module enables real-time Slack notifications for Dagster run failures, allowing teams to swiftly identify and address issues in their pipeline workflows. It integrates with Vault for secure authentication and configures a dedicated Slack sensor to alert stakeholders when critical pipeline errors occur, enhancing incident response efficiency.
-
-#### `dg_projects\data_platform\orchestration_platform_tests\__init__.py` [python]
-
-**Purpose:** This module enables the testing of the orchestration platform's data management capabilities by providing a structured framework for managing test cases, scenarios, and resources, ensuring the platform's reliability and correctness through comprehensive validation. It facilitates the execution of test scenarios to verify data flow, integration, and error handling mechanisms critical to the platform's functionality.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\edxorg\edxorg\jobs\__init__.py` [python]
-
-**Purpose:** This module manages job listings and their associated data, enabling efficient creation, updating, and deletion of job positions across the organization. It ensures data consistency and integrates with external systems for accurate job tracking, supporting business operations such as recruitment and employee management. The module provides a structured framework for handling job-related information, facilitating seamless collaboration between different systems and teams.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\edxorg\edxorg\sensors\__init__.py` [python]
-
-**Purpose:** The module initializes the sensor infrastructure to monitor and process real-time events, enabling the system to track user activities, system events, and other critical data points, thereby supporting proactive decision-making and operational visibility.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\legacy_openedx\legacy_openedx\jobs\__init__.py` [python]
-
-**Purpose:** The module provides the infrastructure for managing job execution in the legacy Open edX platform, enabling the scheduling, execution, and monitoring of tasks to ensure efficient system operations and automation.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\legacy_openedx\legacy_openedx\resources\healthchecks.py` [python]
-
-**Purpose:** This module enables the initiation of health checks by sending start or fail requests to a ping host, allowing external systems to monitor the status of resources. It provides configuration options to control whether a start event is triggered during resource initialization, supporting logging and tracking capabilities. The module ensures consistent and reliable communication between resources and the health checks system, facilitating proactive resource management and status verification.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\legacy_openedx\legacy_openedx\sensors\__init__.py` [python]
-
-**Purpose:** The module provides a framework for monitoring and processing sensor data, enabling external systems to collect, analyze, and track metrics related to sensor operations, thereby supporting system performance and reliability.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\openedx\openedx\definitions.py` [python]
-
-**Purpose:** The module facilitates the normalization and configuration of tracking logs for different OpenEdX deployments, ensuring consistent data handling across environments. It manages shared resources like S3, DuckDB, and Vault, and generates tailored job configurations for daily log processing, enabling isolated, secure operations across deployments.
-
-#### `dg_projects\openedx\openedx\jobs\__init__.py` [python]
-
-**Purpose:** This module manages job execution and orchestration for the OpenEdX platform, handling tasks such as data processing, content delivery, and system maintenance. It ensures that these tasks are scheduled, monitored, and executed efficiently to support the platform's operations and improve system performance.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `dg_projects\openedx\openedx\lib\magic_numbers.py` [python]
-
-**Purpose:** The module defines a standard HTTP status code (404) to represent "Not Found" errors in web applications, ensuring consistency across API endpoints and error handling mechanisms. It serves as a reference point for developers to identify and handle resource-related issues in business workflows involving web services.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `export_b2b_organization_data` [unknown]
-
-**Purpose:** The module exports a CSV file containing organization administration data for a specific organization key, enabling administrators to retrieve and analyze structured organizational information. It ensures data is formatted consistently and stored in a standardized location, facilitating easy access and integration into downstream processes. The module also tracks key metrics like row counts and file sizes for audit and reporting purposes.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\io_managers\__init__.py` [python]
-
-**Purpose:** This module provides a structured framework for managing input and output operations in the orchestration system, enabling seamless data processing and integration with external systems. It facilitates the ingestion of diverse data sources and the transmission of processed data across workflows, supporting the broader goal of streamlining operational workflows and ensuring reliable data flow within the orchestration ecosystem.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\jobs\__init__.py` [python]
-
-**Purpose:** The module provides job management capabilities for orchestrating tasks within a system, enabling the execution of workflows in a structured and scalable manner. It supports scheduling, monitoring, and handling job dependencies, ensuring reliable and efficient automation of business processes. By centralizing job execution and monitoring, the module enhances operational efficiency and flexibility in managing complex workflows.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\automation_policies.py` [python]
-
-**Purpose:** The module evaluates whether all upstream dependencies are resolved and no active processes are blocking the execution of a task, ensuring the environment is ready for the next step. It checks for changes in upstream dependencies, code versions, or missing components to determine if the process can proceed without conflicts.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\lib\hooks.py` [python]
-
-**Purpose:** This module enables the system to notify the health checks system about the outcome of a job, ensuring real-time visibility into job status and enabling proactive monitoring and response. When a job succeeds, it updates the health checks with a "success" signal, and when a failure occurs, it sends a "fail" message to indicate an issue that requires attention. This facilitates seamless integration with health checks mechanisms to maintain system reliability and integrity.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\ops\__init__.py` [python]
-
-**Purpose:** This module provides a comprehensive framework for orchestrating and managing operational tasks, enabling the coordination of diverse processes within the orchestration system. It facilitates the execution of complex workflows by defining the sequence and dependencies of operations, ensuring efficient resource allocation and integration with external systems. The module enhances operational efficiency by standardizing task execution and enabling scalable, reliable process management.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\__init__.py` [python]
-
-**Purpose:** This module provides essential resources for orchestrating tasks, enabling the management of job configurations, task states, and other orchestration-related data, thereby supporting efficient and consistent task execution across different systems.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\resources\outputs.py` [python]
-
-**Purpose:** This module provides a flexible framework for managing output directories in orchestration workflows, enabling the creation and cleanup of structured directories based on configurable parameters. It supports two distinct output formats—simple and daily—allowing for tailored directory organization and avoiding race conditions through nested directory prefixes. The module ensures consistent and reliable management of results across different execution contexts.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\schedules\__init__.py` [python]
-
-**Purpose:** This module defines the structure and interfaces for scheduling tasks in an orchestration system, enabling the execution of tasks at specified times and deadlines. It provides the necessary classes and enums to manage different types of schedules, facilitating the coordination of tasks across various workflows and ensuring processes run efficiently according to business requirements.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `packages\ol-orchestrate-lib\src\ol_orchestrate\sensors\__init__.py` [python]
-
-**Purpose:** The module provides sensor registration and data collection mechanisms to monitor orchestration workflows, enabling insights into operational efficiency and troubleshooting capabilities. It ensures that critical metrics are captured and processed to support decision-making and performance optimization.
-
-> [!WARNING]
-> **Docstring MISSING:** No docstring found.
-
-#### `src\ol_superset\ol_superset\cli.py` [python]
-
-**Purpose:** This module provides a centralized command-line interface for managing Apache Superset assets, enabling efficient asset migration, validation, and governance across QA and production environments with built-in safety mechanisms. It supports key workflows such as exporting assets for backup, promoting changes, syncing data, and applying governance policies to ensure compliance and consistency.
-
-#### `src\ol_superset\ol_superset\commands\apply_rls.py` [python]
-
-**Purpose:** This module enables administrators to apply governance-level row-level security (RLS) policies to a Superset instance, ensuring that users only access data they are authorized to view. It resolves role and dataset mappings via the Superset API, creates or updates RLS filters idempotently, and supports dry-run modes and skip-confirmation options to streamline policy deployment without compromising security.
-
-#### `src\ol_superset\ol_superset\commands\lock.py` [python]
-
-**Purpose:** The module manages external editing flags for Superset assets to enforce controlled workflows, ensuring production dashboards are locked (preventing accidental edits) and QA environments can unlock them for manual editing. It supports enforcing "managed as code" practices by locking production assets and enabling manual editing in development or testing environments.
-
-> [!WARNING]
-> **Docstring DRIFT:** 
-
-#### `src\ol_superset\ol_superset\commands\promote.py` [python]
-
-**Purpose:** This module ensures safe and controlled deployment of Superset assets from QA to production by validating assets, checking for uncommitted changes, and requiring user confirmation to prevent accidental deployments. It performs critical steps like mapping database UUIDs, setting instance configurations, and pushing assets with detailed validation and summary outputs to maintain data integrity and prevent errors.
-
-#### `src\ol_superset\ol_superset\commands\roles.py` [python]
-
-**Purpose:** The module enables administrators to manage and verify dataset access permissions for governance roles, ensuring compliance with organizational policies by aligning local dataset schemas with predefined roles. It provides a way to check if all datasets in specified directories are covered by at least one role, facilitating consistent access control and reducing risks of unauthorized data access.
-
-#### `src\ol_superset\ol_superset\commands\sync.py` [python]
-
-**Purpose:** This module enables seamless synchronization of Superset assets between different instances, ensuring consistency across environments by mapping database UUIDs and pushing datasets, charts, and dashboards to the target instance. It supports automated mapping and manual confirmation, facilitating efficient deployment and maintenance across production and development environments.
-
-#### `src\ol_superset\ol_superset\commands\validate.py` [python]
-
-**Purpose:** The module validates Superset asset files to ensure YAML syntax correctness, secure database configurations, and proper governance role coverage, supporting compliance and reliable data management. It checks for embedded passwords in database configs and verifies that governance roles cover all dataset schemas, preventing security risks and ensuring adherence to organizational data governance policies.
-
-#### `src\ol_superset\ol_superset\lib\role_management.py` [python]
-
-**Purpose:** This module synchronizes dataset access permissions between organizational governance policies and the Superset instance, ensuring that users have the appropriate access to data based on their roles and policies. It retrieves role definitions from a governance file, fetches local dataset metadata, and retrieves dynamic permissions from the Superset API to enforce access controls aligned with governance rules.
-
-#### `src\ol_superset\ol_superset\lib\utils.py` [python]
-
-**Purpose:** This module manages asset directories for the Superset CLI, enabling efficient tracking of dashboards, charts, datasets, and databases, while ensuring version control integrity through git status checks. It provides tools to interact with Superset instances, validate asset types, and handle user confirmation for critical operations.
-
-> [!WARNING]
-> **Docstring DRIFT:** The DOCSTRING is too vague and does not accurately describe the specific functions and purposes of the code. It only states that the code is for "Superset CLI" without detailing the actual implementations, such as handling repository roots, asset counting, or running CLI commands. The code's functionality is significantly more detailed than the DOCSTRING provides.
-
 ---
 
 ### Domain: **Unclustered**
 
-#### `canvas_content_export` [unknown]
+#### `activite_communes` [unknown]
 
 **Purpose:** *(no purpose extracted)*
 
-**Downstream:** `course_content_metadata`
+**Upstream:** `infos_communes`, `logement_2020_valeurs`
 
-#### `columns` [unknown]
+**Downstream:** `activite_departements`
 
-**Purpose:** *(no purpose extracted)*
-
-**Downstream:** `write_file_to_s3`
-
-#### `config` [unknown]
+#### `activite_departements` [unknown]
 
 **Purpose:** *(no purpose extracted)*
 
-**Downstream:** `download_edx_gcs_course_data`, `download_file_from_gcs`, `download_files_from_s3`, `export_edx_courses`, `export_edx_forum_database`, `fetch_edx_course_structure_from_api`, `list_courses`, `load_files_to_table`, `process_edxorg_archive_bundle`, `sync_files_to_s3`, `upload_edx_gcs_course_data_to_s3`, `upload_extracted_data`, `upload_file_to_s3`, `upload_files_to_s3`, `write_file_to_s3`
+**Upstream:** `activite_communes`, `infos_departements`, `logement_2020_valeurs`
 
-#### `course_archive` [unknown]
-
-**Purpose:** *(no purpose extracted)*
-
-**Downstream:** `edxorg_course_content_webhook`
-
-#### `course_ids` [unknown]
+#### `activite_iris` [unknown]
 
 **Purpose:** *(no purpose extracted)*
 
-**Downstream:** `fetch_edx_course_structure_from_api`
+**Upstream:** `infos_iris`, `logement_2020_valeurs`
 
-#### `course_metadata_export` [unknown]
-
-**Purpose:** *(no purpose extracted)*
-
-**Downstream:** `course_content_metadata`
-
-#### `courseware` [unknown]
+#### `bmo_2024` [unknown]
 
 **Purpose:** *(no purpose extracted)*
 
-**Downstream:** `course_xml`
+**Downstream:** `besoin_main_oeuvre_departement`
 
-#### `daily_extracts_dir` [unknown]
-
-**Purpose:** *(no purpose extracted)*
-
-**Downstream:** `export_edx_courses`
-
-#### `downloaded_objects` [unknown]
+#### `bpe_2023` [unknown]
 
 **Purpose:** *(no purpose extracted)*
 
-**Downstream:** `upload_files_to_s3`
-
-#### `edx_course_ids` [unknown]
+#### `bpe_metadata` [unknown]
 
 **Purpose:** *(no purpose extracted)*
 
-**Downstream:** `course_enrollments`, `course_roles`, `enrolled_users`, `export_edx_courses`, `student_submissions`, `user_roles`, `write_course_list_csv`
-
-#### `edx_gcs_course_tarball_directory` [unknown]
+#### `cog_arrondissements` [unknown]
 
 **Purpose:** *(no purpose extracted)*
 
-**Downstream:** `upload_edx_gcs_course_data_to_s3`
+**Downstream:** `infos_communes`
 
-#### `edxorg_raw_tracking_log` [unknown]
-
-**Purpose:** *(no purpose extracted)*
-
-**Downstream:** `normalize_edxorg_tracking_log`
-
-#### `github_api` [unknown]
+#### `cog_communes` [unknown]
 
 **Purpose:** *(no purpose extracted)*
 
-**Downstream:** `update_access_forge_repo`
+**Downstream:** `infos_communes`
 
-#### `instructor_onboarding_user_list` [unknown]
-
-**Purpose:** *(no purpose extracted)*
-
-**Downstream:** `update_access_forge_repo`
-
-#### `learn_api` [unknown]
+#### `cog_departements` [unknown]
 
 **Purpose:** *(no purpose extracted)*
 
-**Downstream:** `video_short_webhook`
+**Downstream:** `commune_centroid_poste`, `infos_communes`, `infos_postes`
 
-#### `log_date` [unknown]
-
-**Purpose:** *(no purpose extracted)*
-
-**Downstream:** `load_files_to_table`, `write_file_to_s3`
-
-#### `output_file` [unknown]
+#### `cog_poste` [unknown]
 
 **Purpose:** *(no purpose extracted)*
 
-**Downstream:** `upload_file_to_s3`
+**Downstream:** `commune_centroid_poste`, `infos_communes`, `infos_postes`, `postes_communes`
 
-#### `sheets_data` [unknown]
-
-**Purpose:** *(no purpose extracted)*
-
-**Downstream:** `video_short_metadata`
-
-#### `superset_api` [unknown]
+#### `cog_regions` [unknown]
 
 **Purpose:** *(no purpose extracted)*
 
-**Downstream:** `_superset_dataset`
+**Downstream:** `commune_centroid_poste`, `infos_communes`, `infos_postes`
 
-#### `uploads` [unknown]
-
-**Purpose:** *(no purpose extracted)*
-
-**Downstream:** `upload_extracted_data`
-
-#### `video_content` [unknown]
+#### `commune_centroid_poste` [unknown]
 
 **Purpose:** *(no purpose extracted)*
 
-**Downstream:** `video_short_thumbnail_large`, `video_short_thumbnail_small`, `video_short_webhook`
+**Upstream:** `cog_departements`, `cog_poste`, `cog_regions`, `infos_communes`
 
-#### `video_metadata` [unknown]
-
-**Purpose:** *(no purpose extracted)*
-
-**Downstream:** `video_short_content`, `video_short_thumbnail_large`, `video_short_thumbnail_small`, `video_short_webhook`
-
-#### `video_thumbnail_large` [unknown]
+#### `communes_to_scot` [unknown]
 
 **Purpose:** *(no purpose extracted)*
 
-**Downstream:** `video_short_webhook`
+**Downstream:** `infos_scot`
 
-#### `video_thumbnail_small` [unknown]
+#### `datatourisme_place` [unknown]
 
 **Purpose:** *(no purpose extracted)*
 
-**Downstream:** `video_short_webhook`
+**Downstream:** `place`
+
+#### `demographie_communes` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Upstream:** `infos_communes`, `logement_2020_valeurs`
+
+**Downstream:** `demographie_departements`
+
+#### `demographie_departements` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Upstream:** `demographie_communes`, `infos_departements`, `logement_2020_valeurs`
+
+#### `demographie_iris` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Upstream:** `infos_iris`, `logement_2020_valeurs`
+
+#### `dvf_2014` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `dvf_2014_dev` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `dvf_2015` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `dvf_2015_dev` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `dvf_2016` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `dvf_2016_dev` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `dvf_2017` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `dvf_2017_dev` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `dvf_2018` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `dvf_2018_dev` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `dvf_2019` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `dvf_2019_dev` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `dvf_2020` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `dvf_2020_dev` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `dvf_2021` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `dvf_2021_dev` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `dvf_2022` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `dvf_2022_dev` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `dvf_2023` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `dvf_2023_dev` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `dvf_2024` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `dvf_2024_dev` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `dvf_default` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `ventes_immobilieres`
+
+#### `filosofi_commune_2021` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `revenu_commune`
+
+#### `filosofi_iris_2021` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+#### `habitat_communes` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Upstream:** `habitat_renomee`, `infos_communes`, `logement_2020_valeurs`
+
+**Downstream:** `habitat_departements`
+
+#### `habitat_departements` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Upstream:** `habitat_communes`, `infos_departements`, `logement_2020_valeurs`
+
+#### `habitat_iris` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Upstream:** `infos_iris`, `logement_2020_valeurs`
+
+#### `infos_communes` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Upstream:** `cog_arrondissements`, `cog_communes`, `cog_departements`, `cog_poste`, `cog_regions`, `shape_arrondissement_municipal_2024`, `shape_commune_2024`
+
+**Downstream:** `activite_communes`, `commune_centroid_poste`, `demographie_communes`, `habitat_communes`, `infos_departements`, `infos_iris`, `infos_scot`, `mobilite_communes`, `revenu_commune`
+
+#### `infos_departements` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Upstream:** `infos_communes`
+
+**Downstream:** `activite_departements`, `besoin_main_oeuvre_departement`, `demographie_departements`, `habitat_departements`, `mobilite_departements`, `professionels_sante_departement`
+
+#### `infos_postes` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Upstream:** `cog_departements`, `cog_poste`, `cog_regions`
+
+#### `infos_scot` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Upstream:** `communes_to_scot`, `infos_communes`
+
+#### `logement_2020` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `activite_renomee`, `demographie_renomee`, `habitat_renomee`, `mobilite_renomee`
+
+#### `logement_2020_dev` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `activite_renomee`, `demographie_renomee`, `habitat_renomee`, `mobilite_renomee`
+
+#### `makeopendata` [yaml]
+
+**Purpose:** *(no purpose extracted)*
+
+#### `mobilite_communes` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Upstream:** `infos_communes`, `logement_2020_valeurs`
+
+**Downstream:** `mobilite_departements`
+
+#### `mobilite_departements` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Upstream:** `infos_departements`, `logement_2020_valeurs`, `mobilite_communes`
+
+#### `mobilite_iris` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Upstream:** `infos_iris`, `logement_2020_valeurs`
+
+#### `postes_communes` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Upstream:** `cog_poste`
+
+#### `professionels_sante` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `professionels_sante_departement`
+
+#### `professionels_sante_departement` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Upstream:** `infos_departements`, `professionels_sante`
+
+#### `revenu_commune` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Upstream:** `filosofi_commune_2021`, `infos_communes`
+
+#### `seveso_2024` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `sites_seveso`
+
+#### `shape_arrondissement_municipal_2024` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `infos_communes`
+
+#### `shape_commune_2024` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `infos_communes`
+
+#### `shape_iris_2024` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Downstream:** `infos_iris`
+
+#### `sites_seveso` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Upstream:** `seveso_2024`
+
+#### `ventes_immobilieres` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Upstream:** `dvf_2014`, `dvf_2014_dev`, `dvf_2015`, `dvf_2015_dev`, `dvf_2016`, `dvf_2016_dev`, `dvf_2017`, `dvf_2017_dev`, `dvf_2018`, `dvf_2018_dev`, `dvf_2019`, `dvf_2019_dev`, `dvf_2020`, `dvf_2020_dev`, `dvf_2021`, `dvf_2021_dev`, `dvf_2022`, `dvf_2022_dev`, `dvf_2023`, `dvf_2023_dev`, `dvf_2024`, `dvf_2024_dev`, `dvf_default`
+
+**Downstream:** `ventes_immobilieres_enrichies`
+
+#### `ventes_immobilieres_enrichies` [unknown]
+
+**Purpose:** *(no purpose extracted)*
+
+**Upstream:** `ventes_immobilieres`
 
 ---
 

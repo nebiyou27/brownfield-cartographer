@@ -1,5 +1,6 @@
-import subprocess
 import os
+import subprocess
+
 
 def get_git_change_velocity(repo_path: str, file_rel_path: str) -> int:
     """
@@ -13,12 +14,13 @@ def get_git_change_velocity(repo_path: str, file_rel_path: str) -> int:
             cwd=repo_path,
             capture_output=True,
             text=True,
-            check=True
+            check=True,
         )
         return int(result.stdout.strip())
     except Exception:
         # If not a git repo or file not found, return 0
         return 0
+
 
 def get_all_file_velocities(repo_path: str) -> dict:
     """
