@@ -16,3 +16,13 @@ analysis_log.txt
 
 # text files
 *.txt
+
+# Directories
+.cartography/
+report/
+
+# Coverage reports
+.coverage
+
+# library files
+lib/
