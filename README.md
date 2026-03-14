@@ -1,84 +1,74 @@
 # Brownfield Cartographer
 
-Codebase intelligence tool for brownfield dbt-style repositories. It builds:
-- A module graph (project/module metadata + Python data-flow signals)
-- A lineage graph (SQL and Python dataset dependencies)
+Brownfield Cartographer maps dbt-style repositories into queryable architecture and lineage artifacts.
 
-## What It Does
-- Parses `dbt_project.yml` to discover configured `model-paths`, `seed-paths`, and `macro-paths`
-- Parses schema YAML files (`.yml` / `.yaml`) to extract models, sources, columns, and descriptions
-- Resolves dbt `{{ doc("...") }}` references from `docs.md` blocks
-- Computes per-file git change velocity for dataset nodes discovered via YAML
-- Analyzes Python files with tree-sitter to capture:
-  - Module nodes
-  - File/database reads (`consumes`)
-  - File/database writes (`produces`)
-- Analyzes SQL lineage with `sqlglot`, including dbt/Jinja cleanup (`ref`, `source`, macros, comments/blocks)
-- Emits JSON graph artifacts and a human-readable lineage text report
+## What It Produces
+- Module graph with project, YAML, Python module, and dataset nodes
+- Lineage graph with SQL + Python + config-derived transformation edges
+- Git change velocity enrichment on discovered files
+- Optional LLM semantic outputs (purpose statements, drift checks, domain map, onboarding brief)
+- Archivist outputs for handoff and auditing
 
-## Architecture
-- `Surveyor`:
-  - YAML + project config discovery
-  - Git change velocity enrichment
-  - Python tree-sitter analysis
-- `Hydrologist`:
-  - SQL lineage extraction across discovered model paths
-  - Optional macro mapping for macro dependency edges
-  - Merges precomputed non-SQL edges from Surveyor into lineage graph
-- `Orchestrator`:
-  - Runs Surveyor then Hydrologist
-  - Marks orphaned lineage nodes
-  - Saves artifacts to `.cartography/` and `lineage_final.txt`
+## Core Pipeline
+- `Surveyor`: project/YAML discovery + Python analysis + git velocity
+- `Hydrologist`: SQL lineage + config lineage + edge/source merging
+- `Semanticist` (optional): local Ollama-powered semantic enrichment
+- `Archivist`: writes `CODEBASE.md`, `audit_trace.log`, and normalized onboarding brief
 
-## Installation
+## Install
 ```bash
 git clone https://github.com/nebiyou27/brownfield-cartographer.git
 cd brownfield-cartographer
 uv sync
 ```
 
-## Usage
+## CLI Usage
+Analyze a local repository:
 ```bash
-# Analyze any local repository path
 uv run python -m src.cli analyze <path-to-repository>
 ```
 
-Example:
+Analyze a GitHub repository URL (auto-cloned to a temp dir):
 ```bash
-uv run python -m src.cli analyze make-open-data
+uv run python -m src.cli analyze https://github.com/<org>/<repo>
 ```
 
-## Output Artifacts
-Generated after each run:
-- `.cartography/module_graph.json`
-- `.cartography/lineage_graph.json`
-- `lineage_final.txt` (project root)
-
-## Project Structure
-```text
-brownfield-cartographer/
-|-- src/
-|   |-- cli.py
-|   |-- orchestrator.py
-|   |-- agents/
-|   |   |-- surveyor.py
-|   |   `-- hydrologist.py
-|   |-- analyzers/
-|   |   |-- dag_config_parser.py
-|   |   |-- git_analyzer.py
-|   |   |-- sql_lineage.py
-|   |   `-- tree_sitter_analyzer.py
-|   |-- graph/
-|   |   `-- knowledge_graph.py
-|   `-- models/
-|       `-- schemas.py
-|-- .cartography/
-|-- pyproject.toml
-`-- README.md
+Fast run without Semanticist:
+```bash
+uv run python -m src.cli analyze <path-to-repository> --no-semanticist
 ```
 
-## Current Limitations
-- SQL parsing still depends on heuristic Jinja cleanup; highly dynamic templates may be partial/inferred.
-- Python analyzer currently targets `.py` files only.
-- `lineage_final.txt` is a flat edge list (not grouped or deduplicated for presentation).
-- Macro mapping uses discovered macro definitions from SQL macro files; unresolved macro calls are logged.
+Incremental run (re-analyzes files changed since saved commit state):
+```bash
+uv run python -m src.cli analyze <path-to-repository> --incremental
+```
+
+Query existing artifacts:
+```bash
+uv run python -m src.cli query <path-to-repository> --ask "What produces mart.orders?"
+```
+
+Interactive query mode:
+```bash
+uv run python -m src.cli query <path-to-repository>
+```
+
+## Streamlit UI
+```bash
+uv run streamlit run app.py
+```
+
+The app runs analysis, visualizes module/lineage graphs, and shows node tables.
+
+## Artifacts
+Outputs are written to `.cartography/` in the current working directory:
+- `module_graph.json`
+- `lineage_graph.json`
+- `CODEBASE.md`
+- `audit_trace.log`
+- `onboarding_brief.md`
+- `state.json` (when incremental mode is used)
+- `purpose_statements.json`, `drift_flags.json`, `domain_map.json`, `budget_summary.json` (when Semanticist runs)
+
+Additional root artifact:
+- `lineage_final.txt`
