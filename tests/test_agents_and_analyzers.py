@@ -188,7 +188,7 @@ def test_archivist_helpers_and_archive(monkeypatch, tmp_path):
     )
 
     codebase = (tmp_path / ".cartography" / "CODEBASE.md").read_text(encoding="utf-8")
-    audit = (tmp_path / ".cartography" / "audit_trace.log").read_text(encoding="utf-8")
+    audit_text = (tmp_path / ".cartography" / "audit_trace.log").read_text(encoding="utf-8")
 
     assert _is_pseudo("<dynamic>:temp") is True
     assert _is_macro("macros\\helper.sql") is True
@@ -199,8 +199,30 @@ def test_archivist_helpers_and_archive(monkeypatch, tmp_path):
         "⚠️ `stg.orders` -> `qa.orders_check` (0.70: jinja placeholders reduced certainty)"
         in codebase
     )
-    assert "src\\app.py" in audit
-    assert "qwen: 2 calls, ~50 tokens" in audit
+
+    # ── Validate JSONL audit trace format ──────────────────────────
+    import json
+
+    lines = [line for line in audit_text.strip().splitlines() if line.strip()]
+    assert len(lines) >= 1, "audit_trace.log should have at least one JSONL entry"
+
+    required_keys = {"timestamp", "phase", "action", "confidence", "method", "evidence"}
+    for line in lines:
+        entry = json.loads(line)
+        assert required_keys <= set(entry.keys()), f"Missing keys in: {entry}"
+        assert isinstance(entry["confidence"], int | float), "confidence must be numeric"
+        assert 0.0 <= entry["confidence"] <= 1.0, f"confidence out of range: {entry['confidence']}"
+        assert entry["method"] in ("static", "LLM"), f"invalid method: {entry['method']}"
+        assert isinstance(entry["evidence"], str) and entry["evidence"], (
+            "evidence must be non-empty"
+        )
+        assert ":" in entry["evidence"], f"evidence should be file:line-like: {entry['evidence']}"
+
+    # Content-level checks on the JSONL entries
+    all_actions = " ".join(json.loads(line_text)["action"] for line_text in lines)
+    all_evidence = " ".join(json.loads(line_text)["evidence"] for line_text in lines)
+    assert "src\\app.py" in all_actions or "src\\app.py" in all_evidence
+    assert "qwen: 2 calls, ~50 tokens" in all_actions
 
 
 def test_semanticist_helpers_and_generation(monkeypatch, tmp_path):

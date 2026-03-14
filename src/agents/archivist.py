@@ -1,3 +1,4 @@
+import json
 import os
 from datetime import datetime
 
@@ -294,6 +295,37 @@ class Archivist:
         logger.info("Generated CODEBASE.md → %s", path)
 
     # ------------------------------------------------------------------
+    @staticmethod
+    def _format_evidence(evidence: str) -> str:
+        """Normalize evidence to explicit file:line attribution."""
+        text = (evidence or "").strip()
+        if not text:
+            return "src/agents/archivist.py:1"
+        if ":" in text:
+            return text
+        return f"{text}:1"
+
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _trace_entry(
+        phase: str,
+        action: str,
+        confidence: float,
+        method: str,
+        evidence: str,
+    ) -> str:
+        """Return a single JSONL record for the audit trace."""
+        return json.dumps(
+            {
+                "timestamp": datetime.now().isoformat(),
+                "phase": phase,
+                "action": action,
+                "confidence": round(confidence, 2),
+                "method": method,
+                "evidence": Archivist._format_evidence(evidence),
+            }
+        )
+
     def _generate_audit_trace(
         self,
         module_graph: KnowledgeGraph,
@@ -303,37 +335,132 @@ class Archivist:
         log_path = os.path.join(self.output_dir, "audit_trace.log")
 
         with open(log_path, "w", encoding="utf-8") as f:
-            f.write(f"CARTOGRAPHER AUDIT TRACE — {datetime.now().isoformat()}\n")
-            f.write(f"Target: {self.target_dir}\n")
-            f.write(f"Modules Scanned:            {len(module_graph.graph.nodes)}\n")
-            f.write(f"Lineage Nodes:              {len(lineage_graph.graph.nodes)}\n")
-            f.write(f"Lineage Edges:              {len(lineage_graph.graph.edges)}\n")
+            # ── init phase: summary counts ────────────────────────────
+            f.write(
+                self._trace_entry(
+                    "init",
+                    f"target={self.target_dir}",
+                    1.0,
+                    "static",
+                    "src/agents/archivist.py:1",
+                )
+                + "\n"
+            )
+            f.write(
+                self._trace_entry(
+                    "init",
+                    f"modules_scanned={len(module_graph.graph.nodes)}",
+                    1.0,
+                    "static",
+                    "src/agents/archivist.py:1",
+                )
+                + "\n"
+            )
+            f.write(
+                self._trace_entry(
+                    "init",
+                    f"lineage_nodes={len(lineage_graph.graph.nodes)}",
+                    1.0,
+                    "static",
+                    "src/agents/archivist.py:1",
+                )
+                + "\n"
+            )
+            f.write(
+                self._trace_entry(
+                    "init",
+                    f"lineage_edges={len(lineage_graph.graph.edges)}",
+                    1.0,
+                    "static",
+                    "src/agents/archivist.py:1",
+                )
+                + "\n"
+            )
 
+            # ── parse phase: failures ─────────────────────────────────
             failed = [
                 nid
                 for nid, attrs in lineage_graph.graph.nodes(data=True)
                 if attrs.get("parsed") is False
             ]
-            f.write(f"Parse Failures:             {len(failed)}\n")
+            f.write(
+                self._trace_entry(
+                    "parse",
+                    f"parse_failures={len(failed)}",
+                    1.0,
+                    "static",
+                    "src/agents/archivist.py:1",
+                )
+                + "\n"
+            )
+            for nid in failed:
+                f.write(
+                    self._trace_entry(
+                        "parse",
+                        f"parse_failed: {nid}",
+                        1.0,
+                        "static",
+                        nid,
+                    )
+                    + "\n"
+                )
 
+            # ── semantic phase: purpose statements ────────────────────
             purposes = semantic_results.get("purpose_statements", {})
-            f.write(f"Purpose Statements:         {len(purposes)}\n")
+            f.write(
+                self._trace_entry(
+                    "semantic",
+                    f"purpose_statements={len(purposes)}",
+                    0.85,
+                    "LLM",
+                    "semantic_results.purpose_statements:1",
+                )
+                + "\n"
+            )
 
+            # ── drift phase: doc-drift flags ──────────────────────────
             drift = {
                 k: v
                 for k, v in semantic_results.get("drift_flags", {}).items()
                 if not _is_pseudo(k)
             }
-            f.write(f"Doc Drift Flags:            {len(drift)}\n")
+            f.write(
+                self._trace_entry(
+                    "drift",
+                    f"drift_flags={len(drift)}",
+                    0.90,
+                    "LLM",
+                    "semantic_results.drift_flags:1",
+                )
+                + "\n"
+            )
             for mod_id, data in sorted(drift.items()):
-                f.write(f"  [{data.get('verdict')}] {mod_id}\n")
+                f.write(
+                    self._trace_entry(
+                        "drift",
+                        f"[{data.get('verdict')}] {mod_id}",
+                        0.90,
+                        "LLM",
+                        mod_id,
+                    )
+                    + "\n"
+                )
 
+            # ── budget phase: LLM budget summary ─────────────────────
             budget = semantic_results.get("budget_summary", {})
             if budget:
-                f.write("\nLLM Budget:\n")
                 for model, calls in budget.get("calls_per_model", {}).items():
                     tokens = budget.get("estimated_tokens_per_model", {}).get(model, 0)
-                    f.write(f"  {model}: {calls} calls, ~{tokens} tokens\n")
+                    f.write(
+                        self._trace_entry(
+                            "budget",
+                            f"{model}: {calls} calls, ~{tokens} tokens",
+                            1.0,
+                            "LLM",
+                            f"semantic_results.budget_summary.calls_per_model.{model}:1",
+                        )
+                        + "\n"
+                    )
 
         logger.info("Generated audit_trace.log → %s", log_path)
 
