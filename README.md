@@ -22,6 +22,19 @@ cd brownfield-cartographer
 uv sync
 ```
 
+## Docker Usage
+The target repository must be mounted into the container as a volume. In this project, `docker-compose.yml` mounts `./make-open-data` to `/repo` and stores artifacts in `./.cartography`.
+
+One-command analysis example:
+```bash
+docker compose run cartographer analyze /repo
+```
+
+If you want Ollama available for semantic enrichment, start it with the optional profile:
+```bash
+docker compose --profile ollama up -d ollama
+```
+
 ## CLI Usage
 Analyze a local repository:
 ```bash

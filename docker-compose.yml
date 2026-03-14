@@ -1,0 +1,20 @@
+services:
+  cartographer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      TARGET_REPO: /repo
+    volumes:
+      - ./make-open-data:/repo
+      - ./.cartography:/app/.cartography
+
+  ollama:
+    image: ollama/ollama
+    profiles:
+      - ollama
+    volumes:
+      - ollama_data:/root/.ollama
+
+volumes:
+  ollama_data:
