@@ -304,19 +304,35 @@ line numbers where possible.
 === MODULE PURPOSE STATEMENTS ===
 {purpose_block}
 
-=== GIT VELOCITY (commit count per file, last 30 days) ===
+=== GIT VELOCITY (commit count per file, last 90 days) ===
 {velocity_block}
+
+=== CRITICAL_NODES ===
+{critical_nodes_block}
+
+=== TRUE_SOURCES ===
+{true_sources_block}
+
+=== TRUE_SINKS ===
+{true_sinks_block}
+
+=== BLAST_RADIUS_TOP5 ===
+{blast_radius_block}
+
+=== HIGH_VELOCITY_FILES ===
+{high_velocity_block}
 
 === FIVE FDE DAY-ONE QUESTIONS ===
 1. What is the primary data ingestion path?
 2. What are the 3-5 most critical output datasets/endpoints?
 3. What is the blast radius if the most critical module changes its interface?
 4. Where is the business logic concentrated vs distributed?
-5. What has changed most frequently in the last 30 days? (use the git velocity data above)
+5. What has changed most frequently in the last 90 days? (use the git velocity data above)
 
 Answer each question with a clear heading Q1:, Q2:, etc.
 Back every claim with a file path citation [file:line] where possible.
-For Q5, rank files by commit count from the velocity data provided.
+Use CRITICAL_NODES and BLAST_RADIUS_TOP5 as the primary basis for Q2 and Q3.
+Use HIGH_VELOCITY_FILES as the primary basis for Q5.
 """
 
 
@@ -325,6 +341,7 @@ def answer_day_one_questions(
     purpose_statements: dict[str, str],
     budget: ContextWindowBudget,
     git_velocity: dict[str, int] | None = None,
+    graph_intelligence: dict[str, Any] | None = None,
 ) -> str:
     """
     Uses deepseek-r1:8b to synthesise Day-One answers from the full graph context.
@@ -345,11 +362,56 @@ def answer_day_one_questions(
     else:
         velocity_block = "  (no git history available)"
 
+    intelligence = graph_intelligence or {}
+    critical_nodes = intelligence.get("critical_nodes", []) or []
+    critical_nodes_block = (
+        "\n".join(
+            "  {node} | score={score:.6f} | in={in_degree} | out={out_degree}".format(**item)
+            for item in critical_nodes[:10]
+        )
+        if critical_nodes
+        else "  (none)"
+    )
+    true_sources = intelligence.get("true_sources", []) or []
+    true_sources_block = (
+        "\n".join(f"  {node}" for node in true_sources) if true_sources else "  (none)"
+    )
+    true_sinks = intelligence.get("true_sinks", []) or []
+    true_sinks_block = "\n".join(f"  {node}" for node in true_sinks) if true_sinks else "  (none)"
+    blast_radius_top5 = intelligence.get("blast_radius_top5", {}) or {}
+    if blast_radius_top5:
+        blast_lines: list[str] = []
+        for node, impact in blast_radius_top5.items():
+            blast_lines.append(f"  {node}:")
+            if not impact:
+                blast_lines.append("    - (no downstream impact)")
+                continue
+            for item in impact:
+                blast_lines.append(
+                    f"    - {item.get('node')} | confidence={item.get('path_confidence', 0):.2f}"
+                )
+        blast_radius_block = "\n".join(blast_lines)
+    else:
+        blast_radius_block = "  (none)"
+    high_velocity_files = intelligence.get("high_velocity_files", []) or []
+    high_velocity_block = (
+        "\n".join(
+            f"  {item['commits']:3d} commits - {item['file']}" for item in high_velocity_files
+        )
+        if high_velocity_files
+        else "  (none)"
+    )
+
     prompt = DAY_ONE_PROMPT.format(
         module_summary=module_summary[:3000],
         lineage_summary=lineage_summary[:3000],
         purpose_block=purpose_block[:4000],
         velocity_block=velocity_block,
+        critical_nodes_block=critical_nodes_block[:2500],
+        true_sources_block=true_sources_block[:2500],
+        true_sinks_block=true_sinks_block[:2500],
+        blast_radius_block=blast_radius_block[:3500],
+        high_velocity_block=high_velocity_block[:2500],
     )
     budget.record(SYNTHESIS_MODEL, len(prompt))
     logger.info("Running Day-One synthesis with %s (this may take 30-90s)...", SYNTHESIS_MODEL)
@@ -427,6 +489,7 @@ class Semanticist:
         graph: KnowledgeGraph,
         module_graph: KnowledgeGraph | None = None,
         git_velocity: dict[str, int] | None = None,
+        graph_intelligence: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """
         Full Semanticist pipeline. Returns enriched data dict.
@@ -498,6 +561,7 @@ class Semanticist:
             purpose_statements,
             self.budget,
             git_velocity=git_velocity or {},
+            graph_intelligence=graph_intelligence or {},
         )
 
         self.budget.log()
@@ -525,6 +589,9 @@ class Semanticist:
         source_graph = module_graph if module_graph is not None else graph
         for node_id, data in source_graph.graph.nodes(data=True):
             normalized_node_id = normalize_path_key(node_id)
+            is_macro_node = isinstance(data.get("macro_args"), list) and isinstance(
+                data.get("logical_name"), str
+            )
             # Skip dynamic reference pseudo-nodes emitted by tree-sitter analyzer
             # (e.g. "<dynamic>:execute:load\loaders.py:35") — not real files
             if normalized_node_id.startswith("<dynamic>") or normalized_node_id.startswith(
@@ -546,7 +613,7 @@ class Semanticist:
                 continue
 
             suffix = candidate.suffix.lower()
-            if suffix not in (".py", ".sql", ".yml", ".yaml", ".md"):
+            if suffix not in (".py", ".sql", ".yml", ".yaml", ".md") and not is_macro_node:
                 continue
 
             try:

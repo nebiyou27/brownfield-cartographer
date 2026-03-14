@@ -1,10 +1,13 @@
 import os
+import re
+from pathlib import Path
 
 from ..analyzers.dag_config_parser import analyze_all_yaml_files
-from ..analyzers.git_analyzer import get_git_change_velocity
+from ..analyzers.git_analyzer import get_all_file_velocities, get_git_change_velocity
 from ..analyzers.tree_sitter_analyzer import LanguageRouter
 from ..graph.knowledge_graph import KnowledgeGraph
 from ..logger import get_logger
+from ..models.schemas import MacroNode
 from ..path_utils import normalize_path_key, with_path_aliases
 
 logger = get_logger(__name__)
@@ -19,10 +22,71 @@ class Surveyor:
     def __init__(self, repo_path: str):
         self.repo_path = repo_path
 
+    @staticmethod
+    def _parse_macro_args(raw_args: str) -> list[str]:
+        args: list[str] = []
+        for token in raw_args.split(","):
+            value = token.strip()
+            if not value:
+                continue
+            value = value.split("=")[0].strip()
+            if value.startswith("*"):
+                value = value.lstrip("*")
+            if value:
+                args.append(value)
+        return args
+
+    def _register_macro_nodes(
+        self,
+        graph: KnowledgeGraph,
+        results: dict,
+        velocity_resolver,
+    ) -> None:
+        macro_paths = results.get("macro_paths", []) or []
+        macro_pattern = re.compile(
+            r"\{%\s*macro\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*\((.*?)\)\s*%\}",
+            flags=re.IGNORECASE | re.DOTALL,
+        )
+        for rel_macro_dir in macro_paths:
+            macro_dir = Path(self.repo_path) / rel_macro_dir
+            if not macro_dir.exists():
+                continue
+            for sql_file in macro_dir.rglob("*.sql"):
+                try:
+                    content = sql_file.read_text(encoding="utf-8", errors="replace")
+                except Exception:
+                    continue
+
+                normalized_file = normalize_path_key(str(sql_file.relative_to(self.repo_path)))
+                velocity = velocity_resolver(normalized_file)
+
+                for match in macro_pattern.finditer(content):
+                    macro_name = match.group(1).strip()
+                    macro_args = self._parse_macro_args(match.group(2))
+                    source_line = content.count("\n", 0, match.start()) + 1
+                    macro_id = f"macro:{macro_name}:{normalized_file}:{source_line}"
+                    macro_node = MacroNode(
+                        id=macro_id,
+                        source_file=normalized_file,
+                        source_line=source_line,
+                        logical_name=macro_name,
+                        macro_args=macro_args,
+                    )
+                    graph.add_node(macro_node)
+                    graph.graph.nodes[macro_id]["git_change_velocity"] = velocity
+
     def survey(self, graph: KnowledgeGraph):
         logger.info("Scanning project structure and YAML configs...")
         results = analyze_all_yaml_files(self.repo_path)
-        results["git_velocity"] = {}
+        results["git_velocity"] = get_all_file_velocities(self.repo_path)
+
+        def _velocity_for_path(file_path: str) -> int:
+            normalized = normalize_path_key(file_path)
+            if normalized in results["git_velocity"]:
+                return int(results["git_velocity"][normalized])
+            velocity = get_git_change_velocity(self.repo_path, normalized)
+            with_path_aliases(results["git_velocity"], normalized, velocity)
+            return velocity
 
         # Add the project node
         if results["project"]:
@@ -34,11 +98,14 @@ class Surveyor:
             file_abs = os.path.abspath(os.path.join(self.repo_path, node.source_file))
             file_in_repo = normalize_path_key(os.path.relpath(file_abs, repo_abs))
 
-            velocity = get_git_change_velocity(self.repo_path, file_in_repo)
+            velocity = _velocity_for_path(file_in_repo)
 
             graph.add_node(node)
             graph.graph.nodes[node.id]["git_change_velocity"] = velocity
             with_path_aliases(results["git_velocity"], file_in_repo, velocity)
+
+        # Add dbt macro definitions as first-class module graph nodes.
+        self._register_macro_nodes(graph, results, _velocity_for_path)
 
         # --- Python file analysis via tree-sitter ---
         logger.info("Analyzing Python files with tree-sitter...")
@@ -53,7 +120,7 @@ class Surveyor:
                 repo_abs = os.path.abspath(self.repo_path)
                 file_abs = os.path.abspath(os.path.join(self.repo_path, mod_node.source_file))
                 file_in_repo = normalize_path_key(os.path.relpath(file_abs, repo_abs))
-                velocity = get_git_change_velocity(self.repo_path, file_in_repo)
+                velocity = _velocity_for_path(file_in_repo)
                 graph.graph.nodes[mod_node.id]["git_change_velocity"] = velocity
                 with_path_aliases(results["git_velocity"], file_in_repo, velocity)
 

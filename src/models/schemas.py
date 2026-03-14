@@ -37,6 +37,15 @@ class ModuleNode(GraphNode):
     )
 
 
+class MacroNode(GraphNode):
+    """
+    Represents a dbt Jinja macro definition extracted from macro SQL files.
+    """
+
+    logical_name: str = Field(..., description="Macro name as declared in `{% macro ... %}`")
+    macro_args: list[str] = Field(default_factory=list, description="Ordered macro argument names")
+
+
 # ---------------------------------------------------------------------------
 # Hydrologist Schemas (Data Lineage Graph)
 # ---------------------------------------------------------------------------

@@ -14,15 +14,22 @@ from src.agents.semanticist import (
 from src.agents.surveyor import Surveyor
 from src.analyzers import git_analyzer
 from src.graph.knowledge_graph import KnowledgeGraph
-from src.models.schemas import DatasetNode, ModuleNode, TransformationEdge
+from src.models.schemas import DatasetNode, MacroNode, ModuleNode, TransformationEdge
 
 
 def test_git_analyzer_success_and_walk(monkeypatch, tmp_path):
-    class Result:
-        stdout = "7\n"
+    seen_commands = []
 
-    monkeypatch.setattr(git_analyzer.subprocess, "run", lambda *args, **kwargs: Result())
-    assert git_analyzer.get_git_change_velocity(str(tmp_path), "file.py") == 7
+    class Result:
+        stdout = "c1\nc2\nc3\n"
+
+    def _run(*args, **kwargs):
+        seen_commands.append(args[0])
+        return Result()
+
+    monkeypatch.setattr(git_analyzer.subprocess, "run", _run)
+    assert git_analyzer.get_git_change_velocity(str(tmp_path), "file.py") == 3
+    assert seen_commands[0][:4] == ["git", "log", "--since=90.days", "--pretty=format:%H"]
 
     monkeypatch.setattr(git_analyzer, "get_git_change_velocity", lambda repo, rel: len(rel))
     (tmp_path / ".git").mkdir()
@@ -35,6 +42,21 @@ def test_git_analyzer_success_and_walk(monkeypatch, tmp_path):
 
     assert velocities["a.py"] == len("a.py")
     assert velocities["pkg\\b.py"] == len("pkg\\b.py")
+
+
+def test_git_analyzer_honors_custom_days_window(monkeypatch, tmp_path):
+    seen_commands = []
+
+    class Result:
+        stdout = ""
+
+    def _run(*args, **kwargs):
+        seen_commands.append(args[0])
+        return Result()
+
+    monkeypatch.setattr(git_analyzer.subprocess, "run", _run)
+    assert git_analyzer.get_git_change_velocity(str(tmp_path), "README.md", days=14) == 0
+    assert "--since=14.days" in seen_commands[0]
 
 
 def test_hydrologist_trace_lineage_adds_nodes_and_edges(monkeypatch, tmp_path):
@@ -206,6 +228,16 @@ def test_surveyor_combines_yaml_and_python_analysis(monkeypatch, tmp_path):
             "macro_paths": ["macros"],
         },
     )
+    monkeypatch.setattr(
+        "src.agents.surveyor.get_all_file_velocities",
+        lambda repo: {
+            "models/schema.yml": 5,
+            "models\\schema.yml": 5,
+            "models/orders.sql": 8,
+            "models\\orders.sql": 8,
+            "README.md": 4,
+        },
+    )
     monkeypatch.setattr("src.agents.surveyor.get_git_change_velocity", lambda repo, rel: 5)
 
     class StubRouter:
@@ -222,9 +254,63 @@ def test_surveyor_combines_yaml_and_python_analysis(monkeypatch, tmp_path):
 
     assert results["git_velocity"]["models\\schema.yml"] == 5
     assert results["git_velocity"]["src\\app.py"] == 5
+    assert results["git_velocity"]["models\\orders.sql"] == 8
+    assert results["git_velocity"]["README.md"] == 4
     assert graph.graph.nodes["orders"]["git_change_velocity"] == 5
     assert graph.graph.has_edge("orders", "derived.orders")
     assert results["python_edges"] == [py_edge]
+
+
+def test_surveyor_registers_macro_nodes_from_macro_paths(monkeypatch, tmp_path):
+    macro_dir = tmp_path / "macros"
+    macro_dir.mkdir(parents=True, exist_ok=True)
+    macro_sql = macro_dir / "helpers.sql"
+    macro_sql.write_text(
+        "{% macro normalize_city(name, country='KE') %}\nSELECT 1\n{% endmacro %}\n"
+        "{% macro slugify(value) %}\nSELECT 2\n{% endmacro %}\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        "src.agents.surveyor.analyze_all_yaml_files",
+        lambda repo_path: {
+            "project": None,
+            "datasets": [],
+            "model_paths": ["models"],
+            "seed_paths": ["seeds"],
+            "macro_paths": ["macros"],
+        },
+    )
+    monkeypatch.setattr(
+        "src.agents.surveyor.get_all_file_velocities",
+        lambda repo: {"macros/helpers.sql": 9, "macros\\helpers.sql": 9},
+    )
+    monkeypatch.setattr("src.agents.surveyor.get_git_change_velocity", lambda repo, rel: 9)
+
+    class StubRouter:
+        def __init__(self, repo_path):
+            self.repo_path = repo_path
+
+        def analyze_directory(self, repo_path):
+            return [], [], []
+
+    monkeypatch.setattr("src.agents.surveyor.LanguageRouter", StubRouter)
+
+    graph = KnowledgeGraph("module")
+    Surveyor(str(tmp_path)).survey(graph)
+
+    macro_nodes = [
+        (node_id, attrs)
+        for node_id, attrs in graph.graph.nodes(data=True)
+        if str(node_id).startswith("macro:")
+    ]
+    assert len(macro_nodes) == 2
+    names = {attrs["logical_name"] for _, attrs in macro_nodes}
+    assert names == {"normalize_city", "slugify"}
+    normalize_node = next(
+        attrs for _, attrs in macro_nodes if attrs["logical_name"] == "normalize_city"
+    )
+    assert normalize_node["macro_args"] == ["name", "country"]
+    assert normalize_node["git_change_velocity"] == 9
 
 
 def test_archivist_helpers_and_archive(monkeypatch, tmp_path):
@@ -235,6 +321,14 @@ def test_archivist_helpers_and_archive(monkeypatch, tmp_path):
 
     module_graph.graph.add_node("src/app.py", file_type="python")
     module_graph.graph.nodes["src/app.py"]["git_change_velocity"] = 6
+    macro_node = MacroNode(
+        id="macro:normalize_city:macros/helpers.sql:1",
+        source_file="macros/helpers.sql",
+        source_line=1,
+        logical_name="normalize_city",
+        macro_args=["name", "country"],
+    )
+    module_graph.add_node(macro_node)
     module_graph.graph.add_node("<dynamic>:temp", file_type="python")
     lineage_graph.graph.add_edge("raw.orders", "stg.orders", source_file="models/stg_orders.sql")
     lineage_graph.graph.add_edge("stg.orders", "mart.orders", source_file="models/mart_orders.sql")
@@ -251,7 +345,10 @@ def test_archivist_helpers_and_archive(monkeypatch, tmp_path):
     lineage_graph.graph.add_node("broken.sql", parsed=False)
 
     semantic_results = {
-        "purpose_statements": {"src\\app.py": "Runs the pipeline"},
+        "purpose_statements": {
+            "src\\app.py": "Runs the pipeline",
+            "macro:normalize_city:macros/helpers.sql:1": "Normalizes city names for downstream joins.",
+        },
         "domain_map": {"src\\app.py": "core"},
         "drift_flags": {"src\\app.py": {"verdict": "DRIFT", "explanation": "docs outdated"}},
         "day_one_answers": "Q1: Start with app flow.\nQ2: Review staging lineage.",
@@ -275,12 +372,21 @@ def test_archivist_helpers_and_archive(monkeypatch, tmp_path):
     assert _is_pseudo("<dynamic>:temp") is True
     assert _is_macro("macros\\helper.sql") is True
     assert codebase.startswith("<!-- CARTOGRAPHER v1 | generated:")
+    assert "## SECTION:COMPLETENESS_SCORE" in codebase
+    assert "COMPLETENESS:" in codebase
+    assert "edges_total=4" in codebase
+    assert "macro_nodes=1" in codebase
     assert "## SECTION:ARCHITECTURE_SUMMARY" in codebase
     assert "## SECTION:KNOWN_DEBT" in codebase
     assert "cycles=1" in codebase
     assert "orphans=2" in codebase
     assert "## SECTION:HIGH_VELOCITY_FILES" in codebase
     assert "file=src/app.py|commits=6" in codebase
+    assert "## SECTION:MACRO_INDEX" in codebase
+    assert (
+        "macro=normalize_city|source=macros/helpers.sql|line=1|args=name,country|"
+        "purpose=Normalizes city names for downstream joins." in codebase
+    )
     assert "## SECTION:MODULE_PURPOSE_INDEX" in codebase
     assert "module=src/app.py|purpose=Runs the pipeline" in codebase
     assert "## SECTION:LOW_CONFIDENCE_LINEAGE" in codebase
@@ -421,12 +527,32 @@ def test_semanticist_helpers_and_generation(monkeypatch, tmp_path):
     assert "src/app.py [python]" in _summarise_modules(graph)
     assert "raw.orders --[select]--> stg.orders" in _summarise_lineage(graph)
 
-    monkeypatch.setattr(
-        "src.agents.semanticist._ollama_generate",
-        lambda model, prompt, timeout=300: "Q1: answer",
+    captured = {}
+
+    def _fake_generate(model, prompt, timeout=300):
+        captured["prompt"] = prompt
+        return "Q1: answer"
+
+    monkeypatch.setattr("src.agents.semanticist._ollama_generate", _fake_generate)
+    answers = answer_day_one_questions(
+        graph,
+        {"src/app.py": "Purpose"},
+        budget,
+        {"src/app.py": 9},
+        graph_intelligence={
+            "critical_nodes": [
+                {"node": "mart.orders", "score": 0.21, "in_degree": 2, "out_degree": 0}
+            ],
+            "true_sources": ["raw.orders"],
+            "true_sinks": ["mart.orders"],
+            "blast_radius_top5": {"mart.orders": []},
+            "high_velocity_files": [{"file": "src/app.py", "commits": 9}],
+        },
     )
-    answers = answer_day_one_questions(graph, {"src/app.py": "Purpose"}, budget, {"src/app.py": 9})
     assert answers == "Q1: answer"
+    assert "=== CRITICAL_NODES ===" in captured["prompt"]
+    assert "=== BLAST_RADIUS_TOP5 ===" in captured["prompt"]
+    assert "=== HIGH_VELOCITY_FILES ===" in captured["prompt"]
 
 
 def test_uncertainty_scoring_values():

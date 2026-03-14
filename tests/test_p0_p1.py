@@ -53,6 +53,24 @@ class TestDependsOnExtraction:
         # Only the SELECT lineage edge for my_table, no depends_on edges
         assert all(e.source_dataset != "logement_2020_valeurs" for e in edges)
 
+    def test_conditional_jinja_if_else_emits_both_branch_edges(self, tmp_path):
+        sql = tmp_path / "branching.sql"
+        sql.write_text(
+            "SELECT * FROM {% if is_incremental() %} {{ ref('table_a') }} "
+            "{% else %} {{ ref('table_b') }} {% endif %}\n",
+            encoding="utf-8",
+        )
+        edges = analyze_sql_file(str(sql))
+        branch_edges = [
+            edge
+            for edge in edges
+            if edge.confidence == 0.60
+            and edge.confidence_reason == "conditional Jinja branch — one path active at runtime"
+        ]
+        sources = {edge.source_dataset for edge in branch_edges}
+        assert "table_a" in sources
+        assert "table_b" in sources
+
 
 # ---------------------------------------------------------------------------
 # aggreger_supra_commune macro expansion

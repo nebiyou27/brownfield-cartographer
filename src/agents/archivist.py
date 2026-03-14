@@ -47,11 +47,11 @@ class Archivist:
         git_velocity: dict[str, int] = None,
     ) -> None:
         logger.info("===== Phase 4 Starting =====")
+        self._generate_audit_trace(module_graph, lineage_graph, semantic_results)
         self._generate_codebase_md(
             module_graph, lineage_graph, semantic_results, git_velocity or {}
         )
         self._generate_onboarding_brief(module_graph, lineage_graph, semantic_results)
-        self._generate_audit_trace(module_graph, lineage_graph, semantic_results)
         logger.info("===== Phase 4 Complete =====")
 
     def _generate_onboarding_brief(
@@ -102,6 +102,7 @@ class Archivist:
         dataset_count = len([n for n in lineage_graph.graph.nodes if not _is_pseudo(n)])
         edge_count = len(lineage_graph.graph.edges)
         domain_count = len(set(domain_map.values())) if domain_map else 0
+        completeness = self._compute_completeness_score(lineage_graph, module_graph)
 
         pagerank_nodes = self._get_pagerank(lineage_graph)
         sources, sinks = self._get_sources_and_sinks(lineage_graph)
@@ -110,6 +111,7 @@ class Archivist:
         anomalies = self._get_semantic_anomalies(lineage_graph, purpose_statements)
         top_velocity = self._get_high_velocity_files(module_graph, git_velocity)
         low_conf_edges = self._get_low_confidence_edges(lineage_graph)
+        macro_nodes = self._get_macro_index(module_graph)
         drift_items = {
             key: value for key, value in (drift_flags or {}).items() if not _is_pseudo(str(key))
         }
@@ -119,6 +121,17 @@ class Archivist:
             f.write(
                 f"<!-- CARTOGRAPHER v1 | generated: {datetime.now().isoformat()} "
                 f"| nodes: {total_nodes} | edges: {edge_count} -->\n\n"
+            )
+
+            f.write("## SECTION:COMPLETENESS_SCORE\n")
+            f.write(f"COMPLETENESS: {completeness['rating']}\n")
+            f.write(
+                f"edges_total={completeness['edges_total']} "
+                f"high_confidence={completeness['high_percent']}% "
+                f"medium={completeness['medium_percent']}% "
+                f"low={completeness['low_percent']}% "
+                f"dynamic_refs_unresolved={completeness['dynamic_refs_unresolved']} "
+                f"macro_nodes={completeness['macro_nodes']}\n\n"
             )
 
             f.write("## SECTION:ARCHITECTURE_SUMMARY\n")
@@ -176,6 +189,20 @@ class Archivist:
             if top_velocity:
                 for file_path, commits in top_velocity:
                     f.write(f"file={file_path}|commits={commits}\n")
+            else:
+                f.write("none\n")
+            f.write("\n")
+
+            f.write("## SECTION:MACRO_INDEX\n")
+            if macro_nodes:
+                for macro in macro_nodes:
+                    purpose = purpose_statements.get(macro["id"], "")
+                    purpose_line = " ".join(str(purpose).split()) if purpose else ""
+                    args = ",".join(macro["macro_args"]) if macro["macro_args"] else ""
+                    f.write(
+                        f"macro={macro['logical_name']}|source={macro['source_file']}|"
+                        f"line={macro['source_line']}|args={args}|purpose={purpose_line}\n"
+                    )
             else:
                 f.write("none\n")
             f.write("\n")
@@ -625,6 +652,102 @@ class Archivist:
                     velocity_by_file[file_key] = max(commits, velocity_by_file.get(file_key, 0))
 
         return sorted(velocity_by_file.items(), key=lambda item: item[1], reverse=True)[:15]
+
+    def _get_macro_index(self, module_graph: KnowledgeGraph) -> list[dict]:
+        macros: list[dict] = []
+        for node_id, attrs in module_graph.graph.nodes(data=True):
+            logical_name = attrs.get("logical_name")
+            macro_args = attrs.get("macro_args")
+            if not isinstance(logical_name, str) or not isinstance(macro_args, list):
+                continue
+            source_file = attrs.get("source_file", "")
+            source_line = attrs.get("source_line")
+            macros.append(
+                {
+                    "id": str(node_id),
+                    "logical_name": logical_name,
+                    "source_file": self._canonical_path(str(source_file)),
+                    "source_line": source_line if isinstance(source_line, int) else 1,
+                    "macro_args": [str(arg) for arg in macro_args],
+                }
+            )
+        return sorted(macros, key=lambda item: (item["source_file"], item["logical_name"]))
+
+    def _count_unresolved_dynamic_refs_from_audit(self) -> int:
+        audit_path = os.path.join(self.output_dir, "audit_trace.log")
+        if not os.path.exists(audit_path):
+            return 0
+
+        count = 0
+        try:
+            with open(audit_path, encoding="utf-8") as fp:
+                for line in fp:
+                    text = line.strip()
+                    if not text:
+                        continue
+                    try:
+                        entry = json.loads(text)
+                    except Exception:
+                        continue
+                    evidence = str(entry.get("evidence", ""))
+                    action = str(entry.get("action", ""))
+                    if "<dynamic>" in evidence or "<dynamic>" in action:
+                        count += 1
+        except Exception:
+            return 0
+        return count
+
+    def _compute_completeness_score(
+        self,
+        lineage_graph: KnowledgeGraph,
+        module_graph: KnowledgeGraph,
+    ) -> dict[str, int | str]:
+        edges_total = len(lineage_graph.graph.edges)
+        high = 0
+        medium = 0
+        low = 0
+        for _, _, data in lineage_graph.graph.edges(data=True):
+            conf = self._confidence_to_float(data.get("confidence", 1.0))
+            if conf >= 0.90:
+                high += 1
+            elif conf >= 0.70:
+                medium += 1
+            else:
+                low += 1
+
+        if edges_total > 0:
+            high_percent = round((high / edges_total) * 100)
+            medium_percent = round((medium / edges_total) * 100)
+            low_percent = round((low / edges_total) * 100)
+        else:
+            high_percent = medium_percent = low_percent = 0
+
+        dynamic_refs_unresolved = self._count_unresolved_dynamic_refs_from_audit()
+        macro_nodes = len(
+            [
+                node_id
+                for node_id, attrs in module_graph.graph.nodes(data=True)
+                if isinstance(attrs.get("macro_args"), list)
+                and isinstance(attrs.get("logical_name"), str)
+            ]
+        )
+
+        if high_percent >= 70 and low_percent <= 10 and dynamic_refs_unresolved <= 3:
+            rating = "HIGH"
+        elif high_percent >= 45 and low_percent <= 25 and dynamic_refs_unresolved <= 10:
+            rating = "MEDIUM"
+        else:
+            rating = "LOW"
+
+        return {
+            "edges_total": edges_total,
+            "high_percent": high_percent,
+            "medium_percent": medium_percent,
+            "low_percent": low_percent,
+            "dynamic_refs_unresolved": dynamic_refs_unresolved,
+            "macro_nodes": macro_nodes,
+            "rating": rating,
+        }
 
     # ------------------------------------------------------------------
     @staticmethod

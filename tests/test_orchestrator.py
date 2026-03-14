@@ -65,19 +65,20 @@ class StubSemanticist:
             "day_one_answers": "Q1: Start here.",
         }
 
-    def analyse(self, lineage_graph, module_graph, git_velocity):
+    def analyse(self, lineage_graph, module_graph, git_velocity, graph_intelligence):
         self.calls.append(
             {
                 "lineage_graph": lineage_graph,
                 "module_graph": module_graph,
                 "git_velocity": git_velocity,
+                "graph_intelligence": graph_intelligence,
             }
         )
         return self.result
 
 
 class FailingSemanticist(StubSemanticist):
-    def analyse(self, lineage_graph, module_graph, git_velocity):
+    def analyse(self, lineage_graph, module_graph, git_velocity, graph_intelligence):
         raise RuntimeError("semantic failure")
 
 
@@ -122,6 +123,16 @@ def test_run_analysis_saves_outputs_and_marks_orphans(monkeypatch, tmp_path):
         }
     ]
     assert len(orchestrator.semanticist.calls) == 1
+    intelligence = orchestrator.semanticist.calls[0]["graph_intelligence"]
+    assert set(intelligence.keys()) == {
+        "critical_nodes",
+        "true_sources",
+        "true_sinks",
+        "blast_radius_top5",
+        "high_velocity_files",
+    }
+    assert intelligence["critical_nodes"]
+    assert intelligence["high_velocity_files"][0]["file"] == "module.py"
     assert len(orchestrator.archivist.calls) == 1
     assert orchestrator.lineage_graph.graph.nodes["broken.sql"]["orphaned"] is True
     assert orchestrator.lineage_graph.graph.nodes["lonely.table"]["orphaned"] is True
@@ -203,6 +214,33 @@ def test_find_orphaned_nodes_returns_only_isolated_nodes(monkeypatch, tmp_path):
     orphaned = orchestrator.find_orphaned_nodes(graph)
 
     assert set(orphaned) == {"c", "d"}
+
+
+def test_build_graph_intelligence_includes_blast_radius_and_high_velocity(monkeypatch, tmp_path):
+    orchestrator = build_orchestrator(monkeypatch, tmp_path)
+    lineage = KnowledgeGraph("lineage")
+    lineage.graph.add_edge("raw.orders", "stg.orders", confidence=0.95, confidence_reason="sql")
+    lineage.graph.add_edge("stg.orders", "mart.orders", confidence=0.70, confidence_reason="jinja")
+    module = KnowledgeGraph("module")
+    module.graph.add_node(
+        "models/stg_orders.sql", source_file="models/stg_orders.sql", git_change_velocity=7
+    )
+    module.graph.add_node(
+        "models/mart_orders.sql", source_file="models/mart_orders.sql", git_change_velocity=5
+    )
+
+    intelligence = orchestrator._build_graph_intelligence(
+        lineage,
+        module,
+        {"models/stg_orders.sql": 7, "README.md": 3},
+    )
+
+    assert intelligence["critical_nodes"]
+    assert "raw.orders" in intelligence["true_sources"]
+    assert "mart.orders" in intelligence["true_sinks"]
+    top_node = intelligence["critical_nodes"][0]["node"]
+    assert top_node in intelligence["blast_radius_top5"]
+    assert intelligence["high_velocity_files"][0] == {"file": "models/stg_orders.sql", "commits": 7}
 
 
 def test_incremental_no_changes_uses_saved_graph_and_updates_state(monkeypatch, tmp_path):

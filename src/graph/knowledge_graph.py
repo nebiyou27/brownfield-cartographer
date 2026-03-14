@@ -4,7 +4,7 @@ import os
 import networkx as nx
 
 from ..logger import get_logger
-from ..models.schemas import DatasetNode, ModuleNode, TransformationEdge
+from ..models.schemas import DatasetNode, MacroNode, ModuleNode, TransformationEdge
 
 logger = get_logger(__name__)
 
@@ -19,7 +19,7 @@ class KnowledgeGraph:
         self.name = name
         self.graph = nx.DiGraph()
 
-    def add_node(self, node: ModuleNode | DatasetNode):
+    def add_node(self, node: ModuleNode | DatasetNode | MacroNode):
         """
         Adds a node to the graph using its Pydantic schema data.
         """

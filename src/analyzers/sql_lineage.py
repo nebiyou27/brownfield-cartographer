@@ -274,6 +274,69 @@ def get_macros_map(macros_dir: str) -> dict[str, str]:
     return macro_map
 
 
+def _extract_branch_sources(branch_sql: str) -> list[str]:
+    sources: set[str] = set()
+
+    for match in re.finditer(
+        r"\{\{\s*ref\(\s*['\"]([^'\"]+)['\"](?:\s*,\s*['\"]([^'\"]+)['\"])?\s*\)\s*\}\}",
+        branch_sql,
+        flags=re.DOTALL,
+    ):
+        sources.add((match.group(2) or match.group(1)).lower())
+
+    for match in re.finditer(
+        r"\{\{\s*source\(\s*['\"][^'\"]+['\"]\s*,\s*['\"]([^'\"]+)['\"]\s*\)\s*\}\}",
+        branch_sql,
+        flags=re.DOTALL,
+    ):
+        sources.add(match.group(1).lower())
+
+    for match in re.finditer(
+        r"\b(?:from|join)\s+([a-zA-Z0-9_\.\"']+)", branch_sql, flags=re.IGNORECASE
+    ):
+        table = match.group(1).strip().strip("\"'")
+        if table:
+            sources.add(table.lower())
+
+    return sorted(sources)
+
+
+def _extract_conditional_jinja_edges(
+    raw_sql: str,
+    target_name: str,
+    rel_path: str,
+    total_lines: int,
+) -> list[TransformationEdge]:
+    edges: list[TransformationEdge] = []
+    branch_pattern = re.compile(
+        r"\{%\s*if\b.*?%\}(.*?)\{%\s*else\s*%\}(.*?)\{%\s*endif\s*%\}",
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    reason = "conditional Jinja branch — one path active at runtime"
+
+    for match in branch_pattern.finditer(raw_sql):
+        if_block = match.group(1)
+        else_block = match.group(2)
+        branch_sources = _extract_branch_sources(if_block) + _extract_branch_sources(else_block)
+        for source in sorted(set(branch_sources)):
+            if source == target_name.lower():
+                continue
+            edges.append(
+                TransformationEdge(
+                    source_dataset=source,
+                    target_dataset=target_name,
+                    source_file=rel_path,
+                    source_line=None,
+                    transformation_type="select",
+                    line_range=[1, total_lines],
+                    confidence=0.60,
+                    confidence_reason=reason,
+                )
+            )
+
+    return edges
+
+
 def _count_parse_errors(error: Exception) -> int:
     if getattr(error, "errors", None):
         return max(1, len(error.errors))
@@ -448,8 +511,10 @@ def analyze_sql_file(
 
     target_name = Path(file_path).stem
     rel_path = _relative_file_path(file_path)
+    total_lines = max(1, raw_sql.count("\n") + 1)
 
     edges = []
+    edges.extend(_extract_conditional_jinja_edges(raw_sql, target_name, rel_path, total_lines))
 
     # 1. Macro Analysis
     macro_calls = extract_macro_calls(raw_sql)
@@ -464,7 +529,7 @@ def analyze_sql_file(
                         source_file=rel_path,
                         source_line=None,
                         transformation_type="config",
-                        line_range=[1, max(1, raw_sql.count("\n") + 1)],
+                        line_range=[1, total_lines],
                         confidence=0.85,
                         confidence_reason=f"inferred via macro call to '{macro_name}'",
                     )

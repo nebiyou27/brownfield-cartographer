@@ -74,6 +74,11 @@ class Orchestrator:
 
         # 3. Semanticist — purpose statements, drift, clustering, Day-One answers.
         semantic_results = {}
+        graph_intelligence = self._build_graph_intelligence(
+            self.lineage_graph,
+            self.module_graph,
+            survey_results.get("git_velocity", {}),
+        )
         if self.skip_semanticist:
             logger.info("[Semanticist] Skipped (--no-semanticist flag set)")
         else:
@@ -82,6 +87,7 @@ class Orchestrator:
                     self.lineage_graph,
                     module_graph=self.module_graph,
                     git_velocity=survey_results.get("git_velocity", {}),
+                    graph_intelligence=graph_intelligence,
                 )
                 self._save_semantic_results(semantic_results)
             except Exception as e:
@@ -168,6 +174,66 @@ class Orchestrator:
         """Identifies nodes with no incoming or outgoing edges."""
         nodes_with_edges = {n for u, v in graph.edges() for n in (u, v)}
         return list(set(graph.nodes()) - nodes_with_edges)
+
+    def _build_graph_intelligence(
+        self,
+        lineage_graph: KnowledgeGraph,
+        module_graph: KnowledgeGraph,
+        git_velocity: dict[str, int],
+    ) -> dict:
+        intelligence: dict = {
+            "critical_nodes": [],
+            "true_sources": [],
+            "true_sinks": [],
+            "blast_radius_top5": {},
+            "high_velocity_files": [],
+        }
+
+        try:
+            pagerank_scores = nx.pagerank(lineage_graph.graph, alpha=0.85)
+        except Exception:
+            pagerank_scores = {}
+
+        ranked_nodes = sorted(pagerank_scores.items(), key=lambda item: item[1], reverse=True)[:10]
+        for node_id, score in ranked_nodes:
+            intelligence["critical_nodes"].append(
+                {
+                    "node": node_id,
+                    "score": float(score),
+                    "in_degree": int(lineage_graph.graph.in_degree(node_id)),
+                    "out_degree": int(lineage_graph.graph.out_degree(node_id)),
+                }
+            )
+
+        intelligence["true_sources"] = sorted(lineage_graph.find_sources())
+        intelligence["true_sinks"] = sorted(lineage_graph.find_sinks())
+
+        for item in intelligence["critical_nodes"][:5]:
+            node_id = item["node"]
+            intelligence["blast_radius_top5"][node_id] = lineage_graph.blast_radius(node_id)
+
+        velocity_items = [
+            (path, commits)
+            for path, commits in (git_velocity or {}).items()
+            if isinstance(commits, int) and commits > 0
+        ]
+        if not velocity_items:
+            for _node_id, attrs in module_graph.graph.nodes(data=True):
+                commits = attrs.get("git_change_velocity")
+                source_file = attrs.get("source_file")
+                if (
+                    isinstance(commits, int)
+                    and commits > 0
+                    and isinstance(source_file, str)
+                    and source_file
+                ):
+                    velocity_items.append((source_file, commits))
+
+        intelligence["high_velocity_files"] = [
+            {"file": path, "commits": commits}
+            for path, commits in sorted(velocity_items, key=lambda item: item[1], reverse=True)[:10]
+        ]
+        return intelligence
 
     # ------------------------------------------------------------------
     # Incremental mode helpers
