@@ -290,6 +290,10 @@ def cluster_into_domains(
 # ---------------------------------------------------------------------------
 
 DAY_ONE_PROMPT = """\
+Output only the final answer for each question.
+Do not include reasoning, thinking steps, or any
+text before Q1. Start your response directly with Q1.
+
 You are an expert data engineer onboarding to a new codebase.
 Using the structural analysis and data lineage information below, answer the
 FIVE FDE Day-One Questions. For each answer, cite specific file paths and

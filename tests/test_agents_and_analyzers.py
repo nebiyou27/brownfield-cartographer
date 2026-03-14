@@ -351,7 +351,11 @@ def test_archivist_helpers_and_archive(monkeypatch, tmp_path):
         },
         "domain_map": {"src\\app.py": "core"},
         "drift_flags": {"src\\app.py": {"verdict": "DRIFT", "explanation": "docs outdated"}},
-        "day_one_answers": "Q1: Start with app flow.\nQ2: Review staging lineage.",
+        "day_one_answers": (
+            "<think>\ninternal scratchpad\n</think>\n"
+            "Q1: Start with app flow. [load/loaders.py:70]\n"
+            "Q2: Review staging lineage."
+        ),
         "budget_summary": {
             "calls_per_model": {"qwen": 2},
             "estimated_tokens_per_model": {"qwen": 50},
@@ -432,9 +436,11 @@ def test_archivist_helpers_and_archive(monkeypatch, tmp_path):
 
     answer_lines = [line for line in onboarding.splitlines() if line.startswith("Q")]
     assert answer_lines
+    assert "<think>" not in onboarding
+    assert "internal scratchpad" not in onboarding
+    assert "Q1: Start with app flow. [load/loaders.py:70]" in onboarding
     for answer_line in answer_lines:
         assert "[" in answer_line and "]" in answer_line
-        assert "`" in answer_line
 
 
 def test_archivist_onboarding_citations_use_real_metadata_and_correct_source(monkeypatch, tmp_path):
@@ -550,6 +556,7 @@ def test_semanticist_helpers_and_generation(monkeypatch, tmp_path):
         },
     )
     assert answers == "Q1: answer"
+    assert captured["prompt"].startswith("Output only the final answer for each question.")
     assert "=== CRITICAL_NODES ===" in captured["prompt"]
     assert "=== BLAST_RADIUS_TOP5 ===" in captured["prompt"]
     assert "=== HIGH_VELOCITY_FILES ===" in captured["prompt"]

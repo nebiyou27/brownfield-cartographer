@@ -61,7 +61,9 @@ class Archivist:
         semantic_results: dict,
     ) -> None:
         path = os.path.join(self.output_dir, "onboarding_brief.md")
-        raw_answers = (semantic_results.get("day_one_answers") or "").strip()
+        raw_answers = self._strip_thinking_blocks(
+            (semantic_results.get("day_one_answers") or "").strip()
+        )
         candidates = self._collect_evidence_candidates(module_graph, lineage_graph)
 
         lines: list[str] = []
@@ -70,6 +72,9 @@ class Archivist:
                 stripped = line.strip()
                 if not stripped:
                     lines.append("")
+                    continue
+                if self._has_citation(stripped):
+                    lines.append(stripped)
                     continue
                 content = self._strip_existing_citations(stripped)
                 citation = self._pick_evidence_for_line(content, candidates)
@@ -516,6 +521,19 @@ class Archivist:
     @staticmethod
     def _strip_existing_citations(line: str) -> str:
         return _CITATION_RE.sub("", line).strip()
+
+    @staticmethod
+    def _has_citation(line: str) -> bool:
+        return bool(_CITATION_RE.search(line))
+
+    @staticmethod
+    def _strip_thinking_blocks(text: str) -> str:
+        if not text:
+            return ""
+        cleaned = re.sub(r"(?is)<think>.*?</think>", "", text)
+        cleaned = re.sub(r"(?im)^\s*</?think>\s*$", "", cleaned)
+        cleaned = re.sub(r"(?im)^\s*.*<think>\s*$", "", cleaned)
+        return cleaned.strip()
 
     @staticmethod
     def _looks_like_path(text: str) -> bool:
