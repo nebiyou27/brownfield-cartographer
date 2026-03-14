@@ -1,0 +1,1733 @@
+{
+  "directed": true,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "id": "<dynamic>:execute:load/loaders.py:35",
+      "source_file": "load/loaders.py",
+      "source_line": 35,
+      "description": "execute() call",
+      "dataset_type": "database_query",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:read_json:load/loaders.py:59",
+      "source_file": "load/loaders.py",
+      "source_line": 59,
+      "description": "read_json() call",
+      "dataset_type": "file_source",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:to_csv:load/loaders.py:60",
+      "source_file": "load/loaders.py",
+      "source_line": 60,
+      "description": "to_csv() call",
+      "dataset_type": "file_sink",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:read_csv:load/loaders.py:70",
+      "source_file": "load/loaders.py",
+      "source_line": 70,
+      "description": "read_csv() call",
+      "dataset_type": "file_source",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:execute:load/loaders.py:99",
+      "source_file": "load/loaders.py",
+      "source_line": 99,
+      "description": "execute() call",
+      "dataset_type": "database_query",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:execute:load/loaders.py:105",
+      "source_file": "load/loaders.py",
+      "source_line": 105,
+      "description": "execute() call",
+      "dataset_type": "database_query",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:execute:load/loaders.py:112",
+      "source_file": "load/loaders.py",
+      "source_line": 112,
+      "description": "execute() call",
+      "dataset_type": "database_query",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:create_engine:load/loaders.py:144",
+      "source_file": "load/loaders.py",
+      "source_line": 144,
+      "description": "create_engine() call",
+      "dataset_type": "database",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:to_postgis:load/loaders.py:148",
+      "source_file": "load/loaders.py",
+      "source_line": 148,
+      "description": "to_postgis() call",
+      "dataset_type": "file_sink",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "SELECT * from test_sources.test_load_file_to_pg",
+      "source_file": "tests/load/test_loaders.py",
+      "source_line": 111,
+      "description": "execute() call",
+      "dataset_type": "database_query",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "4_seeds/logement_2020_valeurs.csv",
+      "source_file": "utils/generer_doc_recenssement.py",
+      "source_line": 14,
+      "description": "read_csv() call",
+      "dataset_type": "file_source",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "load/loaders.py"
+    },
+    {
+      "id": "load/__main__.py"
+    },
+    {
+      "id": "load/__init__.py"
+    },
+    {
+      "id": "tests/load/test_loaders.py"
+    },
+    {
+      "id": "utils/generer_doc_recenssement.py"
+    },
+    {
+      "id": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql"
+    },
+    {
+      "id": "make-open-data\\5_macros\\foncier\\preparer_dvf_biens_immobilier.sql"
+    },
+    {
+      "id": "dvf_2024_dev"
+    },
+    {
+      "id": "ventes_immobilieres"
+    },
+    {
+      "id": "dvf_2024"
+    },
+    {
+      "id": "dvf_2023_dev"
+    },
+    {
+      "id": "dvf_2023"
+    },
+    {
+      "id": "dvf_2022_dev"
+    },
+    {
+      "id": "dvf_2022"
+    },
+    {
+      "id": "dvf_2021_dev"
+    },
+    {
+      "id": "dvf_2021"
+    },
+    {
+      "id": "dvf_2020_dev"
+    },
+    {
+      "id": "dvf_2020"
+    },
+    {
+      "id": "dvf_2019_dev"
+    },
+    {
+      "id": "dvf_2019"
+    },
+    {
+      "id": "dvf_2018_dev"
+    },
+    {
+      "id": "dvf_2018"
+    },
+    {
+      "id": "dvf_2017_dev"
+    },
+    {
+      "id": "dvf_2017"
+    },
+    {
+      "id": "dvf_2016_dev"
+    },
+    {
+      "id": "dvf_2016"
+    },
+    {
+      "id": "dvf_2015_dev"
+    },
+    {
+      "id": "dvf_2015"
+    },
+    {
+      "id": "dvf_2014_dev"
+    },
+    {
+      "id": "dvf_default"
+    },
+    {
+      "id": "dvf_2014"
+    },
+    {
+      "id": "cog_poste"
+    },
+    {
+      "id": "postes_communes"
+    },
+    {
+      "id": "make-open-data/1_data/intermediaires/recensement/activite_renomee.sql"
+    },
+    {
+      "id": "make-open-data\\5_macros\\recensement\\renommer_colonnes_valeurs_logement.sql"
+    },
+    {
+      "id": "logement_2020"
+    },
+    {
+      "id": "activite_renomee"
+    },
+    {
+      "id": "logement_2020_dev"
+    },
+    {
+      "id": "make-open-data/1_data/intermediaires/recensement/demographie_renomee.sql"
+    },
+    {
+      "id": "demographie_renomee"
+    },
+    {
+      "id": "make-open-data/1_data/intermediaires/recensement/habitat_renomee.sql"
+    },
+    {
+      "id": "habitat_renomee"
+    },
+    {
+      "id": "make-open-data/1_data/intermediaires/recensement/mobilite_renomee.sql"
+    },
+    {
+      "id": "mobilite_renomee"
+    },
+    {
+      "id": "datatourisme_place"
+    },
+    {
+      "id": "place"
+    },
+    {
+      "id": "bmo_2024"
+    },
+    {
+      "id": "besoin_main_oeuvre_departement"
+    },
+    {
+      "id": "infos_departements"
+    },
+    {
+      "id": "ventes_immobilieres_enrichies"
+    },
+    {
+      "id": "commune_centroid_poste"
+    },
+    {
+      "id": "infos_communes"
+    },
+    {
+      "id": "cog_departements"
+    },
+    {
+      "id": "cog_regions"
+    },
+    {
+      "id": "cog_communes"
+    },
+    {
+      "id": "cog_arrondissements"
+    },
+    {
+      "id": "shape_commune_2024"
+    },
+    {
+      "id": "shape_arrondissement_municipal_2024"
+    },
+    {
+      "id": "infos_iris"
+    },
+    {
+      "id": "shape_iris_2024"
+    },
+    {
+      "id": "infos_postes"
+    },
+    {
+      "id": "communes_to_scot"
+    },
+    {
+      "id": "infos_scot"
+    },
+    {
+      "id": "make-open-data/1_data/prepare/recensement/activite/activite_communes.sql"
+    },
+    {
+      "id": "make-open-data\\5_macros\\recensement\\aggreger_colonnes_theme_geo.sql"
+    },
+    {
+      "id": "logement_2020_valeurs"
+    },
+    {
+      "id": "activite_communes"
+    },
+    {
+      "id": "make-open-data/1_data/prepare/recensement/activite/activite_departements.sql"
+    },
+    {
+      "id": "make-open-data\\5_macros\\recensement\\aggreger_supra_commune.sql"
+    },
+    {
+      "id": "activite_departements"
+    },
+    {
+      "id": "make-open-data/1_data/prepare/recensement/activite/activite_iris.sql"
+    },
+    {
+      "id": "activite_iris"
+    },
+    {
+      "id": "make-open-data/1_data/prepare/recensement/demographie/demographie_communes.sql"
+    },
+    {
+      "id": "demographie_communes"
+    },
+    {
+      "id": "make-open-data/1_data/prepare/recensement/demographie/demographie_departements.sql"
+    },
+    {
+      "id": "demographie_departements"
+    },
+    {
+      "id": "make-open-data/1_data/prepare/recensement/demographie/demographie_iris.sql"
+    },
+    {
+      "id": "demographie_iris"
+    },
+    {
+      "id": "make-open-data/1_data/prepare/recensement/habitat/habitat_communes.sql"
+    },
+    {
+      "id": "habitat_communes"
+    },
+    {
+      "id": "make-open-data/1_data/prepare/recensement/habitat/habitat_departements.sql"
+    },
+    {
+      "id": "habitat_departements"
+    },
+    {
+      "id": "make-open-data/1_data/prepare/recensement/habitat/habitat_iris.sql"
+    },
+    {
+      "id": "habitat_iris"
+    },
+    {
+      "id": "make-open-data/1_data/prepare/recensement/mobilite/mobilite_communes.sql"
+    },
+    {
+      "id": "mobilite_communes"
+    },
+    {
+      "id": "make-open-data/1_data/prepare/recensement/mobilite/mobilite_departements.sql"
+    },
+    {
+      "id": "mobilite_departements"
+    },
+    {
+      "id": "make-open-data/1_data/prepare/recensement/mobilite/mobilite_iris.sql"
+    },
+    {
+      "id": "mobilite_iris"
+    },
+    {
+      "id": "make-open-data/1_data/prepare/revenu/revenu_commune.sql"
+    },
+    {
+      "id": "make-open-data\\5_macros\\revenu\\nettoyer_modalite_revenu.sql"
+    },
+    {
+      "id": "filosofi_commune_2021"
+    },
+    {
+      "id": "revenu_commune"
+    },
+    {
+      "id": "seveso_2024"
+    },
+    {
+      "id": "sites_seveso"
+    },
+    {
+      "id": "professionels_sante_departement"
+    },
+    {
+      "id": "professionels_sante"
+    }
+  ],
+  "edges": [
+    {
+      "source_dataset": "<dynamic>:execute:load/loaders.py:35",
+      "target_dataset": "load/loaders.py",
+      "source_file": "load/loaders.py",
+      "source_line": 35,
+      "transformation_type": "consumes",
+      "confidence": 0.6,
+      "confidence_reason": "inferred from dynamic execute() call (f-string or variable)",
+      "source": "<dynamic>:execute:load/loaders.py:35",
+      "target": "load/loaders.py"
+    },
+    {
+      "source_dataset": "<dynamic>:read_json:load/loaders.py:59",
+      "target_dataset": "load/loaders.py",
+      "source_file": "load/loaders.py",
+      "source_line": 59,
+      "transformation_type": "consumes",
+      "confidence": 0.6,
+      "confidence_reason": "inferred from dynamic read_json() call (f-string or variable)",
+      "source": "<dynamic>:read_json:load/loaders.py:59",
+      "target": "load/loaders.py"
+    },
+    {
+      "source_dataset": "<dynamic>:read_csv:load/loaders.py:70",
+      "target_dataset": "load/loaders.py",
+      "source_file": "load/loaders.py",
+      "source_line": 70,
+      "transformation_type": "consumes",
+      "confidence": 0.6,
+      "confidence_reason": "inferred from dynamic read_csv() call (f-string or variable)",
+      "source": "<dynamic>:read_csv:load/loaders.py:70",
+      "target": "load/loaders.py"
+    },
+    {
+      "source_dataset": "<dynamic>:execute:load/loaders.py:99",
+      "target_dataset": "load/loaders.py",
+      "source_file": "load/loaders.py",
+      "source_line": 99,
+      "transformation_type": "consumes",
+      "confidence": 0.6,
+      "confidence_reason": "inferred from dynamic execute() call (f-string or variable)",
+      "source": "<dynamic>:execute:load/loaders.py:99",
+      "target": "load/loaders.py"
+    },
+    {
+      "source_dataset": "<dynamic>:execute:load/loaders.py:105",
+      "target_dataset": "load/loaders.py",
+      "source_file": "load/loaders.py",
+      "source_line": 105,
+      "transformation_type": "consumes",
+      "confidence": 0.6,
+      "confidence_reason": "inferred from dynamic execute() call (f-string or variable)",
+      "source": "<dynamic>:execute:load/loaders.py:105",
+      "target": "load/loaders.py"
+    },
+    {
+      "source_dataset": "<dynamic>:execute:load/loaders.py:112",
+      "target_dataset": "load/loaders.py",
+      "source_file": "load/loaders.py",
+      "source_line": 112,
+      "transformation_type": "consumes",
+      "confidence": 0.6,
+      "confidence_reason": "inferred from dynamic execute() call (f-string or variable)",
+      "source": "<dynamic>:execute:load/loaders.py:112",
+      "target": "load/loaders.py"
+    },
+    {
+      "source_dataset": "<dynamic>:create_engine:load/loaders.py:144",
+      "target_dataset": "load/loaders.py",
+      "source_file": "load/loaders.py",
+      "source_line": 144,
+      "transformation_type": "consumes",
+      "confidence": 0.6,
+      "confidence_reason": "inferred from dynamic create_engine() call (f-string or variable)",
+      "source": "<dynamic>:create_engine:load/loaders.py:144",
+      "target": "load/loaders.py"
+    },
+    {
+      "source_dataset": "SELECT * from test_sources.test_load_file_to_pg",
+      "target_dataset": "tests/load/test_loaders.py",
+      "source_file": "tests/load/test_loaders.py",
+      "source_line": 111,
+      "transformation_type": "consumes",
+      "confidence": 0.75,
+      "confidence_reason": "inferred from literal argument in execute() call",
+      "source": "SELECT * from test_sources.test_load_file_to_pg",
+      "target": "tests/load/test_loaders.py"
+    },
+    {
+      "source_dataset": "4_seeds/logement_2020_valeurs.csv",
+      "target_dataset": "utils/generer_doc_recenssement.py",
+      "source_file": "utils/generer_doc_recenssement.py",
+      "source_line": 14,
+      "transformation_type": "consumes",
+      "confidence": 0.75,
+      "confidence_reason": "inferred from literal argument in read_csv() call",
+      "source": "4_seeds/logement_2020_valeurs.csv",
+      "target": "utils/generer_doc_recenssement.py"
+    },
+    {
+      "source_dataset": "load/loaders.py",
+      "target_dataset": "<dynamic>:to_csv:load/loaders.py:60",
+      "source_file": "load/loaders.py",
+      "source_line": 60,
+      "transformation_type": "produces",
+      "confidence": 0.6,
+      "confidence_reason": "inferred from dynamic to_csv() call (f-string or variable)",
+      "source": "load/loaders.py",
+      "target": "<dynamic>:to_csv:load/loaders.py:60"
+    },
+    {
+      "source_dataset": "load/loaders.py",
+      "target_dataset": "<dynamic>:to_postgis:load/loaders.py:148",
+      "source_file": "load/loaders.py",
+      "source_line": 148,
+      "transformation_type": "produces",
+      "confidence": 0.6,
+      "confidence_reason": "inferred from dynamic to_postgis() call (f-string or variable)",
+      "source": "load/loaders.py",
+      "target": "<dynamic>:to_postgis:load/loaders.py:148"
+    },
+    {
+      "source_dataset": "load/loaders.py",
+      "target_dataset": "load/__main__.py",
+      "source_file": "load/__main__.py",
+      "source_line": 11,
+      "transformation_type": "imports",
+      "confidence": 0.95,
+      "confidence_reason": "structural Python import of 'load.loaders'",
+      "source": "load/loaders.py",
+      "target": "load/__main__.py"
+    },
+    {
+      "source_dataset": "load/loaders.py",
+      "target_dataset": "tests/load/test_loaders.py",
+      "source_file": "tests/load/test_loaders.py",
+      "source_line": 10,
+      "transformation_type": "imports",
+      "confidence": 0.95,
+      "confidence_reason": "structural Python import of 'load.loaders'",
+      "source": "load/loaders.py",
+      "target": "tests/load/test_loaders.py"
+    },
+    {
+      "source_dataset": "load/__init__.py",
+      "target_dataset": "tests/load/test_loaders.py",
+      "source_file": "tests/load/test_loaders.py",
+      "source_line": 9,
+      "transformation_type": "imports",
+      "confidence": 0.95,
+      "confidence_reason": "structural Python import of 'load'",
+      "source": "load/__init__.py",
+      "target": "tests/load/test_loaders.py"
+    },
+    {
+      "source_dataset": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "target_dataset": "make-open-data\\5_macros\\foncier\\preparer_dvf_biens_immobilier.sql",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "configures",
+      "confidence": 0.85,
+      "confidence_reason": "inferred via macro call to 'preparer_dvf_biens_immobilier'",
+      "source": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "target": "make-open-data\\5_macros\\foncier\\preparer_dvf_biens_immobilier.sql"
+    },
+    {
+      "source_dataset": "dvf_2024_dev",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_2024_dev",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "ventes_immobilieres",
+      "target_dataset": "ventes_immobilieres_enrichies",
+      "source_file": "make-open-data/1_data/prepare/foncier/ventes_immobilieres_enrichies.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "ventes_immobilieres",
+      "target": "ventes_immobilieres_enrichies"
+    },
+    {
+      "source_dataset": "dvf_2024",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_2024",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "dvf_2023_dev",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_2023_dev",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "dvf_2023",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_2023",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "dvf_2022_dev",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_2022_dev",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "dvf_2022",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_2022",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "dvf_2021_dev",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_2021_dev",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "dvf_2021",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_2021",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "dvf_2020_dev",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_2020_dev",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "dvf_2020",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_2020",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "dvf_2019_dev",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_2019_dev",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "dvf_2019",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_2019",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "dvf_2018_dev",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_2018_dev",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "dvf_2018",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_2018",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "dvf_2017_dev",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_2017_dev",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "dvf_2017",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_2017",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "dvf_2016_dev",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_2016_dev",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "dvf_2016",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_2016",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "dvf_2015_dev",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_2015_dev",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "dvf_2015",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_2015",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "dvf_2014_dev",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_2014_dev",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "dvf_default",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_default",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "dvf_2014",
+      "target_dataset": "ventes_immobilieres",
+      "source_file": "make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "dvf_2014",
+      "target": "ventes_immobilieres"
+    },
+    {
+      "source_dataset": "cog_poste",
+      "target_dataset": "postes_communes",
+      "source_file": "make-open-data/1_data/intermediaires/geographie/postes_communes.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "cog_poste",
+      "target": "postes_communes"
+    },
+    {
+      "source_dataset": "cog_poste",
+      "target_dataset": "commune_centroid_poste",
+      "source_file": "make-open-data/1_data/prepare/geographie/commune_centroid_poste.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "cog_poste",
+      "target": "commune_centroid_poste"
+    },
+    {
+      "source_dataset": "cog_poste",
+      "target_dataset": "infos_communes",
+      "source_file": "make-open-data/1_data/prepare/geographie/infos_communes.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "cog_poste",
+      "target": "infos_communes"
+    },
+    {
+      "source_dataset": "cog_poste",
+      "target_dataset": "infos_postes",
+      "source_file": "make-open-data/1_data/prepare/geographie/infos_postes.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "cog_poste",
+      "target": "infos_postes"
+    },
+    {
+      "source_dataset": "make-open-data/1_data/intermediaires/recensement/activite_renomee.sql",
+      "target_dataset": "make-open-data\\5_macros\\recensement\\renommer_colonnes_valeurs_logement.sql",
+      "source_file": "make-open-data/1_data/intermediaires/recensement/activite_renomee.sql",
+      "source_line": null,
+      "transformation_type": "configures",
+      "confidence": 0.85,
+      "confidence_reason": "inferred via macro call to 'renommer_colonnes_values_logement'",
+      "source": "make-open-data/1_data/intermediaires/recensement/activite_renomee.sql",
+      "target": "make-open-data\\5_macros\\recensement\\renommer_colonnes_valeurs_logement.sql"
+    },
+    {
+      "source_dataset": "logement_2020",
+      "target_dataset": "activite_renomee",
+      "source_file": "make-open-data/1_data/intermediaires/recensement/activite_renomee.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "logement_2020",
+      "target": "activite_renomee"
+    },
+    {
+      "source_dataset": "logement_2020",
+      "target_dataset": "demographie_renomee",
+      "source_file": "make-open-data/1_data/intermediaires/recensement/demographie_renomee.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "logement_2020",
+      "target": "demographie_renomee"
+    },
+    {
+      "source_dataset": "logement_2020",
+      "target_dataset": "habitat_renomee",
+      "source_file": "make-open-data/1_data/intermediaires/recensement/habitat_renomee.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "logement_2020",
+      "target": "habitat_renomee"
+    },
+    {
+      "source_dataset": "logement_2020",
+      "target_dataset": "mobilite_renomee",
+      "source_file": "make-open-data/1_data/intermediaires/recensement/mobilite_renomee.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "logement_2020",
+      "target": "mobilite_renomee"
+    },
+    {
+      "source_dataset": "logement_2020_dev",
+      "target_dataset": "activite_renomee",
+      "source_file": "make-open-data/1_data/intermediaires/recensement/activite_renomee.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "logement_2020_dev",
+      "target": "activite_renomee"
+    },
+    {
+      "source_dataset": "logement_2020_dev",
+      "target_dataset": "demographie_renomee",
+      "source_file": "make-open-data/1_data/intermediaires/recensement/demographie_renomee.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "logement_2020_dev",
+      "target": "demographie_renomee"
+    },
+    {
+      "source_dataset": "logement_2020_dev",
+      "target_dataset": "habitat_renomee",
+      "source_file": "make-open-data/1_data/intermediaires/recensement/habitat_renomee.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "logement_2020_dev",
+      "target": "habitat_renomee"
+    },
+    {
+      "source_dataset": "logement_2020_dev",
+      "target_dataset": "mobilite_renomee",
+      "source_file": "make-open-data/1_data/intermediaires/recensement/mobilite_renomee.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "logement_2020_dev",
+      "target": "mobilite_renomee"
+    },
+    {
+      "source_dataset": "make-open-data/1_data/intermediaires/recensement/demographie_renomee.sql",
+      "target_dataset": "make-open-data\\5_macros\\recensement\\renommer_colonnes_valeurs_logement.sql",
+      "source_file": "make-open-data/1_data/intermediaires/recensement/demographie_renomee.sql",
+      "source_line": null,
+      "transformation_type": "configures",
+      "confidence": 0.85,
+      "confidence_reason": "inferred via macro call to 'renommer_colonnes_values_logement'",
+      "source": "make-open-data/1_data/intermediaires/recensement/demographie_renomee.sql",
+      "target": "make-open-data\\5_macros\\recensement\\renommer_colonnes_valeurs_logement.sql"
+    },
+    {
+      "source_dataset": "make-open-data/1_data/intermediaires/recensement/habitat_renomee.sql",
+      "target_dataset": "make-open-data\\5_macros\\recensement\\renommer_colonnes_valeurs_logement.sql",
+      "source_file": "make-open-data/1_data/intermediaires/recensement/habitat_renomee.sql",
+      "source_line": null,
+      "transformation_type": "configures",
+      "confidence": 0.85,
+      "confidence_reason": "inferred via macro call to 'renommer_colonnes_values_logement'",
+      "source": "make-open-data/1_data/intermediaires/recensement/habitat_renomee.sql",
+      "target": "make-open-data\\5_macros\\recensement\\renommer_colonnes_valeurs_logement.sql"
+    },
+    {
+      "source_dataset": "habitat_renomee",
+      "target_dataset": "habitat_communes",
+      "source_file": "make-open-data/1_data/prepare/recensement/habitat/habitat_communes.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 1.0,
+      "confidence_reason": "explicitly declared via '-- depends_on' for 'habitat_renomee'",
+      "source": "habitat_renomee",
+      "target": "habitat_communes"
+    },
+    {
+      "source_dataset": "make-open-data/1_data/intermediaires/recensement/mobilite_renomee.sql",
+      "target_dataset": "make-open-data\\5_macros\\recensement\\renommer_colonnes_valeurs_logement.sql",
+      "source_file": "make-open-data/1_data/intermediaires/recensement/mobilite_renomee.sql",
+      "source_line": null,
+      "transformation_type": "configures",
+      "confidence": 0.85,
+      "confidence_reason": "inferred via macro call to 'renommer_colonnes_values_logement'",
+      "source": "make-open-data/1_data/intermediaires/recensement/mobilite_renomee.sql",
+      "target": "make-open-data\\5_macros\\recensement\\renommer_colonnes_valeurs_logement.sql"
+    },
+    {
+      "source_dataset": "datatourisme_place",
+      "target_dataset": "place",
+      "source_file": "make-open-data/1_data/prepare/datatourisme/place.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "datatourisme_place",
+      "target": "place"
+    },
+    {
+      "source_dataset": "bmo_2024",
+      "target_dataset": "besoin_main_oeuvre_departement",
+      "source_file": "make-open-data/1_data/prepare/emploi/besoin_main_oeuvre_departement.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "bmo_2024",
+      "target": "besoin_main_oeuvre_departement"
+    },
+    {
+      "source_dataset": "infos_departements",
+      "target_dataset": "besoin_main_oeuvre_departement",
+      "source_file": "make-open-data/1_data/prepare/emploi/besoin_main_oeuvre_departement.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "infos_departements",
+      "target": "besoin_main_oeuvre_departement"
+    },
+    {
+      "source_dataset": "infos_departements",
+      "target_dataset": "activite_departements",
+      "source_file": "make-open-data/1_data/prepare/recensement/activite/activite_departements.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "infos_departements",
+      "target": "activite_departements"
+    },
+    {
+      "source_dataset": "infos_departements",
+      "target_dataset": "demographie_departements",
+      "source_file": "make-open-data/1_data/prepare/recensement/demographie/demographie_departements.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "infos_departements",
+      "target": "demographie_departements"
+    },
+    {
+      "source_dataset": "infos_departements",
+      "target_dataset": "habitat_departements",
+      "source_file": "make-open-data/1_data/prepare/recensement/habitat/habitat_departements.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "infos_departements",
+      "target": "habitat_departements"
+    },
+    {
+      "source_dataset": "infos_departements",
+      "target_dataset": "mobilite_departements",
+      "source_file": "make-open-data/1_data/prepare/recensement/mobilite/mobilite_departements.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "infos_departements",
+      "target": "mobilite_departements"
+    },
+    {
+      "source_dataset": "infos_departements",
+      "target_dataset": "professionels_sante_departement",
+      "source_file": "make-open-data/1_data/prepare/sante/professionels_sante_departement.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "infos_departements",
+      "target": "professionels_sante_departement"
+    },
+    {
+      "source_dataset": "infos_communes",
+      "target_dataset": "commune_centroid_poste",
+      "source_file": "make-open-data/1_data/prepare/geographie/commune_centroid_poste.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "infos_communes",
+      "target": "commune_centroid_poste"
+    },
+    {
+      "source_dataset": "infos_communes",
+      "target_dataset": "infos_departements",
+      "source_file": "make-open-data/1_data/prepare/geographie/infos_departements.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "infos_communes",
+      "target": "infos_departements"
+    },
+    {
+      "source_dataset": "infos_communes",
+      "target_dataset": "infos_iris",
+      "source_file": "make-open-data/1_data/prepare/geographie/infos_iris.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "infos_communes",
+      "target": "infos_iris"
+    },
+    {
+      "source_dataset": "infos_communes",
+      "target_dataset": "infos_scot",
+      "source_file": "make-open-data/1_data/prepare/geographie/infos_scot.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "infos_communes",
+      "target": "infos_scot"
+    },
+    {
+      "source_dataset": "infos_communes",
+      "target_dataset": "activite_communes",
+      "source_file": "make-open-data/1_data/prepare/recensement/activite/activite_communes.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "infos_communes",
+      "target": "activite_communes"
+    },
+    {
+      "source_dataset": "infos_communes",
+      "target_dataset": "demographie_communes",
+      "source_file": "make-open-data/1_data/prepare/recensement/demographie/demographie_communes.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "infos_communes",
+      "target": "demographie_communes"
+    },
+    {
+      "source_dataset": "infos_communes",
+      "target_dataset": "habitat_communes",
+      "source_file": "make-open-data/1_data/prepare/recensement/habitat/habitat_communes.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "infos_communes",
+      "target": "habitat_communes"
+    },
+    {
+      "source_dataset": "infos_communes",
+      "target_dataset": "mobilite_communes",
+      "source_file": "make-open-data/1_data/prepare/recensement/mobilite/mobilite_communes.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "infos_communes",
+      "target": "mobilite_communes"
+    },
+    {
+      "source_dataset": "infos_communes",
+      "target_dataset": "revenu_commune",
+      "source_file": "make-open-data/1_data/prepare/revenu/revenu_commune.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "infos_communes",
+      "target": "revenu_commune"
+    },
+    {
+      "source_dataset": "cog_departements",
+      "target_dataset": "commune_centroid_poste",
+      "source_file": "make-open-data/1_data/prepare/geographie/commune_centroid_poste.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "cog_departements",
+      "target": "commune_centroid_poste"
+    },
+    {
+      "source_dataset": "cog_departements",
+      "target_dataset": "infos_communes",
+      "source_file": "make-open-data/1_data/prepare/geographie/infos_communes.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "cog_departements",
+      "target": "infos_communes"
+    },
+    {
+      "source_dataset": "cog_departements",
+      "target_dataset": "infos_postes",
+      "source_file": "make-open-data/1_data/prepare/geographie/infos_postes.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "cog_departements",
+      "target": "infos_postes"
+    },
+    {
+      "source_dataset": "cog_regions",
+      "target_dataset": "commune_centroid_poste",
+      "source_file": "make-open-data/1_data/prepare/geographie/commune_centroid_poste.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "cog_regions",
+      "target": "commune_centroid_poste"
+    },
+    {
+      "source_dataset": "cog_regions",
+      "target_dataset": "infos_communes",
+      "source_file": "make-open-data/1_data/prepare/geographie/infos_communes.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "cog_regions",
+      "target": "infos_communes"
+    },
+    {
+      "source_dataset": "cog_regions",
+      "target_dataset": "infos_postes",
+      "source_file": "make-open-data/1_data/prepare/geographie/infos_postes.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "cog_regions",
+      "target": "infos_postes"
+    },
+    {
+      "source_dataset": "cog_communes",
+      "target_dataset": "infos_communes",
+      "source_file": "make-open-data/1_data/prepare/geographie/infos_communes.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "cog_communes",
+      "target": "infos_communes"
+    },
+    {
+      "source_dataset": "cog_arrondissements",
+      "target_dataset": "infos_communes",
+      "source_file": "make-open-data/1_data/prepare/geographie/infos_communes.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "cog_arrondissements",
+      "target": "infos_communes"
+    },
+    {
+      "source_dataset": "shape_commune_2024",
+      "target_dataset": "infos_communes",
+      "source_file": "make-open-data/1_data/prepare/geographie/infos_communes.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "shape_commune_2024",
+      "target": "infos_communes"
+    },
+    {
+      "source_dataset": "shape_arrondissement_municipal_2024",
+      "target_dataset": "infos_communes",
+      "source_file": "make-open-data/1_data/prepare/geographie/infos_communes.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "shape_arrondissement_municipal_2024",
+      "target": "infos_communes"
+    },
+    {
+      "source_dataset": "infos_iris",
+      "target_dataset": "activite_iris",
+      "source_file": "make-open-data/1_data/prepare/recensement/activite/activite_iris.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "infos_iris",
+      "target": "activite_iris"
+    },
+    {
+      "source_dataset": "infos_iris",
+      "target_dataset": "demographie_iris",
+      "source_file": "make-open-data/1_data/prepare/recensement/demographie/demographie_iris.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "infos_iris",
+      "target": "demographie_iris"
+    },
+    {
+      "source_dataset": "infos_iris",
+      "target_dataset": "habitat_iris",
+      "source_file": "make-open-data/1_data/prepare/recensement/habitat/habitat_iris.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "infos_iris",
+      "target": "habitat_iris"
+    },
+    {
+      "source_dataset": "infos_iris",
+      "target_dataset": "mobilite_iris",
+      "source_file": "make-open-data/1_data/prepare/recensement/mobilite/mobilite_iris.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "infos_iris",
+      "target": "mobilite_iris"
+    },
+    {
+      "source_dataset": "shape_iris_2024",
+      "target_dataset": "infos_iris",
+      "source_file": "make-open-data/1_data/prepare/geographie/infos_iris.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "shape_iris_2024",
+      "target": "infos_iris"
+    },
+    {
+      "source_dataset": "communes_to_scot",
+      "target_dataset": "infos_scot",
+      "source_file": "make-open-data/1_data/prepare/geographie/infos_scot.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "communes_to_scot",
+      "target": "infos_scot"
+    },
+    {
+      "source_dataset": "make-open-data/1_data/prepare/recensement/activite/activite_communes.sql",
+      "target_dataset": "make-open-data\\5_macros\\recensement\\aggreger_colonnes_theme_geo.sql",
+      "source_file": "make-open-data/1_data/prepare/recensement/activite/activite_communes.sql",
+      "source_line": null,
+      "transformation_type": "configures",
+      "confidence": 0.85,
+      "confidence_reason": "inferred via macro call to 'aggreger_colonnes_theme_geo'",
+      "source": "make-open-data/1_data/prepare/recensement/activite/activite_communes.sql",
+      "target": "make-open-data\\5_macros\\recensement\\aggreger_colonnes_theme_geo.sql"
+    },
+    {
+      "source_dataset": "logement_2020_valeurs",
+      "target_dataset": "activite_communes",
+      "source_file": "make-open-data/1_data/prepare/recensement/activite/activite_communes.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 1.0,
+      "confidence_reason": "explicitly declared via '-- depends_on' for 'logement_2020_valeurs'",
+      "source": "logement_2020_valeurs",
+      "target": "activite_communes"
+    },
+    {
+      "source_dataset": "logement_2020_valeurs",
+      "target_dataset": "activite_departements",
+      "source_file": "make-open-data/1_data/prepare/recensement/activite/activite_departements.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "logement_2020_valeurs",
+      "target": "activite_departements"
+    },
+    {
+      "source_dataset": "logement_2020_valeurs",
+      "target_dataset": "activite_iris",
+      "source_file": "make-open-data/1_data/prepare/recensement/activite/activite_iris.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 1.0,
+      "confidence_reason": "explicitly declared via '-- depends_on' for 'logement_2020_valeurs'",
+      "source": "logement_2020_valeurs",
+      "target": "activite_iris"
+    },
+    {
+      "source_dataset": "logement_2020_valeurs",
+      "target_dataset": "demographie_communes",
+      "source_file": "make-open-data/1_data/prepare/recensement/demographie/demographie_communes.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 1.0,
+      "confidence_reason": "explicitly declared via '-- depends_on' for 'logement_2020_valeurs'",
+      "source": "logement_2020_valeurs",
+      "target": "demographie_communes"
+    },
+    {
+      "source_dataset": "logement_2020_valeurs",
+      "target_dataset": "demographie_departements",
+      "source_file": "make-open-data/1_data/prepare/recensement/demographie/demographie_departements.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "logement_2020_valeurs",
+      "target": "demographie_departements"
+    },
+    {
+      "source_dataset": "logement_2020_valeurs",
+      "target_dataset": "demographie_iris",
+      "source_file": "make-open-data/1_data/prepare/recensement/demographie/demographie_iris.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 1.0,
+      "confidence_reason": "explicitly declared via '-- depends_on' for 'logement_2020_valeurs'",
+      "source": "logement_2020_valeurs",
+      "target": "demographie_iris"
+    },
+    {
+      "source_dataset": "logement_2020_valeurs",
+      "target_dataset": "habitat_communes",
+      "source_file": "make-open-data/1_data/prepare/recensement/habitat/habitat_communes.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 1.0,
+      "confidence_reason": "explicitly declared via '-- depends_on' for 'logement_2020_valeurs'",
+      "source": "logement_2020_valeurs",
+      "target": "habitat_communes"
+    },
+    {
+      "source_dataset": "logement_2020_valeurs",
+      "target_dataset": "habitat_departements",
+      "source_file": "make-open-data/1_data/prepare/recensement/habitat/habitat_departements.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "logement_2020_valeurs",
+      "target": "habitat_departements"
+    },
+    {
+      "source_dataset": "logement_2020_valeurs",
+      "target_dataset": "habitat_iris",
+      "source_file": "make-open-data/1_data/prepare/recensement/habitat/habitat_iris.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 1.0,
+      "confidence_reason": "explicitly declared via '-- depends_on' for 'logement_2020_valeurs'",
+      "source": "logement_2020_valeurs",
+      "target": "habitat_iris"
+    },
+    {
+      "source_dataset": "logement_2020_valeurs",
+      "target_dataset": "mobilite_communes",
+      "source_file": "make-open-data/1_data/prepare/recensement/mobilite/mobilite_communes.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 1.0,
+      "confidence_reason": "explicitly declared via '-- depends_on' for 'logement_2020_valeurs'",
+      "source": "logement_2020_valeurs",
+      "target": "mobilite_communes"
+    },
+    {
+      "source_dataset": "logement_2020_valeurs",
+      "target_dataset": "mobilite_departements",
+      "source_file": "make-open-data/1_data/prepare/recensement/mobilite/mobilite_departements.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "logement_2020_valeurs",
+      "target": "mobilite_departements"
+    },
+    {
+      "source_dataset": "logement_2020_valeurs",
+      "target_dataset": "mobilite_iris",
+      "source_file": "make-open-data/1_data/prepare/recensement/mobilite/mobilite_iris.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 1.0,
+      "confidence_reason": "explicitly declared via '-- depends_on' for 'logement_2020_valeurs'",
+      "source": "logement_2020_valeurs",
+      "target": "mobilite_iris"
+    },
+    {
+      "source_dataset": "activite_communes",
+      "target_dataset": "activite_departements",
+      "source_file": "make-open-data/1_data/prepare/recensement/activite/activite_departements.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "activite_communes",
+      "target": "activite_departements"
+    },
+    {
+      "source_dataset": "make-open-data/1_data/prepare/recensement/activite/activite_departements.sql",
+      "target_dataset": "make-open-data\\5_macros\\recensement\\aggreger_supra_commune.sql",
+      "source_file": "make-open-data/1_data/prepare/recensement/activite/activite_departements.sql",
+      "source_line": null,
+      "transformation_type": "configures",
+      "confidence": 0.85,
+      "confidence_reason": "inferred via macro call to 'aggreger_supra_commune'",
+      "source": "make-open-data/1_data/prepare/recensement/activite/activite_departements.sql",
+      "target": "make-open-data\\5_macros\\recensement\\aggreger_supra_commune.sql"
+    },
+    {
+      "source_dataset": "make-open-data/1_data/prepare/recensement/activite/activite_iris.sql",
+      "target_dataset": "make-open-data\\5_macros\\recensement\\aggreger_colonnes_theme_geo.sql",
+      "source_file": "make-open-data/1_data/prepare/recensement/activite/activite_iris.sql",
+      "source_line": null,
+      "transformation_type": "configures",
+      "confidence": 0.85,
+      "confidence_reason": "inferred via macro call to 'aggreger_colonnes_theme_geo'",
+      "source": "make-open-data/1_data/prepare/recensement/activite/activite_iris.sql",
+      "target": "make-open-data\\5_macros\\recensement\\aggreger_colonnes_theme_geo.sql"
+    },
+    {
+      "source_dataset": "make-open-data/1_data/prepare/recensement/demographie/demographie_communes.sql",
+      "target_dataset": "make-open-data\\5_macros\\recensement\\aggreger_colonnes_theme_geo.sql",
+      "source_file": "make-open-data/1_data/prepare/recensement/demographie/demographie_communes.sql",
+      "source_line": null,
+      "transformation_type": "configures",
+      "confidence": 0.85,
+      "confidence_reason": "inferred via macro call to 'aggreger_colonnes_theme_geo'",
+      "source": "make-open-data/1_data/prepare/recensement/demographie/demographie_communes.sql",
+      "target": "make-open-data\\5_macros\\recensement\\aggreger_colonnes_theme_geo.sql"
+    },
+    {
+      "source_dataset": "demographie_communes",
+      "target_dataset": "demographie_departements",
+      "source_file": "make-open-data/1_data/prepare/recensement/demographie/demographie_departements.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "demographie_communes",
+      "target": "demographie_departements"
+    },
+    {
+      "source_dataset": "make-open-data/1_data/prepare/recensement/demographie/demographie_departements.sql",
+      "target_dataset": "make-open-data\\5_macros\\recensement\\aggreger_supra_commune.sql",
+      "source_file": "make-open-data/1_data/prepare/recensement/demographie/demographie_departements.sql",
+      "source_line": null,
+      "transformation_type": "configures",
+      "confidence": 0.85,
+      "confidence_reason": "inferred via macro call to 'aggreger_supra_commune'",
+      "source": "make-open-data/1_data/prepare/recensement/demographie/demographie_departements.sql",
+      "target": "make-open-data\\5_macros\\recensement\\aggreger_supra_commune.sql"
+    },
+    {
+      "source_dataset": "make-open-data/1_data/prepare/recensement/demographie/demographie_iris.sql",
+      "target_dataset": "make-open-data\\5_macros\\recensement\\aggreger_colonnes_theme_geo.sql",
+      "source_file": "make-open-data/1_data/prepare/recensement/demographie/demographie_iris.sql",
+      "source_line": null,
+      "transformation_type": "configures",
+      "confidence": 0.85,
+      "confidence_reason": "inferred via macro call to 'aggreger_colonnes_theme_geo'",
+      "source": "make-open-data/1_data/prepare/recensement/demographie/demographie_iris.sql",
+      "target": "make-open-data\\5_macros\\recensement\\aggreger_colonnes_theme_geo.sql"
+    },
+    {
+      "source_dataset": "make-open-data/1_data/prepare/recensement/habitat/habitat_communes.sql",
+      "target_dataset": "make-open-data\\5_macros\\recensement\\aggreger_colonnes_theme_geo.sql",
+      "source_file": "make-open-data/1_data/prepare/recensement/habitat/habitat_communes.sql",
+      "source_line": null,
+      "transformation_type": "configures",
+      "confidence": 0.85,
+      "confidence_reason": "inferred via macro call to 'aggreger_colonnes_theme_geo'",
+      "source": "make-open-data/1_data/prepare/recensement/habitat/habitat_communes.sql",
+      "target": "make-open-data\\5_macros\\recensement\\aggreger_colonnes_theme_geo.sql"
+    },
+    {
+      "source_dataset": "habitat_communes",
+      "target_dataset": "habitat_departements",
+      "source_file": "make-open-data/1_data/prepare/recensement/habitat/habitat_departements.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "habitat_communes",
+      "target": "habitat_departements"
+    },
+    {
+      "source_dataset": "make-open-data/1_data/prepare/recensement/habitat/habitat_departements.sql",
+      "target_dataset": "make-open-data\\5_macros\\recensement\\aggreger_supra_commune.sql",
+      "source_file": "make-open-data/1_data/prepare/recensement/habitat/habitat_departements.sql",
+      "source_line": null,
+      "transformation_type": "configures",
+      "confidence": 0.85,
+      "confidence_reason": "inferred via macro call to 'aggreger_supra_commune'",
+      "source": "make-open-data/1_data/prepare/recensement/habitat/habitat_departements.sql",
+      "target": "make-open-data\\5_macros\\recensement\\aggreger_supra_commune.sql"
+    },
+    {
+      "source_dataset": "make-open-data/1_data/prepare/recensement/habitat/habitat_iris.sql",
+      "target_dataset": "make-open-data\\5_macros\\recensement\\aggreger_colonnes_theme_geo.sql",
+      "source_file": "make-open-data/1_data/prepare/recensement/habitat/habitat_iris.sql",
+      "source_line": null,
+      "transformation_type": "configures",
+      "confidence": 0.85,
+      "confidence_reason": "inferred via macro call to 'aggreger_colonnes_theme_geo'",
+      "source": "make-open-data/1_data/prepare/recensement/habitat/habitat_iris.sql",
+      "target": "make-open-data\\5_macros\\recensement\\aggreger_colonnes_theme_geo.sql"
+    },
+    {
+      "source_dataset": "make-open-data/1_data/prepare/recensement/mobilite/mobilite_communes.sql",
+      "target_dataset": "make-open-data\\5_macros\\recensement\\aggreger_colonnes_theme_geo.sql",
+      "source_file": "make-open-data/1_data/prepare/recensement/mobilite/mobilite_communes.sql",
+      "source_line": null,
+      "transformation_type": "configures",
+      "confidence": 0.85,
+      "confidence_reason": "inferred via macro call to 'aggreger_colonnes_theme_geo'",
+      "source": "make-open-data/1_data/prepare/recensement/mobilite/mobilite_communes.sql",
+      "target": "make-open-data\\5_macros\\recensement\\aggreger_colonnes_theme_geo.sql"
+    },
+    {
+      "source_dataset": "mobilite_communes",
+      "target_dataset": "mobilite_departements",
+      "source_file": "make-open-data/1_data/prepare/recensement/mobilite/mobilite_departements.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "mobilite_communes",
+      "target": "mobilite_departements"
+    },
+    {
+      "source_dataset": "make-open-data/1_data/prepare/recensement/mobilite/mobilite_departements.sql",
+      "target_dataset": "make-open-data\\5_macros\\recensement\\aggreger_supra_commune.sql",
+      "source_file": "make-open-data/1_data/prepare/recensement/mobilite/mobilite_departements.sql",
+      "source_line": null,
+      "transformation_type": "configures",
+      "confidence": 0.85,
+      "confidence_reason": "inferred via macro call to 'aggreger_supra_commune'",
+      "source": "make-open-data/1_data/prepare/recensement/mobilite/mobilite_departements.sql",
+      "target": "make-open-data\\5_macros\\recensement\\aggreger_supra_commune.sql"
+    },
+    {
+      "source_dataset": "make-open-data/1_data/prepare/recensement/mobilite/mobilite_iris.sql",
+      "target_dataset": "make-open-data\\5_macros\\recensement\\aggreger_colonnes_theme_geo.sql",
+      "source_file": "make-open-data/1_data/prepare/recensement/mobilite/mobilite_iris.sql",
+      "source_line": null,
+      "transformation_type": "configures",
+      "confidence": 0.85,
+      "confidence_reason": "inferred via macro call to 'aggreger_colonnes_theme_geo'",
+      "source": "make-open-data/1_data/prepare/recensement/mobilite/mobilite_iris.sql",
+      "target": "make-open-data\\5_macros\\recensement\\aggreger_colonnes_theme_geo.sql"
+    },
+    {
+      "source_dataset": "make-open-data/1_data/prepare/revenu/revenu_commune.sql",
+      "target_dataset": "make-open-data\\5_macros\\revenu\\nettoyer_modalite_revenu.sql",
+      "source_file": "make-open-data/1_data/prepare/revenu/revenu_commune.sql",
+      "source_line": null,
+      "transformation_type": "configures",
+      "confidence": 0.85,
+      "confidence_reason": "inferred via macro call to 'nettoyer_modalite_revenu'",
+      "source": "make-open-data/1_data/prepare/revenu/revenu_commune.sql",
+      "target": "make-open-data\\5_macros\\revenu\\nettoyer_modalite_revenu.sql"
+    },
+    {
+      "source_dataset": "filosofi_commune_2021",
+      "target_dataset": "revenu_commune",
+      "source_file": "make-open-data/1_data/prepare/revenu/revenu_commune.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.7,
+      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "source": "filosofi_commune_2021",
+      "target": "revenu_commune"
+    },
+    {
+      "source_dataset": "seveso_2024",
+      "target_dataset": "sites_seveso",
+      "source_file": "make-open-data/1_data/prepare/risques/sites_seveso.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "seveso_2024",
+      "target": "sites_seveso"
+    },
+    {
+      "source_dataset": "professionels_sante",
+      "target_dataset": "professionels_sante_departement",
+      "source_file": "make-open-data/1_data/prepare/sante/professionels_sante_departement.sql",
+      "source_line": null,
+      "transformation_type": "sql_select",
+      "confidence": 0.95,
+      "confidence_reason": "extracted via sqlglot from direct SELECT with no Jinja substitution",
+      "source": "professionels_sante",
+      "target": "professionels_sante_departement"
+    }
+  ]
+}

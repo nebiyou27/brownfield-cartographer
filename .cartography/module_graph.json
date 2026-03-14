@@ -1,0 +1,369 @@
+{
+  "directed": true,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "id": "makeopendata",
+      "source_file": "make-open-data\\dbt_project.yml",
+      "source_line": null,
+      "description": "",
+      "file_type": "yaml",
+      "logical_name": "makeopendata"
+    },
+    {
+      "id": "extract/__init__.py",
+      "source_file": "extract/__init__.py",
+      "source_line": null,
+      "description": "Python module with 0 imports, 0 data-flow edges",
+      "file_type": "python",
+      "logical_name": "__init__",
+      "git_change_velocity": 2
+    },
+    {
+      "id": "load/loaders.py",
+      "source_file": "load/loaders.py",
+      "source_line": null,
+      "description": "Python module with 8 imports, 9 data-flow edges",
+      "file_type": "python",
+      "logical_name": "loaders",
+      "git_change_velocity": 5
+    },
+    {
+      "id": "load/__init__.py",
+      "source_file": "load/__init__.py",
+      "source_line": null,
+      "description": "Python module with 0 imports, 0 data-flow edges",
+      "file_type": "python",
+      "logical_name": "__init__",
+      "git_change_velocity": 1
+    },
+    {
+      "id": "load/__main__.py",
+      "source_file": "load/__main__.py",
+      "source_line": null,
+      "description": "Python module with 6 imports, 1 data-flow edges",
+      "file_type": "python",
+      "logical_name": "__main__",
+      "git_change_velocity": 3
+    },
+    {
+      "id": "tests/conftest.py",
+      "source_file": "tests/conftest.py",
+      "source_line": null,
+      "description": "Python module with 0 imports, 0 data-flow edges",
+      "file_type": "python",
+      "logical_name": "conftest",
+      "git_change_velocity": 1
+    },
+    {
+      "id": "tests/__init__.py",
+      "source_file": "tests/__init__.py",
+      "source_line": null,
+      "description": "Python module with 0 imports, 0 data-flow edges",
+      "file_type": "python",
+      "logical_name": "__init__",
+      "git_change_velocity": 1
+    },
+    {
+      "id": "tests/fixtures/db.py",
+      "source_file": "tests/fixtures/db.py",
+      "source_line": null,
+      "description": "Python module with 3 imports, 0 data-flow edges",
+      "file_type": "python",
+      "logical_name": "db",
+      "git_change_velocity": 1
+    },
+    {
+      "id": "tests/fixtures/__init__.py",
+      "source_file": "tests/fixtures/__init__.py",
+      "source_line": null,
+      "description": "Python module with 0 imports, 0 data-flow edges",
+      "file_type": "python",
+      "logical_name": "__init__",
+      "git_change_velocity": 1
+    },
+    {
+      "id": "tests/load/test_loaders.py",
+      "source_file": "tests/load/test_loaders.py",
+      "source_line": null,
+      "description": "Python module with 8 imports, 3 data-flow edges",
+      "file_type": "python",
+      "logical_name": "test_loaders",
+      "git_change_velocity": 3
+    },
+    {
+      "id": "tests/load/__init__.py",
+      "source_file": "tests/load/__init__.py",
+      "source_line": null,
+      "description": "Python module with 0 imports, 0 data-flow edges",
+      "file_type": "python",
+      "logical_name": "__init__",
+      "git_change_velocity": 1
+    },
+    {
+      "id": "utils/generer_doc_recenssement.py",
+      "source_file": "utils/generer_doc_recenssement.py",
+      "source_line": null,
+      "description": "Python module with 1 imports, 1 data-flow edges",
+      "file_type": "python",
+      "logical_name": "generer_doc_recenssement",
+      "git_change_velocity": 1
+    },
+    {
+      "id": "<dynamic>:execute:load/loaders.py:35",
+      "source_file": "load/loaders.py",
+      "source_line": 35,
+      "description": "execute() call",
+      "dataset_type": "database_query",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:read_json:load/loaders.py:59",
+      "source_file": "load/loaders.py",
+      "source_line": 59,
+      "description": "read_json() call",
+      "dataset_type": "file_source",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:to_csv:load/loaders.py:60",
+      "source_file": "load/loaders.py",
+      "source_line": 60,
+      "description": "to_csv() call",
+      "dataset_type": "file_sink",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:read_csv:load/loaders.py:70",
+      "source_file": "load/loaders.py",
+      "source_line": 70,
+      "description": "read_csv() call",
+      "dataset_type": "file_source",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:execute:load/loaders.py:99",
+      "source_file": "load/loaders.py",
+      "source_line": 99,
+      "description": "execute() call",
+      "dataset_type": "database_query",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:execute:load/loaders.py:105",
+      "source_file": "load/loaders.py",
+      "source_line": 105,
+      "description": "execute() call",
+      "dataset_type": "database_query",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:execute:load/loaders.py:112",
+      "source_file": "load/loaders.py",
+      "source_line": 112,
+      "description": "execute() call",
+      "dataset_type": "database_query",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:create_engine:load/loaders.py:144",
+      "source_file": "load/loaders.py",
+      "source_line": 144,
+      "description": "create_engine() call",
+      "dataset_type": "database",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "<dynamic>:to_postgis:load/loaders.py:148",
+      "source_file": "load/loaders.py",
+      "source_line": 148,
+      "description": "to_postgis() call",
+      "dataset_type": "file_sink",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "SELECT * from test_sources.test_load_file_to_pg",
+      "source_file": "tests/load/test_loaders.py",
+      "source_line": 111,
+      "description": "execute() call",
+      "dataset_type": "database_query",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
+      "id": "4_seeds/logement_2020_valeurs.csv",
+      "source_file": "utils/generer_doc_recenssement.py",
+      "source_line": 14,
+      "description": "read_csv() call",
+      "dataset_type": "file_source",
+      "columns": [],
+      "column_descriptions": {}
+    }
+  ],
+  "edges": [
+    {
+      "source_dataset": "load/loaders.py",
+      "target_dataset": "<dynamic>:to_csv:load/loaders.py:60",
+      "source_file": "load/loaders.py",
+      "source_line": 60,
+      "transformation_type": "produces",
+      "confidence": 0.6,
+      "confidence_reason": "inferred from dynamic to_csv() call (f-string or variable)",
+      "source": "load/loaders.py",
+      "target": "<dynamic>:to_csv:load/loaders.py:60"
+    },
+    {
+      "source_dataset": "load/loaders.py",
+      "target_dataset": "<dynamic>:to_postgis:load/loaders.py:148",
+      "source_file": "load/loaders.py",
+      "source_line": 148,
+      "transformation_type": "produces",
+      "confidence": 0.6,
+      "confidence_reason": "inferred from dynamic to_postgis() call (f-string or variable)",
+      "source": "load/loaders.py",
+      "target": "<dynamic>:to_postgis:load/loaders.py:148"
+    },
+    {
+      "source_dataset": "load/loaders.py",
+      "target_dataset": "load/__main__.py",
+      "source_file": "load/__main__.py",
+      "source_line": 11,
+      "transformation_type": "imports",
+      "confidence": 0.95,
+      "confidence_reason": "structural Python import of 'load.loaders'",
+      "source": "load/loaders.py",
+      "target": "load/__main__.py"
+    },
+    {
+      "source_dataset": "load/loaders.py",
+      "target_dataset": "tests/load/test_loaders.py",
+      "source_file": "tests/load/test_loaders.py",
+      "source_line": 10,
+      "transformation_type": "imports",
+      "confidence": 0.95,
+      "confidence_reason": "structural Python import of 'load.loaders'",
+      "source": "load/loaders.py",
+      "target": "tests/load/test_loaders.py"
+    },
+    {
+      "source_dataset": "load/__init__.py",
+      "target_dataset": "tests/load/test_loaders.py",
+      "source_file": "tests/load/test_loaders.py",
+      "source_line": 9,
+      "transformation_type": "imports",
+      "confidence": 0.95,
+      "confidence_reason": "structural Python import of 'load'",
+      "source": "load/__init__.py",
+      "target": "tests/load/test_loaders.py"
+    },
+    {
+      "source_dataset": "<dynamic>:execute:load/loaders.py:35",
+      "target_dataset": "load/loaders.py",
+      "source_file": "load/loaders.py",
+      "source_line": 35,
+      "transformation_type": "consumes",
+      "confidence": 0.6,
+      "confidence_reason": "inferred from dynamic execute() call (f-string or variable)",
+      "source": "<dynamic>:execute:load/loaders.py:35",
+      "target": "load/loaders.py"
+    },
+    {
+      "source_dataset": "<dynamic>:read_json:load/loaders.py:59",
+      "target_dataset": "load/loaders.py",
+      "source_file": "load/loaders.py",
+      "source_line": 59,
+      "transformation_type": "consumes",
+      "confidence": 0.6,
+      "confidence_reason": "inferred from dynamic read_json() call (f-string or variable)",
+      "source": "<dynamic>:read_json:load/loaders.py:59",
+      "target": "load/loaders.py"
+    },
+    {
+      "source_dataset": "<dynamic>:read_csv:load/loaders.py:70",
+      "target_dataset": "load/loaders.py",
+      "source_file": "load/loaders.py",
+      "source_line": 70,
+      "transformation_type": "consumes",
+      "confidence": 0.6,
+      "confidence_reason": "inferred from dynamic read_csv() call (f-string or variable)",
+      "source": "<dynamic>:read_csv:load/loaders.py:70",
+      "target": "load/loaders.py"
+    },
+    {
+      "source_dataset": "<dynamic>:execute:load/loaders.py:99",
+      "target_dataset": "load/loaders.py",
+      "source_file": "load/loaders.py",
+      "source_line": 99,
+      "transformation_type": "consumes",
+      "confidence": 0.6,
+      "confidence_reason": "inferred from dynamic execute() call (f-string or variable)",
+      "source": "<dynamic>:execute:load/loaders.py:99",
+      "target": "load/loaders.py"
+    },
+    {
+      "source_dataset": "<dynamic>:execute:load/loaders.py:105",
+      "target_dataset": "load/loaders.py",
+      "source_file": "load/loaders.py",
+      "source_line": 105,
+      "transformation_type": "consumes",
+      "confidence": 0.6,
+      "confidence_reason": "inferred from dynamic execute() call (f-string or variable)",
+      "source": "<dynamic>:execute:load/loaders.py:105",
+      "target": "load/loaders.py"
+    },
+    {
+      "source_dataset": "<dynamic>:execute:load/loaders.py:112",
+      "target_dataset": "load/loaders.py",
+      "source_file": "load/loaders.py",
+      "source_line": 112,
+      "transformation_type": "consumes",
+      "confidence": 0.6,
+      "confidence_reason": "inferred from dynamic execute() call (f-string or variable)",
+      "source": "<dynamic>:execute:load/loaders.py:112",
+      "target": "load/loaders.py"
+    },
+    {
+      "source_dataset": "<dynamic>:create_engine:load/loaders.py:144",
+      "target_dataset": "load/loaders.py",
+      "source_file": "load/loaders.py",
+      "source_line": 144,
+      "transformation_type": "consumes",
+      "confidence": 0.6,
+      "confidence_reason": "inferred from dynamic create_engine() call (f-string or variable)",
+      "source": "<dynamic>:create_engine:load/loaders.py:144",
+      "target": "load/loaders.py"
+    },
+    {
+      "source_dataset": "SELECT * from test_sources.test_load_file_to_pg",
+      "target_dataset": "tests/load/test_loaders.py",
+      "source_file": "tests/load/test_loaders.py",
+      "source_line": 111,
+      "transformation_type": "consumes",
+      "confidence": 0.75,
+      "confidence_reason": "inferred from literal argument in execute() call",
+      "source": "SELECT * from test_sources.test_load_file_to_pg",
+      "target": "tests/load/test_loaders.py"
+    },
+    {
+      "source_dataset": "4_seeds/logement_2020_valeurs.csv",
+      "target_dataset": "utils/generer_doc_recenssement.py",
+      "source_file": "utils/generer_doc_recenssement.py",
+      "source_line": 14,
+      "transformation_type": "consumes",
+      "confidence": 0.75,
+      "confidence_reason": "inferred from literal argument in read_csv() call",
+      "source": "4_seeds/logement_2020_valeurs.csv",
+      "target": "utils/generer_doc_recenssement.py"
+    }
+  ]
+}

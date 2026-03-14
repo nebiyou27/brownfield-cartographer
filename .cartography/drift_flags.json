@@ -1,0 +1,38 @@
+{
+  "load/loaders.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "load/__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "tests/conftest.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "tests/__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "tests/fixtures/__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "tests/load/test_loaders.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "tests/load/__init__.py": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "utils/generer_doc_recenssement.py": {
+    "verdict": "DRIFT",
+    "explanation": "The docstring mentions \"generating documentation for schemas\" but lacks specific details about the code's logic, data processing, or output format. The implementation, however, explicitly shows how the code reads a CSV, processes data, and prints formatted output. The docstring's vague description and missing context significantly misrepresent the code's purpose."
+  },
+  "4_seeds/logement_2020_valeurs.csv": {
+    "verdict": "DRIFT",
+    "explanation": "The docstring claims the code generates documentation but actually prints data without creating any documentation. It also includes a warning about checking values, which is not part of the implementation."
+  }
+}

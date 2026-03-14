@@ -18,7 +18,6 @@ analysis_log.txt
 *.txt
 
 # Directories
-.cartography/
 report/
 
 # Coverage reports

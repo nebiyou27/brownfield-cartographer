@@ -1,0 +1,361 @@
+{
+  "extract/__init__.py": {
+    "hash": "1c138080cccb3d1888bf8b1b8f0557ee8ab346d44c8145c2a4abb77b202aa5de",
+    "purpose": "The module enables the manual extraction of data from source systems to storage, leveraging the Lake House approach to manage data movement, despite the complexity and infrequency of the process. It serves as a critical component for transitioning data into storage formats required by downstream analytics or processing workflows.",
+    "drift": null
+  },
+  "load/loaders.py": {
+    "hash": "ffe29aa20dbfdf1c7b38779b9c828b601204a7e49b13e0689c0fc95348fb5759",
+    "purpose": "The module enables the ingestion of structured data (CSV, JSON, shapefiles) from external storage into a PostgreSQL database, facilitating data integration and persistent storage for downstream applications. It handles file downloading, format conversion, and table creation with proper schema management, ensuring data is correctly structured and validated before insertion.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "load/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module provides functions to load data and configuration parameters from various sources, enabling applications to retrieve and initialize data efficiently, thereby supporting scalable and flexible data processing workflows.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "load/__main__.py": {
+    "hash": "4bac541c96f92513dd29f5946d0f3804e467ed8c57114d45cb1a08af5326c06a",
+    "purpose": "This module extracts data from specified sources and loads it into a PostgreSQL database, handling different file formats (CSV, JSON, shapefiles) and skipping operations in non-production environments. It ensures data is properly processed and stored according to the configuration defined in the `storage_to_pg.yml` file.",
+    "drift": null
+  },
+  "tests/conftest.py": {
+    "hash": "278387454f599ba96ddaea086eedc820c3ea1da0739ff4a6291d741c94ea593d",
+    "purpose": "The module enables pytest tests to access a database for integration and unit testing, ensuring that the application's logic is validated against real-world data, which is critical for maintaining data integrity and functionality in production.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "tests/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module serves as a central repository for test cases, facilitating organization and management of test suites across different modules. It ensures that tests are structured and accessible, enabling efficient maintenance and execution. By providing a standardized structure, it enhances collaboration and reduces duplication across the codebase.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "tests/fixtures/db.py": {
+    "hash": "b98ddc98a6afdcfb092df138c23c18697dcda85999e14a597b3be480dd7f9881",
+    "purpose": "This module provides a reliable, secure connection to a test PostgreSQL database by configuring environment variables and establishing a persistent connection, ensuring tests can seamlessly access the test database without manual setup. It ensures the database is available for use by waiting until the service is responsive, facilitating consistent and reliable test execution.",
+    "drift": null
+  },
+  "tests/fixtures/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module ensures that the test directory is properly configured by creating necessary directories and setting up test environments, enabling seamless execution of test cases and maintaining a structured, organized test framework. It facilitates the isolation of test data and configurations, ensuring consistency across different test runs.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "tests/load/test_loaders.py": {
+    "hash": "d3bad365eedc578154e1063f3d426e32bbd923f11e85f45c1fd9c0dc0cf572cc",
+    "purpose": "The module enables the ingestion of CSV data into a PostgreSQL database, ensuring that the data is correctly formatted and mapped to the target schema. It verifies the integrity of the loaded data through automated tests, allowing for reliable data entry and retrieval.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "tests/load/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module manages test cases and provides the necessary configurations to run tests, ensuring that the test environment is set up correctly for the business requirements. It facilitates the execution of test scenarios by loading test data and initializing dependencies, enabling reliable and consistent test runs across different environments.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "utils/generer_doc_recenssement.py": {
+    "hash": "1e2d3a29c26e3702620a23b6afdbc92eb91985445eeca42ccbf6ad15e978c2c3",
+    "purpose": "The module generates structured documentation for demography-related variables in a commune, extracting and formatting data from a CSV file to provide clear insights into household counts and response patterns. It ensures consistent labeling and presentation of demographic data, aiding in data interpretation and system documentation.",
+    "drift": {
+      "verdict": "DRIFT",
+      "explanation": "The docstring mentions \"generating documentation for schemas\" but lacks specific details about the code's logic, data processing, or output format. The implementation, however, explicitly shows how the code reads a CSV, processes data, and prints formatted output. The docstring's vague description and missing context significantly misrepresent the code's purpose."
+    }
+  },
+  "4_seeds/logement_2020_valeurs.csv": {
+    "hash": "1e2d3a29c26e3702620a23b6afdbc92eb91985445eeca42ccbf6ad15e978c2c3",
+    "purpose": "This module generates a structured documentation of demographic values from a CSV file, enabling users to understand the relationship between different variables and their respective values in the dataset. It provides a clear overview of the data schema, including the number of households, variable codes, and descriptive labels, which is essential for data preparation and analysis workflows.",
+    "drift": {
+      "verdict": "DRIFT",
+      "explanation": "The docstring claims the code generates documentation but actually prints data without creating any documentation. It also includes a warning about checking values, which is not part of the implementation."
+    }
+  },
+  "app.py": {
+    "hash": "0ab9ac836f4dcbf76b62e9604cae2dfeef0d99877e7f56d611d2637772944391",
+    "purpose": "This module enables the analysis and visualization of codebase repositories to track data flows and dependencies, providing insights into how data moves through the codebase and identifying potential issues or areas for optimization. It allows users to generate interactive visualizations of module and lineage graphs, facilitating deeper understanding of complex code structures and data relationships.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "make-open-data/extract/__init__.py": {
+    "hash": "1c138080cccb3d1888bf8b1b8f0557ee8ab346d44c8145c2a4abb77b202aa5de",
+    "purpose": "The module facilitates manual extraction of data from source systems into a storage format, addressing the challenges of complex data structures (e.g., zip files, nested folders) and the limitations of automation, ensuring data is transferred efficiently within the Lake House architecture.",
+    "drift": null
+  },
+  "make-open-data/load/loaders.py": {
+    "hash": "ffe29aa20dbfdf1c7b38779b9c828b601204a7e49b13e0689c0fc95348fb5759",
+    "purpose": "The module enables the ingestion of structured data from storage sources, such as CSV files and shapefiles, into a PostgreSQL database, facilitating data integration and analysis workflows. It handles file format conversion, schema management, and efficient data loading via COPY commands, ensuring data is properly structured and committed to the database for subsequent use.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "make-open-data/load/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module facilitates the loading of diverse data sources into a standardized format, enabling efficient data processing and integration across the application. It ensures consistency in data representation, allowing different components to work with structured data seamlessly, which is critical for maintaining data integrity and enabling downstream analytics or transformations.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "make-open-data/load/__main__.py": {
+    "hash": "4bac541c96f92513dd29f5946d0f3804e467ed8c57114d45cb1a08af5326c06a",
+    "purpose": "This module extracts and loads data from specified sources into a PostgreSQL database, supporting CSV and shapefile formats, and ensures compliance with production environment constraints, such as skipping non-production processing and handling temporary storage for file loading.",
+    "drift": null
+  },
+  "make-open-data/tests/conftest.py": {
+    "hash": "278387454f599ba96ddaea086eedc820c3ea1da0739ff4a6291d741c94ea593d",
+    "purpose": "This module configures pytest to use a predefined database fixture, enabling tests to access a structured database environment without requiring real-world database setup, thereby facilitating efficient and reliable testing of data integrity and functionality.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "make-open-data/tests/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module provides the foundational infrastructure for testing the `make-open-data` project, enabling developers to run, manage, and configure test cases efficiently. It ensures that the codebase is thoroughly validated through automated testing, supporting continuous integration and quality assurance processes.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "make-open-data/tests/fixtures/db.py": {
+    "hash": "b98ddc98a6afdcfb092df138c23c18697dcda85999e14a597b3be480dd7f9881",
+    "purpose": "This module provides a reliable, session-scoped fixture to establish a connection to a test PostgreSQL database, enabling seamless test execution by securely configuring environment variables and ensuring the database is ready for use. It ensures consistency across test runs by maintaining a stable connection to the test environment, facilitating safe and efficient testing of application functionality.",
+    "drift": null
+  },
+  "make-open-data/tests/fixtures/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides utilities and data structures for testing purposes, enabling developers to simulate various scenarios and validate their code against different conditions. It ensures that the test suite can run efficiently by offering necessary components without exposing internal implementation details.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "make-open-data/tests/load/test_loaders.py": {
+    "hash": "d3bad365eedc578154e1063f3d426e32bbd923f11e85f45c1fd9c0dc0cf572cc",
+    "purpose": "The module enables the loading of CSV files into a PostgreSQL database, ensuring data integrity and correctness by specifying parameters like delimiter and schema. It allows for efficient data importation and verification through test scenarios, validating that the loaded data matches expected formats and counts.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "make-open-data/tests/load/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module sets up the test environment for loading open data, organizing directories for test data, and configuring settings necessary for the tests to run successfully, ensuring that the data loading functionalities can be validated against realistic scenarios.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "make-open-data/utils/generer_doc_recenssement.py": {
+    "hash": "1e2d3a29c26e3702620a23b6afdbc92eb91985445eeca42ccbf6ad15e978c2c3",
+    "purpose": "This module generates a structured documentation overview of housing demographic data for communes, aggregating and formatting statistics from a CSV dataset to provide clear insights into population distribution and household counts across different modalities. It enables stakeholders to quickly understand and analyze demographic trends specific to each commune.",
+    "drift": {
+      "verdict": "DRIFT",
+      "explanation": "The DOCSTRING provides a general purpose statement and a warning about labels, but it does not accurately describe the implementation details (e.g., how it reads CSV files, filters data, or formats output). It misses the specific functionality and steps outlined in the implementation."
+    }
+  },
+  "src/cli.py": {
+    "hash": "b209a59966a03510d3c02d045f38362611d2a84b6d7ee4f5f68804acec7a57bb",
+    "purpose": "The module provides a CLI interface for analyzing and querying repository artifacts, enabling efficient exploration of modular dependencies and data lineage. It allows users to run full analysis pipelines or interactively explore artifacts using the Navigator agent, supporting data engineering workflows and improving understanding of complex systems.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "src/logger.py": {
+    "hash": "44d7c2b6237823e352988d42271f5025dc963620bb30d9d3f73fda619f1f8a63",
+    "purpose": "The module provides a centralized logging system for Brownfield Cartographer, enabling developers to configure log levels and formats dynamically via environment variables. It ensures consistent and structured logging across modules, facilitating troubleshooting and monitoring by isolating logs to specific namespaces and controlling verbosity with flexibility.",
+    "drift": null
+  },
+  "src/orchestrator.py": {
+    "hash": "ee0c0cfafe532090ea80f168a9bc34097a05b8c071596150d7b775e560de0bf3",
+    "purpose": "The Orchestrator module coordinates the execution of key agents (Surveyor, Hydrologist, Semanticist, and Archivist) to analyze and document data workflows, producing structured output files that enable comprehensive data governance and reporting. It ensures seamless integration of structural analysis, data lineage tracking, and semantic enrichment to support informed decision-making and traceability across the data pipeline.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "src/path_utils.py": {
+    "hash": "e1e3a368576c05de21307a1cc7948f926715f5eac356c042fc06aec35e7bc047",
+    "purpose": "This module ensures consistent and stable path representations across operating systems by normalizing file-like keys to POSIX format, allowing legacy Windows-style aliases to persist while promoting the use of standardized POSIX keys. It maintains compatibility with existing callers by preserving old aliases until they are no longer needed, ensuring seamless transition between different OS environments.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "src/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module acts as a standard initialization file for the project, containing essential imports and configurations to ensure proper setup and execution of the application. It facilitates the integration of various components by providing access to helper functions and classes defined in other modules, supporting the broader goal of maintaining a structured and maintainable codebase.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "src/agents/archivist.py": {
+    "hash": "9a1e4943f383743a38b9d9d00dfef4eca57421654ad35bedfe098f5fcc204aa6",
+    "purpose": "The Archivist module generates a living documentation file, CODEBASE.md, that outlines the project's architecture, including module counts, domain mappings, and data flow, to aid AI coding agents in understanding the system's structure. It also creates an audit trace log to ensure reproducibility of the data engineering process, providing visibility into transformation paths and dependencies.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "src/agents/hydrologist.py": {
+    "hash": "c0203b1b99b8aaa4aa51fb1f2341287920ff23c52b0a6487a34b4ebbc36fb165",
+    "purpose": "The module traces data flow through SQL models and YAML configurations, building a comprehensive data lineage graph to enable transparency and compliance. It captures how datasets transform across databases, supporting audit trails and ensuring data integrity in complex workflows. By integrating SQL analysis with existing macro paths, it provides a unified view of data movement, aiding in governance and debugging efforts.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "src/agents/navigator.py": {
+    "hash": "1880b96500a34b260c382f366e7953274f9ab146720996d234d90e9c86cfde8c",
+    "purpose": "[purpose extraction failed: [WinError 10054] An existing connection was forcibly closed by the remote host]",
+    "drift": null
+  },
+  "src/agents/semanticist.py": {
+    "hash": "f7fbf65f6061590fc87c9829c7688b49047c82b326dac0bfaeec403f64306a4d",
+    "purpose": "The module enables the extraction of a codebase's business purpose by generating concise, business-relevant summaries of code sections, detecting inconsistencies between documentation and implementation, and facilitating initial onboarding questions for new developers. It leverages optimized models for efficiency, prioritizing fast, cost-effective purpose statements and thorough, slow synthesis for detailed insights.",
+    "drift": null
+  },
+  "src/agents/surveyor.py": {
+    "hash": "000e1dcdb90193df9a83514b435fdaf44204be34fb09804ca712fc74010a3c2f",
+    "purpose": "The Surveyor module analyzes a repository's structure, builds a dependency graph of modules and datasets, and tracks code changes using git velocity data to support efficient code management and dependency analysis. It enables developers to understand how different components of the codebase are interconnected and quantify the impact of code changes over time.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "src/agents/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides a framework for managing agents that handle various business tasks, enabling automation and efficient task execution across different processes. This allows the system to scale and handle complex workflows by delegating tasks to specialized agents, optimizing resource utilization and improving operational efficiency.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "src/analyzers/dag_config_parser.py": {
+    "hash": "e161df27f74cb8f1ff71ba96a5c63788ffcfbce1db84f3c12231e97231879364",
+    "purpose": "This module enables the extraction of database model definitions from YAML schema files, allowing for accurate data modeling and error handling when parsing fails. It ensures that model names, descriptions, and column details are properly extracted and validated, supporting the integration of database schemas into the system's data modeling framework.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "src/analyzers/git_analyzer.py": {
+    "hash": "d1710df9735710ad346e67c4448ed7ecd3f4a7bdfbb045b32bd4a7d9d7dccd1f",
+    "purpose": "The module calculates the \"change velocity\" of individual files and the entire codebase by determining how many commits have touched each file, providing insights into development activity and risk. It enables stakeholders to monitor how frequently specific parts of the codebase are being modified, aiding in assessing project health and prioritizing changes.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "src/analyzers/sql_lineage.py": {
+    "hash": "3d294862fb50d4386a94c5c3c6997d872d0c8c160395f2bec91e55af5e0eac66",
+    "purpose": "This module prepares SQL queries for parsing by replacing common artifacts like empty CTEs, Jinja placeholders, and union statements, ensuring compatibility with sqlglot for accurate lineage tracking. It enables the generation of detailed data flow diagrams by transforming raw SQL into a format that can be processed by the library, facilitating transparent analysis of data sources and transformations.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "src/analyzers/tree_sitter_analyzer.py": {
+    "hash": "b92fb02dc43a67ad88b6d7ae8fd81e4303b59def54a91bb33cc366b4fdbfee6d",
+    "purpose": "The module analyzes Python files to extract module-level imports, data source reads (consumes), data sink writes (produces), and dynamic references, aiding in code understanding and maintenance by mapping out data flow and resolving imports.",
+    "drift": null
+  },
+  "src/analyzers/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides a framework for registering and managing various analysis analyzers, enabling the business to dynamically add and configure analysis tools as needed. It supports extensibility and flexibility, allowing developers to integrate custom analysis methods without modifying core code, thereby enhancing the system's adaptability to different business requirements.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "src/graph/knowledge_graph.py": {
+    "hash": "b98c9daf4c9816e76eef61adfa8009683e7b43c5d818654d0b81a6efba751421",
+    "purpose": "The module manages a knowledge graph that represents both the module structure and data lineage, enabling visualization and retrieval of relationships between code components and datasets. This supports traceability and analysis in data workflows, aiding in understanding data flows and dependencies within the codebase.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "src/graph/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides foundational utilities for working with graph data structures, enabling efficient manipulation of nodes, edges, and relationships within interconnected systems. It supports core operations such as graph construction, traversal, and query execution, which are critical for applications involving network analysis, social graph processing, or dependency modeling. By abstracting graph operations, the module enhances scalability and flexibility for building complex data-driven solutions.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "src/models/schemas.py": {
+    "hash": "0610640bb59f3344222bbbe909b5c2cd6dfd286bb6b11193ee523af8776ce0c4",
+    "purpose": "This module defines data models for representing nodes in graph-based dependency structures, enabling the surveyor and hydrologist tools to track file dependencies and data lineage within the jaffle_shop repository. It supports structured mapping of physical files (ModuleNode) and logical data entities (DatasetNode) with traceability for transformations and dependencies.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "src/models/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module serves as a centralized repository for defining data models, enabling the application to represent business entities and their relationships in a structured and consistent manner. It provides a unified interface for interacting with these models, facilitating data abstraction and ensuring that the application's data structure aligns with evolving business requirements. This helps maintain clarity, scalability, and maintainability as the application grows.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "tests/test_agents_and_analyzers.py": {
+    "hash": "082b80f5cca5393f70469b66f4482f48e4669eafdd471cb9674ae3300fe55612",
+    "purpose": "This module constructs and analyzes knowledge graphs to track data lineage, detect changes, and summarize purposes, aiding in data governance and operational transparency by providing structured insights into how datasets and transformations interact.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "tests/test_cli_and_navigator.py": {
+    "hash": "fbfc13a246f0b3ccc2cd361f9ed4e05d0400953e9b1af29066db0b606aba8ce4",
+    "purpose": "The module enables data engineers to query, trace, and explain data lineage within a pipeline, facilitating transparency and accountability in data transformations. It allows for navigating upstream and downstream data flows, identifying key transformations, and generating detailed explanations of module interactions, which supports data governance and troubleshooting.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "tests/test_dag_config_parser.py": {
+    "hash": "1a302338fee042674c90af07d466dd8bc31a1600430ac705330cfd096e2a8e0a",
+    "purpose": "The module parses and configures data pipeline components using YAML files, enabling users to define and manage their data workflows through structured configuration. It retrieves and resolves documentation references, supports schema-based node extraction for modeling, and handles parse failures to ensure robust configuration management. This facilitates efficient data pipeline setup and metadata retrieval across different data sources and models.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "tests/test_orchestrator.py": {
+    "hash": "85e96f81c7914d3bfb7b0d1518217f7a70ac4857db76e675df019bc77bb0be66",
+    "purpose": "This module orchestrates the execution of data analysis workflows, ensuring that data flows are traced, results are archived, and necessary reports are generated. It handles the integration of surveying module graphs, tracing lineage through hydrological steps, and generating business-relevant outputs such as purpose statements and drift flags, supporting efficient data pipeline management and documentation.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "tests/test_p0_p1.py": {
+    "hash": "cf2bf8e2f5afcf843736cfb2da3d0e1563303e6d602c1905fe0de83e41153685",
+    "purpose": "This module ensures accurate data lineage by extracting dependencies between datasets, expanding macros from multiple directories, and identifying import edges for internal modules, which enhances transparency and maintainability in the data pipeline. It verifies that macro expansions respect directory structures and that Python imports correctly reflect internal module relationships, supporting reliable data tracking and debugging.",
+    "drift": null
+  }
+}
