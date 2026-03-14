@@ -1,5 +1,8 @@
 import json
+import types
 
+from src.graph.knowledge_graph import KnowledgeGraph
+from src.models.schemas import ModuleNode
 from src.orchestrator import Orchestrator
 
 
@@ -94,13 +97,15 @@ class StubArchivist:
         )
 
 
-def build_orchestrator(monkeypatch, tmp_path, semanticist_cls=StubSemanticist, skip=False):
+def build_orchestrator(
+    monkeypatch, tmp_path, semanticist_cls=StubSemanticist, skip=False, incremental=False
+):
     monkeypatch.chdir(tmp_path)
     monkeypatch.setattr("src.orchestrator.Surveyor", StubSurveyor)
     monkeypatch.setattr("src.orchestrator.Hydrologist", StubHydrologist)
     monkeypatch.setattr("src.orchestrator.Semanticist", semanticist_cls)
     monkeypatch.setattr("src.orchestrator.Archivist", StubArchivist)
-    return Orchestrator(str(tmp_path), skip_semanticist=skip)
+    return Orchestrator(str(tmp_path), skip_semanticist=skip, incremental=incremental)
 
 
 def test_run_analysis_saves_outputs_and_marks_orphans(monkeypatch, tmp_path):
@@ -198,3 +203,90 @@ def test_find_orphaned_nodes_returns_only_isolated_nodes(monkeypatch, tmp_path):
     orphaned = orchestrator.find_orphaned_nodes(graph)
 
     assert set(orphaned) == {"c", "d"}
+
+
+def test_incremental_no_changes_uses_saved_graph_and_updates_state(monkeypatch, tmp_path):
+    output_dir = tmp_path / ".cartography"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    module_graph = KnowledgeGraph("module")
+    module_graph.graph.add_node("module.py", source_file="module.py")
+    module_graph.save_json(str(output_dir / "module_graph.json"))
+
+    lineage_graph = KnowledgeGraph("lineage")
+    lineage_graph.graph.add_edge("raw.orders", "stg.orders", source_file="models/stg_orders.sql")
+    lineage_graph.save_json(str(output_dir / "lineage_graph.json"))
+
+    (output_dir / "state.json").write_text('{"commit_hash":"oldhash"}', encoding="utf-8")
+    (output_dir / "purpose_statements.json").write_text("{}", encoding="utf-8")
+    (output_dir / "drift_flags.json").write_text("{}", encoding="utf-8")
+    (output_dir / "domain_map.json").write_text("{}", encoding="utf-8")
+    (output_dir / "budget_summary.json").write_text("{}", encoding="utf-8")
+
+    def _run(cmd, check, capture_output, text):
+        if cmd[-2:] == ["rev-parse", "HEAD"]:
+            return types.SimpleNamespace(stdout="newhash\n")
+        if "diff" in cmd:
+            return types.SimpleNamespace(stdout="")
+        raise AssertionError(f"Unexpected command: {cmd}")
+
+    monkeypatch.setattr("src.orchestrator.subprocess.run", _run)
+    orchestrator = build_orchestrator(monkeypatch, tmp_path, incremental=True)
+
+    orchestrator.run_analysis()
+
+    assert orchestrator.surveyor.calls == []
+    assert len(orchestrator.archivist.calls) == 1
+    saved_state = json.loads((output_dir / "state.json").read_text(encoding="utf-8"))
+    assert saved_state["commit_hash"] == "newhash"
+
+
+def test_incremental_changed_python_file_reanalyzes_only_changed(monkeypatch, tmp_path):
+    output_dir = tmp_path / ".cartography"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    module_graph = KnowledgeGraph("module")
+    module_graph.graph.add_node("old.py", source_file="old.py")
+    module_graph.save_json(str(output_dir / "module_graph.json"))
+    lineage_graph = KnowledgeGraph("lineage")
+    lineage_graph.save_json(str(output_dir / "lineage_graph.json"))
+
+    (output_dir / "state.json").write_text('{"commit_hash":"oldhash"}', encoding="utf-8")
+    (output_dir / "purpose_statements.json").write_text("{}", encoding="utf-8")
+    (output_dir / "drift_flags.json").write_text("{}", encoding="utf-8")
+    (output_dir / "domain_map.json").write_text("{}", encoding="utf-8")
+    (output_dir / "budget_summary.json").write_text("{}", encoding="utf-8")
+
+    (tmp_path / "changed.py").write_text("x = 1\n", encoding="utf-8")
+
+    def _run(cmd, check, capture_output, text):
+        if cmd[-2:] == ["rev-parse", "HEAD"]:
+            return types.SimpleNamespace(stdout="newhash\n")
+        if "diff" in cmd:
+            return types.SimpleNamespace(stdout="changed.py\n")
+        raise AssertionError(f"Unexpected command: {cmd}")
+
+    class StubRouter:
+        def __init__(self, repo_path):
+            self.repo_path = repo_path
+
+        def analyze_file(self, file_path):
+            mod = ModuleNode(
+                id="changed.py",
+                source_file="changed.py",
+                source_line=1,
+                file_type="python",
+                logical_name="changed",
+            )
+            return mod, [], []
+
+    monkeypatch.setattr("src.orchestrator.subprocess.run", _run)
+    monkeypatch.setattr("src.orchestrator.LanguageRouter", StubRouter)
+    monkeypatch.setattr("src.orchestrator.get_git_change_velocity", lambda repo, path: 2)
+    orchestrator = build_orchestrator(monkeypatch, tmp_path, incremental=True)
+
+    orchestrator.run_analysis()
+
+    assert orchestrator.surveyor.calls == []
+    assert "changed.py" in orchestrator.module_graph.graph.nodes
+    assert orchestrator.module_graph.graph.nodes["changed.py"]["git_change_velocity"] == 2

@@ -1,4 +1,5 @@
 import json
+import subprocess
 import sys
 import types
 
@@ -13,8 +14,8 @@ def test_cli_analyze_invokes_orchestrator(monkeypatch, tmp_path):
     calls = {}
 
     class StubOrchestrator:
-        def __init__(self, repo_path, skip_semanticist):
-            calls["init"] = (repo_path, skip_semanticist)
+        def __init__(self, repo_path, skip_semanticist, incremental=False):
+            calls["init"] = (repo_path, skip_semanticist, incremental)
 
         def run_analysis(self):
             calls["ran"] = True
@@ -24,7 +25,7 @@ def test_cli_analyze_invokes_orchestrator(monkeypatch, tmp_path):
 
     cli.main()
 
-    assert calls["init"] == (str(tmp_path.resolve()), True)
+    assert calls["init"] == (str(tmp_path.resolve()), True, False)
     assert calls["ran"] is True
 
 
@@ -57,6 +58,105 @@ def test_cli_exits_when_repo_path_missing(monkeypatch):
         cli.main()
 
     assert excinfo.value.code == 1
+
+
+def test_cli_analyze_github_url_clones_then_cleans_up(monkeypatch, tmp_path):
+    calls = {}
+    cleanup = {}
+
+    class StubOrchestrator:
+        def __init__(self, repo_path, skip_semanticist, incremental=False):
+            calls["init"] = (repo_path, skip_semanticist, incremental)
+
+        def run_analysis(self):
+            calls["ran"] = True
+
+    def _mkdtemp(prefix):
+        path = tmp_path / "clone-root"
+        path.mkdir()
+        return str(path)
+
+    def _run(cmd, check, capture_output, text):
+        clone_target = cmd[-1]
+        (tmp_path / "clone-root" / "repo").mkdir()
+        calls["clone"] = cmd
+        assert check is True
+        assert capture_output is True
+        assert text is True
+        assert clone_target.endswith("repo")
+        return types.SimpleNamespace(returncode=0, stderr="")
+
+    def _rmtree(path, ignore_errors):
+        cleanup["path"] = path
+        cleanup["ignore_errors"] = ignore_errors
+
+    monkeypatch.setattr(cli, "Orchestrator", StubOrchestrator)
+    monkeypatch.setattr(cli.tempfile, "mkdtemp", _mkdtemp)
+    monkeypatch.setattr(cli.subprocess, "run", _run)
+    monkeypatch.setattr(cli.shutil, "rmtree", _rmtree)
+    monkeypatch.setattr(
+        sys, "argv", ["prog", "analyze", "https://github.com/org/repo", "--no-semanticist"]
+    )
+
+    cli.main()
+
+    assert calls["clone"][:3] == ["git", "clone", "https://github.com/org/repo"]
+    assert calls["init"][0].endswith("repo")
+    assert calls["init"][1] is True
+    assert calls["init"][2] is False
+    assert calls["ran"] is True
+    assert cleanup["path"].endswith("clone-root")
+    assert cleanup["ignore_errors"] is True
+
+
+def test_cli_analyze_github_clone_failure_exits_and_cleans_up(monkeypatch, tmp_path):
+    cleaned = {}
+
+    class StubOrchestrator:
+        def __init__(self, repo_path, skip_semanticist, incremental=False):
+            raise AssertionError("Orchestrator should not be initialized on clone failure")
+
+    def _mkdtemp(prefix):
+        path = tmp_path / "clone-root"
+        path.mkdir()
+        return str(path)
+
+    def _run(cmd, check, capture_output, text):
+        raise subprocess.CalledProcessError(returncode=128, cmd=cmd, stderr="fatal: failed")
+
+    def _rmtree(path, ignore_errors):
+        cleaned["path"] = path
+
+    monkeypatch.setattr(cli, "Orchestrator", StubOrchestrator)
+    monkeypatch.setattr(cli.tempfile, "mkdtemp", _mkdtemp)
+    monkeypatch.setattr(cli.subprocess, "run", _run)
+    monkeypatch.setattr(cli.shutil, "rmtree", _rmtree)
+    monkeypatch.setattr(sys, "argv", ["prog", "analyze", "https://github.com/org/repo"])
+
+    with pytest.raises(SystemExit) as excinfo:
+        cli.main()
+
+    assert excinfo.value.code == 1
+    assert cleaned["path"].endswith("clone-root")
+
+
+def test_cli_analyze_passes_incremental_flag(monkeypatch, tmp_path):
+    calls = {}
+
+    class StubOrchestrator:
+        def __init__(self, repo_path, skip_semanticist, incremental=False):
+            calls["init"] = (repo_path, skip_semanticist, incremental)
+
+        def run_analysis(self):
+            calls["ran"] = True
+
+    monkeypatch.setattr(cli, "Orchestrator", StubOrchestrator)
+    monkeypatch.setattr(sys, "argv", ["prog", "analyze", str(tmp_path), "--incremental"])
+
+    cli.main()
+
+    assert calls["init"] == (str(tmp_path.resolve()), False, True)
+    assert calls["ran"] is True
 
 
 def test_load_json_and_lineage_graph(monkeypatch, tmp_path):

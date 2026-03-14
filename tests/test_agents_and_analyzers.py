@@ -175,6 +175,7 @@ def test_archivist_helpers_and_archive(monkeypatch, tmp_path):
         "purpose_statements": {"src\\app.py": "Runs the pipeline"},
         "domain_map": {"src\\app.py": "core"},
         "drift_flags": {"src\\app.py": {"verdict": "DRIFT", "explanation": "docs outdated"}},
+        "day_one_answers": "Q1: Start with app flow.\nQ2: Review staging lineage.",
         "budget_summary": {
             "calls_per_model": {"qwen": 2},
             "estimated_tokens_per_model": {"qwen": 50},
@@ -190,18 +191,22 @@ def test_archivist_helpers_and_archive(monkeypatch, tmp_path):
 
     codebase = (tmp_path / ".cartography" / "CODEBASE.md").read_text(encoding="utf-8")
     audit_text = (tmp_path / ".cartography" / "audit_trace.log").read_text(encoding="utf-8")
+    onboarding = (tmp_path / ".cartography" / "onboarding_brief.md").read_text(encoding="utf-8")
 
     assert _is_pseudo("<dynamic>:temp") is True
     assert _is_macro("macros\\helper.sql") is True
-    assert "Circular Dependencies: 1" in codebase
-    assert "Orphaned Nodes: 2" in codebase
-    assert "## 5. High-Velocity Files" in codebase
-    assert "- `src/app.py` — **6** commits" in codebase
-    assert "## 6. Module Purpose Index" in codebase
-    assert "| `src/app.py` | Runs the pipeline |" in codebase
-    assert "## 7. Low-Confidence Lineage Edges" in codebase
+    assert codebase.startswith("<!-- CARTOGRAPHER v1 | generated:")
+    assert "## SECTION:ARCHITECTURE_SUMMARY" in codebase
+    assert "## SECTION:KNOWN_DEBT" in codebase
+    assert "cycles=1" in codebase
+    assert "orphans=2" in codebase
+    assert "## SECTION:HIGH_VELOCITY_FILES" in codebase
+    assert "file=src/app.py|commits=6" in codebase
+    assert "## SECTION:MODULE_PURPOSE_INDEX" in codebase
+    assert "module=src/app.py|purpose=Runs the pipeline" in codebase
+    assert "## SECTION:LOW_CONFIDENCE_LINEAGE" in codebase
     assert (
-        "⚠️ `stg.orders` -> `qa.orders_check` (0.70: jinja placeholders reduced certainty)"
+        "edge=stg.orders->qa.orders_check|confidence=0.70|reason=jinja placeholders reduced certainty"
         in codebase
     )
 
@@ -215,19 +220,36 @@ def test_archivist_helpers_and_archive(monkeypatch, tmp_path):
     for line in lines:
         entry = json.loads(line)
         assert required_keys <= set(entry.keys()), f"Missing keys in: {entry}"
-        assert isinstance(entry["confidence"], int | float), "confidence must be numeric"
-        assert 0.0 <= entry["confidence"] <= 1.0, f"confidence out of range: {entry['confidence']}"
-        assert entry["method"] in ("static", "LLM"), f"invalid method: {entry['method']}"
-        assert isinstance(entry["evidence"], str) and entry["evidence"], (
-            "evidence must be non-empty"
-        )
-        assert ":" in entry["evidence"], f"evidence should be file:line-like: {entry['evidence']}"
+        assert entry["phase"] in {"surveyor", "hydrologist", "semanticist", "archivist"}
+        if entry["confidence"] is not None:
+            assert isinstance(entry["confidence"], int | float), (
+                "confidence must be numeric or null"
+            )
+            assert 0.0 <= entry["confidence"] <= 1.0, (
+                f"confidence out of range: {entry['confidence']}"
+            )
+        assert entry["method"] in ("static", "llm"), f"invalid method: {entry['method']}"
+        if entry["evidence"] is not None:
+            assert isinstance(entry["evidence"], str) and entry["evidence"], (
+                "evidence must be non-empty when present"
+            )
+            assert ":" in entry["evidence"], (
+                f"evidence should be file:line-like: {entry['evidence']}"
+            )
 
     # Content-level checks on the JSONL entries
     all_actions = " ".join(json.loads(line_text)["action"] for line_text in lines)
-    all_evidence = " ".join(json.loads(line_text)["evidence"] for line_text in lines)
-    assert "src\\app.py" in all_actions or "src\\app.py" in all_evidence
-    assert "qwen: 2 calls, ~50 tokens" in all_actions
+    all_evidence = " ".join(json.loads(line_text)["evidence"] or "" for line_text in lines)
+    assert "module_parsed" in all_actions
+    assert "edge_added" in all_actions
+    assert "drift_flagged" in all_actions
+    assert "src/app.py" in all_evidence or "src\\app.py" in all_evidence
+
+    answer_lines = [line for line in onboarding.splitlines() if line.startswith("Q")]
+    assert answer_lines
+    for answer_line in answer_lines:
+        assert "[" in answer_line and "]" in answer_line
+        assert "`" in answer_line
 
 
 def test_archivist_module_purpose_index_uses_persisted_json(monkeypatch, tmp_path):
@@ -246,8 +268,8 @@ def test_archivist_module_purpose_index_uses_persisted_json(monkeypatch, tmp_pat
     archivist.archive(module_graph, lineage_graph, semantic_results={}, git_velocity={})
 
     codebase = (output_dir / "CODEBASE.md").read_text(encoding="utf-8")
-    assert "## 6. Module Purpose Index" in codebase
-    assert "| `src/module_a.py` | Owns A flow. |" in codebase
+    assert "## SECTION:MODULE_PURPOSE_INDEX" in codebase
+    assert "module=src/module_a.py|purpose=Owns A flow." in codebase
 
 
 def test_semanticist_helpers_and_generation(monkeypatch, tmp_path):

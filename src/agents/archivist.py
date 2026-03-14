@@ -48,8 +48,41 @@ class Archivist:
         self._generate_codebase_md(
             module_graph, lineage_graph, semantic_results, git_velocity or {}
         )
+        self._generate_onboarding_brief(module_graph, lineage_graph, semantic_results)
         self._generate_audit_trace(module_graph, lineage_graph, semantic_results)
         logger.info("===== Phase 4 Complete =====")
+
+    def _generate_onboarding_brief(
+        self,
+        module_graph: KnowledgeGraph,
+        lineage_graph: KnowledgeGraph,
+        semantic_results: dict,
+    ) -> None:
+        path = os.path.join(self.output_dir, "onboarding_brief.md")
+        raw_answers = (semantic_results.get("day_one_answers") or "").strip()
+        candidates = self._collect_evidence_candidates(module_graph, lineage_graph)
+
+        lines: list[str] = []
+        if raw_answers:
+            for line in raw_answers.splitlines():
+                stripped = line.strip()
+                if not stripped:
+                    lines.append("")
+                    continue
+                citation = self._pick_evidence_for_line(stripped, candidates)
+                if "`" in stripped and ":" in stripped:
+                    lines.append(stripped)
+                else:
+                    lines.append(f"{stripped} [{citation}]")
+        else:
+            fallback = self._pick_evidence_for_line("", candidates)
+            lines.append(f"No semantic day-one answers were generated. [{fallback}]")
+
+        with open(path, "w", encoding="utf-8") as f:
+            f.write("# FDE Day-One Onboarding Brief\n\n")
+            f.write("\n".join(lines).strip() + "\n")
+
+        logger.info("Generated onboarding_brief.md -> %s", path)
 
     # ------------------------------------------------------------------
     def _generate_codebase_md(
@@ -64,6 +97,113 @@ class Archivist:
         purpose_statements = self._load_purpose_statements(semantic_results)
         domain_map = semantic_results.get("domain_map", {})
         drift_flags = semantic_results.get("drift_flags", {})
+
+        module_count = len([n for n in module_graph.graph.nodes if not _is_pseudo(n)])
+        dataset_count = len([n for n in lineage_graph.graph.nodes if not _is_pseudo(n)])
+        edge_count = len(lineage_graph.graph.edges)
+        domain_count = len(set(domain_map.values())) if domain_map else 0
+
+        pagerank_nodes = self._get_pagerank(lineage_graph)
+        sources, sinks = self._get_sources_and_sinks(lineage_graph)
+        cycles = self._get_cycles(lineage_graph)
+        orphaned = self._get_orphans(lineage_graph)
+        anomalies = self._get_semantic_anomalies(lineage_graph, purpose_statements)
+        top_velocity = self._get_high_velocity_files(module_graph, git_velocity)
+        low_conf_edges = self._get_low_confidence_edges(lineage_graph)
+        drift_items = {
+            key: value for key, value in (drift_flags or {}).items() if not _is_pseudo(str(key))
+        }
+
+        with open(path, "w", encoding="utf-8") as f:
+            total_nodes = module_count + dataset_count
+            f.write(
+                f"<!-- CARTOGRAPHER v1 | generated: {datetime.now().isoformat()} "
+                f"| nodes: {total_nodes} | edges: {edge_count} -->\n\n"
+            )
+
+            f.write("## SECTION:ARCHITECTURE_SUMMARY\n")
+            f.write(f"target_dir={self.target_dir}\n")
+            f.write(f"module_nodes={module_count}\n")
+            f.write(f"dataset_nodes={dataset_count}\n")
+            f.write(f"lineage_edges={edge_count}\n")
+            f.write(f"domain_count={domain_count}\n\n")
+
+            f.write("## SECTION:CRITICAL_PATH\n")
+            if pagerank_nodes:
+                for rank, (node_id, score, details) in enumerate(pagerank_nodes[:5], 1):
+                    purpose = purpose_statements.get(node_id, "")
+                    f.write(
+                        f"{rank}|node={node_id}|pagerank={score:.4f}|why={details}|purpose={purpose}\n"
+                    )
+            else:
+                f.write("none\n")
+            f.write("\n")
+
+            f.write("## SECTION:SOURCES\n")
+            if sources:
+                for source in sorted(sources)[:20]:
+                    f.write(f"node={source}\n")
+            else:
+                f.write("none\n")
+            f.write("\n")
+
+            f.write("## SECTION:SINKS\n")
+            if sinks:
+                for sink in sorted(sinks)[:20]:
+                    f.write(f"node={sink}\n")
+            else:
+                f.write("none\n")
+            f.write("\n")
+
+            f.write("## SECTION:KNOWN_DEBT\n")
+            f.write(f"cycles={len(cycles)}\n")
+            for cycle in cycles[:5]:
+                f.write(f"cycle={' -> '.join(cycle)}\n")
+            f.write(f"drift_flags={len(drift_items)}\n")
+            for mod_id, flag in sorted(drift_items.items()):
+                verdict = (flag or {}).get("verdict", "UNKNOWN")
+                explanation = (flag or {}).get("explanation", "")
+                f.write(f"drift|module={mod_id}|verdict={verdict}|explanation={explanation}\n")
+            f.write(f"orphans={len(orphaned)}\n")
+            for orphan in sorted(orphaned):
+                f.write(f"orphan={orphan}\n")
+            f.write(f"semantic_anomalies={len(anomalies)}\n")
+            for target, issue in anomalies:
+                f.write(f"anomaly|node={target}|issue={issue}\n")
+            f.write("\n")
+
+            f.write("## SECTION:HIGH_VELOCITY_FILES\n")
+            if top_velocity:
+                for file_path, commits in top_velocity:
+                    f.write(f"file={file_path}|commits={commits}\n")
+            else:
+                f.write("none\n")
+            f.write("\n")
+
+            f.write("## SECTION:MODULE_PURPOSE_INDEX\n")
+            if purpose_statements:
+                for mod_id in sorted(purpose_statements.keys()):
+                    if _is_pseudo(mod_id):
+                        continue
+                    purpose_line = " ".join(str(purpose_statements[mod_id]).split())
+                    f.write(f"module={mod_id}|purpose={purpose_line}\n")
+            else:
+                f.write("none\n")
+            f.write("\n")
+
+            f.write("## SECTION:LOW_CONFIDENCE_LINEAGE\n")
+            if low_conf_edges:
+                for src, tgt, conf, reason, src_file in low_conf_edges[:50]:
+                    reason_text = reason or "none"
+                    f.write(
+                        f"edge={src}->{tgt}|confidence={conf:.2f}|reason={reason_text}|source={src_file}\n"
+                    )
+            else:
+                f.write("none\n")
+            f.write("\n")
+
+        logger.info("Generated CODEBASE.md -> %s", path)
+        return
 
         with open(path, "w", encoding="utf-8") as f:
             # ── Header ────────────────────────────────────────────────
@@ -228,6 +368,43 @@ class Archivist:
         # consistently even when tests run on Linux/macOS.
         return Path(path).as_posix().replace("\\", "/")
 
+    def _collect_evidence_candidates(
+        self, module_graph: KnowledgeGraph, lineage_graph: KnowledgeGraph
+    ) -> list[str]:
+        candidates: list[str] = []
+        seen: set[str] = set()
+
+        def _add(path: str | None, line: int | None = None):
+            evidence = self._format_evidence(path, line)
+            if evidence and evidence not in seen:
+                seen.add(evidence)
+                candidates.append(evidence)
+
+        for _, attrs in module_graph.graph.nodes(data=True):
+            _add(attrs.get("source_file"), attrs.get("source_line"))
+
+        for _, attrs in lineage_graph.graph.nodes(data=True):
+            _add(attrs.get("source_file"), attrs.get("source_line"))
+
+        for _, _, data in lineage_graph.graph.edges(data=True):
+            _add(data.get("source_file"), data.get("source_line"))
+
+        if not candidates:
+            candidates.append("src/agents/archivist.py:1")
+        return candidates
+
+    def _pick_evidence_for_line(self, line: str, candidates: list[str]) -> str:
+        if not candidates:
+            return "`src/agents/archivist.py:1`"
+
+        low = line.lower()
+        for evidence in candidates:
+            file_path = evidence.split(":", 1)[0]
+            stem = Path(file_path).stem.lower()
+            if stem and stem in low:
+                return f"`{evidence}`"
+        return f"`{candidates[0]}`"
+
     def _load_purpose_statements(self, semantic_results: dict) -> dict[str, str]:
         persisted_path = os.path.join(self.output_dir, "purpose_statements.json")
         persisted: dict[str, str] = {}
@@ -289,13 +466,15 @@ class Archivist:
 
     # ------------------------------------------------------------------
     @staticmethod
-    def _format_evidence(evidence: str) -> str:
-        """Normalize evidence to explicit file:line attribution."""
+    def _format_evidence(evidence: str | None, source_line: int | None = None) -> str | None:
+        """Normalize evidence to explicit file:line attribution or null if unavailable."""
         text = (evidence or "").strip()
         if not text:
-            return "src/agents/archivist.py:1"
+            return None
         if ":" in text:
             return text
+        if isinstance(source_line, int) and source_line > 0:
+            return f"{text}:{source_line}"
         return f"{text}:1"
 
     # ------------------------------------------------------------------
@@ -303,19 +482,22 @@ class Archivist:
     def _trace_entry(
         phase: str,
         action: str,
-        confidence: float,
+        confidence: float | None,
         method: str,
-        evidence: str,
+        evidence: str | None,
     ) -> str:
         """Return a single JSONL record for the audit trace."""
+        norm_confidence = None
+        if isinstance(confidence, int | float):
+            norm_confidence = round(max(0.0, min(1.0, float(confidence))), 2)
         return json.dumps(
             {
                 "timestamp": datetime.now().isoformat(),
                 "phase": phase,
                 "action": action,
-                "confidence": round(confidence, 2),
-                "method": method,
-                "evidence": Archivist._format_evidence(evidence),
+                "confidence": norm_confidence,
+                "method": method.lower(),
+                "evidence": evidence,
             }
         )
 
@@ -326,6 +508,106 @@ class Archivist:
         semantic_results: dict,
     ) -> None:
         log_path = os.path.join(self.output_dir, "audit_trace.log")
+
+        with open(log_path, "w", encoding="utf-8") as f:
+            for _, attrs in module_graph.graph.nodes(data=True):
+                evidence = self._format_evidence(attrs.get("source_file"), attrs.get("source_line"))
+                f.write(
+                    self._trace_entry(
+                        "surveyor",
+                        "module_parsed",
+                        1.0,
+                        "static",
+                        evidence,
+                    )
+                    + "\n"
+                )
+
+            for _, _, edge_data in lineage_graph.graph.edges(data=True):
+                confidence = edge_data.get("confidence")
+                if not isinstance(confidence, int | float):
+                    confidence = None
+                evidence = self._format_evidence(
+                    edge_data.get("source_file"), edge_data.get("source_line")
+                )
+                f.write(
+                    self._trace_entry(
+                        "hydrologist",
+                        "edge_added",
+                        confidence,
+                        "static",
+                        evidence,
+                    )
+                    + "\n"
+                )
+
+            for node_id, attrs in lineage_graph.graph.nodes(data=True):
+                if attrs.get("parsed") is False:
+                    evidence = self._format_evidence(attrs.get("source_file") or node_id)
+                    f.write(
+                        self._trace_entry(
+                            "hydrologist",
+                            "module_parse_failed",
+                            None,
+                            "static",
+                            evidence,
+                        )
+                        + "\n"
+                    )
+
+            purposes = semantic_results.get("purpose_statements", {}) or {}
+            for module_id in sorted(purposes):
+                f.write(
+                    self._trace_entry(
+                        "semanticist",
+                        "purpose_inferred",
+                        0.85,
+                        "llm",
+                        self._format_evidence(module_id),
+                    )
+                    + "\n"
+                )
+
+            drift_flags = semantic_results.get("drift_flags", {}) or {}
+            for module_id, data in sorted(drift_flags.items()):
+                if _is_pseudo(module_id):
+                    continue
+                verdict = str((data or {}).get("verdict", "UNKNOWN")).strip().upper()
+                action = "drift_flagged" if verdict == "DRIFT" else "drift_checked"
+                f.write(
+                    self._trace_entry(
+                        "semanticist",
+                        action,
+                        0.9,
+                        "llm",
+                        self._format_evidence(module_id),
+                    )
+                    + "\n"
+                )
+
+            f.write(
+                self._trace_entry(
+                    "archivist",
+                    "artifact_written",
+                    1.0,
+                    "static",
+                    self._format_evidence("CODEBASE.md"),
+                )
+                + "\n"
+            )
+            f.write(
+                self._trace_entry(
+                    "archivist",
+                    "artifact_written",
+                    1.0,
+                    "static",
+                    self._format_evidence("audit_trace.log"),
+                )
+                + "\n"
+            )
+
+        logger.info("Generated audit_trace.log -> %s", log_path)
+        return
 
         with open(log_path, "w", encoding="utf-8") as f:
             # ── init phase: summary counts ────────────────────────────

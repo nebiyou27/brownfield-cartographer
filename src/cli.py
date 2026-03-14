@@ -1,11 +1,22 @@
 import argparse
 import os
+import shutil
+import subprocess
 import sys
+import tempfile
+from urllib.parse import urlparse
 
 from .logger import get_logger
 from .orchestrator import Orchestrator
 
 logger = get_logger(__name__)
+
+
+def _is_github_url(value: str) -> bool:
+    parsed = urlparse(value)
+    if parsed.scheme not in ("http", "https"):
+        return False
+    return parsed.netloc.lower() == "github.com" and bool(parsed.path.strip("/"))
 
 
 def main():
@@ -35,6 +46,12 @@ def main():
         default=False,
         help="Skip the Semanticist agent (faster iteration, no LLM calls)",
     )
+    analyze_parser.add_argument(
+        "--incremental",
+        action="store_true",
+        default=False,
+        help="Incremental mode: only re-analyze files changed since last saved commit state.",
+    )
 
     # ── query ─────────────────────────────────────────────────────────────
     query_parser = subparsers.add_parser(
@@ -55,16 +72,38 @@ def main():
 
     # ── analyze handler ───────────────────────────────────────────────────
     if args.command == "analyze":
-        target_path = os.path.abspath(args.repo_path)
-        if not os.path.exists(target_path):
-            logger.error("Repository path does not exist: %s", target_path)
-            sys.exit(1)
+        temp_repo_root = None
+        try:
+            if _is_github_url(args.repo_path):
+                temp_repo_root = tempfile.mkdtemp(prefix="cartography_clone_")
+                target_path = os.path.join(temp_repo_root, "repo")
+                logger.info("Cloning GitHub repository: %s", args.repo_path)
+                subprocess.run(
+                    ["git", "clone", args.repo_path, target_path],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
+            else:
+                target_path = os.path.abspath(args.repo_path)
+                if not os.path.exists(target_path):
+                    logger.error("Repository path does not exist: %s", target_path)
+                    sys.exit(1)
 
-        orchestrator = Orchestrator(
-            target_path,
-            skip_semanticist=args.no_semanticist,
-        )
-        orchestrator.run_analysis()
+            orchestrator = Orchestrator(
+                target_path,
+                skip_semanticist=args.no_semanticist,
+                incremental=args.incremental,
+            )
+            orchestrator.run_analysis()
+        except subprocess.CalledProcessError as e:
+            logger.error("Failed to clone repository: %s", args.repo_path)
+            if e.stderr:
+                logger.error("%s", e.stderr.strip())
+            sys.exit(1)
+        finally:
+            if temp_repo_root and os.path.isdir(temp_repo_root):
+                shutil.rmtree(temp_repo_root, ignore_errors=True)
 
     # ── query handler ─────────────────────────────────────────────────────
     elif args.command == "query":
