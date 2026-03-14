@@ -11,6 +11,7 @@ from src.analyzers.sql_lineage import (
     strip_jinja,
 )
 from src.analyzers.tree_sitter_analyzer import PythonAnalyzer
+from src.graph.knowledge_graph import KnowledgeGraph
 
 # ---------------------------------------------------------------------------
 # depends_on extraction
@@ -144,6 +145,10 @@ class TestMultiMacroDirMerging:
 
 class TestSQLDialectDetection:
     """Verify multi-dialect parsing and dialect selection logging."""
+
+    def test_default_dialect_order_is_exposed(self):
+        analyzer = SQLLineageAnalyzer()
+        assert analyzer.dialect_order == ["duckdb", "postgres", "bigquery", "snowflake"]
 
     def test_auto_detects_dialect_and_logs(self, monkeypatch):
         import sqlglot
@@ -305,3 +310,28 @@ class TestEdgeMetadata:
             assert edge.transformation_type in self.ALLOWED
             assert edge.line_range is not None
             assert len(edge.line_range) == 2
+
+
+class TestKnowledgeGraphBlastRadius:
+    def test_blast_radius_returns_downstream_confidence_reason(self):
+        graph = KnowledgeGraph("lineage")
+        graph.graph.add_edge(
+            "raw.orders",
+            "stg.orders",
+            confidence=0.95,
+            confidence_reason="sql parse",
+        )
+        graph.graph.add_edge(
+            "stg.orders",
+            "mart.orders",
+            confidence=0.70,
+            confidence_reason="jinja placeholders reduced certainty",
+        )
+
+        impact = graph.blast_radius("raw.orders")
+
+        assert isinstance(impact, list)
+        assert {item["node"] for item in impact} == {"stg.orders", "mart.orders"}
+        mart = next(item for item in impact if item["node"] == "mart.orders")
+        assert mart["path_confidence"] == 0.70
+        assert mart["reason"] == "jinja placeholders reduced certainty"

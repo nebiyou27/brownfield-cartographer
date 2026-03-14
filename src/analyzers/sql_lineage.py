@@ -297,7 +297,8 @@ class SQLLineageAnalyzer:
     """
 
     def __init__(self, dialects: list[str] | None = None):
-        self.dialects = dialects or list(DEFAULT_DIALECT_ORDER)
+        self.dialect_order = list(dialects or DEFAULT_DIALECT_ORDER)
+        self.dialects = self.dialect_order
 
     def _parse_with_best_dialect(
         self, sql: str, source_file: str, dialect: str | None = None
