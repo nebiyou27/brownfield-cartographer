@@ -1,6 +1,7 @@
 import json
 import os
 from datetime import datetime
+from pathlib import Path
 
 from ..graph.knowledge_graph import KnowledgeGraph
 from ..logger import get_logger
@@ -60,7 +61,7 @@ class Archivist:
     ) -> None:
         path = os.path.join(self.output_dir, "CODEBASE.md")
 
-        purpose_statements = semantic_results.get("purpose_statements", {})
+        purpose_statements = self._load_purpose_statements(semantic_results)
         domain_map = semantic_results.get("domain_map", {})
         drift_flags = semantic_results.get("drift_flags", {})
 
@@ -176,9 +177,9 @@ class Archivist:
             # ── Section 5: High-Velocity Files ────────────────────────
             f.write("## 5. High-Velocity Files\n\n")
             f.write("*Files with the most commits in the last 30 days — likely pain points.*\n\n")
-            if git_velocity:
-                top = sorted(git_velocity.items(), key=lambda x: x[1], reverse=True)[:15]
-                for file_path, commits in top:
+            top_velocity = self._get_high_velocity_files(module_graph, git_velocity)
+            if top_velocity:
+                for file_path, commits in top_velocity:
                     bar = "█" * min(commits, 20)
                     f.write(f"- `{file_path}` — **{commits}** commits {bar}\n")
             else:
@@ -187,92 +188,18 @@ class Archivist:
 
             # ── Section 6: Domain Module Index ────────────────────────
             f.write("## 6. Module Purpose Index\n\n")
-            f.write(
-                "*Grouped by inferred business domain. Purpose statements grounded in code, not docstrings.*\n\n"
-            )
-
-            # Normalise all node IDs to backslash to prevent slash/backslash
-            # duplicates (e.g. "load/loaders.py" vs "load\loaders.py")
-            def _norm(p: str) -> str:
-                return p.replace("/", "\\")
-
-            # Group modules by domain, filter pseudo-nodes
-            domains: dict[str, list[str]] = {}
-            seen_in_domain: set = set()
-            for mod_id, domain in domain_map.items():
-                if _is_pseudo(mod_id):
-                    continue
-                n = _norm(mod_id)
-                if n not in seen_in_domain:
-                    seen_in_domain.add(n)
-                    domains.setdefault(domain, []).append(n)
-
-            # Include modules not in domain_map — deduplicated
-            mapped_norm = {_norm(k) for k in domain_map.keys()}
-            seen_all: set = set()
-            unclustered = []
-            for node in module_graph.graph.nodes:
-                if _is_pseudo(node):
-                    continue
-                n = _norm(node)
-                if n not in seen_all:
-                    seen_all.add(n)
-                    if n not in mapped_norm:
-                        unclustered.append(n)
-            if unclustered:
-                domains.setdefault("unclustered", unclustered)
-
-            for domain in sorted(domains.keys()):
-                f.write(f"### Domain: **{domain.replace('_', ' ').title()}**\n\n")
-                for mod_id in sorted(set(domains[domain])):
-                    # Look up node data trying both slash variants
-                    mod_data = (
-                        module_graph.graph.nodes.get(mod_id)
-                        or module_graph.graph.nodes.get(mod_id.replace("\\", "/"))
-                        or {}
-                    )
-                    file_type = mod_data.get("file_type", "unknown")
-                    # Look up purpose trying both variants
-                    purpose = (
-                        purpose_statements.get(mod_id)
-                        or purpose_statements.get(mod_id.replace("\\", "/"))
-                        or "*(no purpose extracted)*"
-                    )
-
-                    f.write(f"#### `{mod_id}` [{file_type}]\n\n")
-                    f.write(f"**Purpose:** {purpose}\n\n")
-
-                    # Drift warning — try both slash variants
-                    drift_data = drift_flags.get(mod_id) or drift_flags.get(
-                        mod_id.replace("\\", "/")
-                    )
-                    if drift_data and not _is_pseudo(mod_id):
-                        flag = drift_data
-                        verdict = flag.get("verdict", "UNKNOWN")
-                        expl = flag.get("explanation", "")
-                        f.write(f"> [!WARNING]\n> **Docstring {verdict}:** {expl}\n\n")
-
-                    # Dependencies — try both slash variants, filter pseudo-nodes
-                    g = lineage_graph.graph
-                    alt = mod_id.replace("\\", "/")
-                    node_in_graph = mod_id if mod_id in g else (alt if alt in g else None)
-                    if node_in_graph:
-                        upstream = [u for u, _ in g.in_edges(node_in_graph) if not _is_pseudo(u)]
-                        downstream = [v for _, v in g.out_edges(node_in_graph) if not _is_pseudo(v)]
-                        if upstream:
-                            f.write(
-                                "**Upstream:** "
-                                + ", ".join(f"`{u}`" for u in sorted(upstream))
-                                + "\n\n"
-                            )
-                        if downstream:
-                            f.write(
-                                "**Downstream:** "
-                                + ", ".join(f"`{v}`" for v in sorted(downstream))
-                                + "\n\n"
-                            )
-
-                f.write("---\n\n")
+            f.write("*Module-to-purpose mapping sourced from `purpose_statements.json`.*\n\n")
+            if purpose_statements:
+                f.write("| Module | Purpose |\n")
+                f.write("| --- | --- |\n")
+                for mod_id in sorted(purpose_statements.keys()):
+                    if _is_pseudo(mod_id):
+                        continue
+                    purpose_line = " ".join(str(purpose_statements[mod_id]).split())
+                    f.write(f"| `{mod_id}` | {purpose_line} |\n")
+                f.write("\n")
+            else:
+                f.write("*(purpose statements not available)*\n\n")
 
             # Section 7: Low-confidence lineage edges
             f.write("## 7. Low-Confidence Lineage Edges\n\n")
@@ -293,6 +220,70 @@ class Archivist:
             f.write("\n")
 
         logger.info("Generated CODEBASE.md → %s", path)
+
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _canonical_path(path: str) -> str:
+        return Path(path).as_posix()
+
+    def _load_purpose_statements(self, semantic_results: dict) -> dict[str, str]:
+        persisted_path = os.path.join(self.output_dir, "purpose_statements.json")
+        persisted: dict[str, str] = {}
+
+        if os.path.exists(persisted_path):
+            try:
+                with open(persisted_path, encoding="utf-8") as fp:
+                    raw = json.load(fp)
+                if isinstance(raw, dict):
+                    for key, value in raw.items():
+                        if isinstance(key, str) and isinstance(value, str):
+                            persisted[self._canonical_path(key)] = value
+            except Exception as exc:
+                logger.warning("Failed to read purpose_statements.json: %s", exc)
+
+        semantic = semantic_results.get("purpose_statements", {}) or {}
+        semantic_norm = {
+            self._canonical_path(key): value
+            for key, value in semantic.items()
+            if isinstance(key, str) and isinstance(value, str)
+        }
+
+        # Persisted file is the authoritative source; in-memory semantic output fills gaps.
+        merged = dict(semantic_norm)
+        merged.update(persisted)
+        return merged
+
+    def _get_high_velocity_files(
+        self, module_graph: KnowledgeGraph, git_velocity: dict[str, int]
+    ) -> list[tuple[str, int]]:
+        velocity_by_file: dict[str, int] = {}
+
+        # Primary source: velocity already attached to module-graph nodes.
+        for node_id, attrs in module_graph.graph.nodes(data=True):
+            raw_velocity = attrs.get("git_change_velocity")
+            if not isinstance(raw_velocity, int) or raw_velocity <= 0:
+                continue
+
+            source_file = attrs.get("source_file")
+            if isinstance(source_file, str) and source_file:
+                file_key = self._canonical_path(source_file)
+            elif isinstance(node_id, str) and (
+                "/" in node_id or "\\" in node_id or node_id.endswith(".py")
+            ):
+                file_key = self._canonical_path(node_id)
+            else:
+                continue
+
+            velocity_by_file[file_key] = max(raw_velocity, velocity_by_file.get(file_key, 0))
+
+        # Fallback to explicit survey output map if graph metadata is missing.
+        if not velocity_by_file:
+            for file_path, commits in (git_velocity or {}).items():
+                if isinstance(commits, int) and commits > 0:
+                    file_key = self._canonical_path(file_path)
+                    velocity_by_file[file_key] = max(commits, velocity_by_file.get(file_key, 0))
+
+        return sorted(velocity_by_file.items(), key=lambda item: item[1], reverse=True)[:15]
 
     # ------------------------------------------------------------------
     @staticmethod

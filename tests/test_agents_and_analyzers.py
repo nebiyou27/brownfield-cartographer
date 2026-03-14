@@ -155,6 +155,7 @@ def test_archivist_helpers_and_archive(monkeypatch, tmp_path):
     lineage_graph = KnowledgeGraph("lineage")
 
     module_graph.graph.add_node("src/app.py", file_type="python")
+    module_graph.graph.nodes["src/app.py"]["git_change_velocity"] = 6
     module_graph.graph.add_node("<dynamic>:temp", file_type="python")
     lineage_graph.graph.add_edge("raw.orders", "stg.orders", source_file="models/stg_orders.sql")
     lineage_graph.graph.add_edge("stg.orders", "mart.orders", source_file="models/mart_orders.sql")
@@ -184,7 +185,7 @@ def test_archivist_helpers_and_archive(monkeypatch, tmp_path):
         module_graph,
         lineage_graph,
         semantic_results,
-        git_velocity={"src\\app.py": 4},
+        git_velocity={},
     )
 
     codebase = (tmp_path / ".cartography" / "CODEBASE.md").read_text(encoding="utf-8")
@@ -194,6 +195,10 @@ def test_archivist_helpers_and_archive(monkeypatch, tmp_path):
     assert _is_macro("macros\\helper.sql") is True
     assert "Circular Dependencies: 1" in codebase
     assert "Orphaned Nodes: 2" in codebase
+    assert "## 5. High-Velocity Files" in codebase
+    assert "- `src/app.py` — **6** commits" in codebase
+    assert "## 6. Module Purpose Index" in codebase
+    assert "| `src/app.py` | Runs the pipeline |" in codebase
     assert "## 7. Low-Confidence Lineage Edges" in codebase
     assert (
         "⚠️ `stg.orders` -> `qa.orders_check` (0.70: jinja placeholders reduced certainty)"
@@ -223,6 +228,26 @@ def test_archivist_helpers_and_archive(monkeypatch, tmp_path):
     all_evidence = " ".join(json.loads(line_text)["evidence"] for line_text in lines)
     assert "src\\app.py" in all_actions or "src\\app.py" in all_evidence
     assert "qwen: 2 calls, ~50 tokens" in all_actions
+
+
+def test_archivist_module_purpose_index_uses_persisted_json(monkeypatch, tmp_path):
+    monkeypatch.chdir(tmp_path)
+    output_dir = tmp_path / ".cartography"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    (output_dir / "purpose_statements.json").write_text(
+        '{"src/module_a.py": "Owns A flow."}', encoding="utf-8"
+    )
+
+    archivist = Archivist("repo")
+    module_graph = KnowledgeGraph("module")
+    lineage_graph = KnowledgeGraph("lineage")
+    module_graph.graph.add_node("src/module_a.py", file_type="python")
+
+    archivist.archive(module_graph, lineage_graph, semantic_results={}, git_velocity={})
+
+    codebase = (output_dir / "CODEBASE.md").read_text(encoding="utf-8")
+    assert "## 6. Module Purpose Index" in codebase
+    assert "| `src/module_a.py` | Owns A flow. |" in codebase
 
 
 def test_semanticist_helpers_and_generation(monkeypatch, tmp_path):
