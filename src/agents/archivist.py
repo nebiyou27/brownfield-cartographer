@@ -224,7 +224,9 @@ class Archivist:
     # ------------------------------------------------------------------
     @staticmethod
     def _canonical_path(path: str) -> str:
-        return Path(path).as_posix()
+        # Keep normalization OS-agnostic so Windows-style paths are normalized
+        # consistently even when tests run on Linux/macOS.
+        return Path(path).as_posix().replace("\\", "/")
 
     def _load_purpose_statements(self, semantic_results: dict) -> dict[str, str]:
         persisted_path = os.path.join(self.output_dir, "purpose_statements.json")
