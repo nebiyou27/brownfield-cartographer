@@ -335,3 +335,55 @@ class TestKnowledgeGraphBlastRadius:
         mart = next(item for item in impact if item["node"] == "mart.orders")
         assert mart["path_confidence"] == 0.70
         assert mart["reason"] == "jinja placeholders reduced certainty"
+
+    def test_blast_radius_treats_missing_confidence_as_uncertain(self):
+        graph = KnowledgeGraph("lineage")
+        graph.graph.add_edge(
+            "raw.orders",
+            "stg.orders",
+            confidence_reason="confidence omitted by parser",
+        )
+        graph.graph.add_edge(
+            "stg.orders",
+            "mart.orders",
+            confidence=0.90,
+            confidence_reason="explicit edge metadata",
+        )
+
+        impact = graph.blast_radius("raw.orders")
+        stg = next(item for item in impact if item["node"] == "stg.orders")
+
+        assert stg["path_confidence"] == 0.50
+        assert stg["uncertain"] is True
+        assert stg["unknown_confidence_edges"] == 1
+
+    def test_blast_radius_uses_most_conservative_shortest_path(self):
+        graph = KnowledgeGraph("lineage")
+        # Two equal-length shortest paths from raw.orders to mart.orders
+        graph.graph.add_edge(
+            "raw.orders", "stg.fast", confidence=0.95, confidence_reason="direct parse"
+        )
+        graph.graph.add_edge(
+            "stg.fast",
+            "mart.orders",
+            confidence=0.95,
+            confidence_reason="trusted transform",
+        )
+        graph.graph.add_edge(
+            "raw.orders",
+            "stg.risky",
+            confidence=0.60,
+            confidence_reason="dynamic SQL interpolation",
+        )
+        graph.graph.add_edge(
+            "stg.risky",
+            "mart.orders",
+            confidence=0.90,
+            confidence_reason="explicit declaration",
+        )
+
+        impact = graph.blast_radius("raw.orders")
+        mart = next(item for item in impact if item["node"] == "mart.orders")
+
+        assert mart["path_confidence"] == 0.60
+        assert mart["reason"] == "dynamic SQL interpolation"

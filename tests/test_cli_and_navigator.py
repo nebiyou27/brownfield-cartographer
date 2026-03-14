@@ -274,9 +274,30 @@ def test_blast_radius_and_explain_module(monkeypatch, tmp_path):
     explanation = navigator.explain_module.invoke({"path": "module.py"})
 
     assert "Blast radius: 2 downstream node(s)" in blast
-    assert "path confidence: 0.70 ⚠️" in blast
+    assert "path confidence: 0.70" in blast
     assert "Detailed explanation" in explanation
     assert "[explain_module] module.py" in explanation
+
+
+def test_blast_radius_surfaces_unknown_confidence_and_conservative_path(monkeypatch):
+    graph = nx.DiGraph()
+    # High-confidence shortest path
+    graph.add_edge("root.py", "stg.safe", source_file="safe.sql", confidence=0.95)
+    graph.add_edge("stg.safe", "mart.orders", source_file="mart.sql", confidence=0.95)
+    # Equal-length shorter path with unknown confidence on first edge
+    graph.add_edge(
+        "root.py",
+        "stg.unknown",
+        source_file="unknown.sql",
+        confidence_reason="confidence omitted in extractor",
+    )
+    graph.add_edge("stg.unknown", "mart.orders", source_file="mart.sql", confidence=0.90)
+    monkeypatch.setattr(navigator, "_load_lineage_graph", lambda: graph)
+
+    blast = navigator.blast_radius.invoke({"module_path": "root.py"})
+
+    assert "path confidence: 0.50" in blast
+    assert "unknown confidence edges: 1" in blast
 
 
 def test_routing_and_tool_nodes(monkeypatch):

@@ -87,8 +87,10 @@ class KnowledgeGraph:
 
         For each downstream node, returns:
             - node: downstream node id
-            - path_confidence: minimum confidence across the shortest path
-            - reason: confidence reason from the weakest edge on that path
+            - path_confidence: conservative confidence across all shortest paths
+            - reason: confidence reason from the weakest edge on the selected path
+            - uncertain: True when confidence metadata was missing on any weakest edge
+            - unknown_confidence_edges: count of edges on the selected path without explicit confidence
         """
         if node not in self.graph:
             return []
@@ -100,28 +102,62 @@ class KnowledgeGraph:
         distances = dict(nx.single_source_shortest_path_length(self.graph, node))
         distances.pop(node, None)
 
+        def _parse_confidence(edge_data: dict) -> tuple[float, bool]:
+            """
+            Return (confidence, is_unknown).
+            Unknown values are treated as medium confidence to avoid false certainty.
+            """
+            if "confidence" not in edge_data:
+                return 0.50, True
+            conf_value = edge_data.get("confidence")
+            try:
+                conf = float(conf_value)
+            except (TypeError, ValueError):
+                return 0.50, True
+            return max(0.0, min(1.0, conf)), False
+
         results: list[dict] = []
         for target, _distance in sorted(distances.items(), key=lambda item: (item[1], item[0])):
-            path = nx.shortest_path(self.graph, node, target)
-            min_conf = 1.0
-            weakest_reason = "no reason recorded"
-            for path_u, path_v in zip(path, path[1:], strict=False):
-                edge_data = self.graph.get_edge_data(path_u, path_v) or {}
-                conf_value = edge_data.get("confidence", 1.0)
-                try:
-                    conf = float(conf_value)
-                except (TypeError, ValueError):
-                    conf = 1.0
-                conf = max(0.0, min(1.0, conf))
-                if conf <= min_conf:
-                    min_conf = conf
-                    weakest_reason = edge_data.get("confidence_reason", "no reason recorded")
+            shortest_paths = list(nx.all_shortest_paths(self.graph, node, target))
+
+            selected_path = shortest_paths[0]
+            selected_min_conf = 1.0
+            selected_reason = "no reason recorded"
+            selected_unknown_edges = 0
+
+            for path in shortest_paths:
+                path_min_conf = 1.0
+                weakest_reason = "no reason recorded"
+                unknown_edges = 0
+
+                for path_u, path_v in zip(path, path[1:], strict=False):
+                    edge_data = self.graph.get_edge_data(path_u, path_v) or {}
+                    conf, is_unknown = _parse_confidence(edge_data)
+                    if is_unknown:
+                        unknown_edges += 1
+                    if conf <= path_min_conf:
+                        path_min_conf = conf
+                        weakest_reason = edge_data.get(
+                            "confidence_reason",
+                            "confidence missing; treated as uncertain",
+                        )
+
+                if path_min_conf < selected_min_conf or (
+                    path_min_conf == selected_min_conf and unknown_edges > selected_unknown_edges
+                ):
+                    selected_path = path
+                    selected_min_conf = path_min_conf
+                    selected_reason = weakest_reason
+                    selected_unknown_edges = unknown_edges
 
             results.append(
                 {
                     "node": target,
-                    "path_confidence": min_conf,
-                    "reason": weakest_reason,
+                    "path_confidence": selected_min_conf,
+                    "reason": selected_reason,
+                    "uncertain": selected_unknown_edges > 0,
+                    "unknown_confidence_edges": selected_unknown_edges,
+                    "path": selected_path,
                 }
             )
 

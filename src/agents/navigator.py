@@ -1,14 +1,14 @@
 """
 src/agents/navigator.py
 
-Phase 4 — The Navigator Agent
+Phase 4 - The Navigator Agent
 A LangGraph-powered query interface over the Cartographer's knowledge graph.
 
 Four tools:
-    find_implementation(concept)          — semantic search over purpose statements
-    trace_lineage(dataset, direction)     — BFS upstream/downstream in lineage graph
-    blast_radius(module_path)             — DFS downstream impact from a node
-    explain_module(path)                  — LLM generative explanation with file context
+    find_implementation(concept)          - semantic search over purpose statements
+    trace_lineage(dataset, direction)     - BFS upstream/downstream in lineage graph
+    blast_radius(module_path)             - DFS downstream impact from a node
+    explain_module(path)                  - LLM generative explanation with file context
 
 All answers cite evidence: source file, line range, and analysis method
 (static analysis vs. LLM inference).
@@ -36,13 +36,13 @@ logger = get_logger(__name__)
 # ---------------------------------------------------------------------------
 
 OLLAMA_BASE = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
-REASON_MODEL = "deepseek-r1:8b"  # explain_module — needs reasoning
+REASON_MODEL = "deepseek-r1:8b"  # explain_module - needs reasoning
 FAST_MODEL = "qwen3:1.7b"  # tool routing + lightweight responses
 EMBED_MODEL = "nomic-embed-text"  # find_implementation semantic search
 
 CARTOGRAPHY_DIR = Path(__file__).resolve().parent.parent.parent / ".cartography"
 
-SYSTEM_PROMPT = """You are the Brownfield Cartographer Navigator — an expert codebase 
+SYSTEM_PROMPT = """You are the Brownfield Cartographer Navigator - an expert codebase 
 intelligence agent. You have four tools to answer questions about the codebase:
 
 - find_implementation: semantic search to locate where a concept is implemented
@@ -55,7 +55,7 @@ static analysis or LLM inference. Be concise and precise."""
 
 
 # ---------------------------------------------------------------------------
-# Helpers — load cartography artifacts
+# Helpers - load cartography artifacts
 # ---------------------------------------------------------------------------
 
 
@@ -103,6 +103,34 @@ def _confidence_to_float(value) -> float:
     return 0.50
 
 
+def _edge_confidence(edge_data: dict) -> tuple[float, bool]:
+    """
+    Return (confidence, is_unknown).
+    Missing/invalid confidence is treated as uncertain medium confidence.
+    """
+    if "confidence" not in edge_data:
+        return 0.50, True
+    value = edge_data.get("confidence")
+    if isinstance(value, int | float):
+        return max(0.0, min(1.0, float(value))), False
+    if isinstance(value, str):
+        norm = value.strip().lower()
+        mapping = {
+            "high": 0.95,
+            "medium": 0.70,
+            "low": 0.55,
+            "inferred": 0.75,
+            "unknown": 0.50,
+        }
+        if norm in mapping:
+            return mapping[norm], False
+        try:
+            return max(0.0, min(1.0, float(norm))), False
+        except ValueError:
+            return 0.50, True
+    return 0.50, True
+
+
 def _embed(text: str) -> list[float]:
     url = f"{OLLAMA_BASE}/api/embeddings"
     r = httpx.post(url, json={"model": EMBED_MODEL, "prompt": text}, timeout=60)
@@ -129,7 +157,7 @@ def _ollama_generate(model: str, prompt: str, timeout: int = 180) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Tool 1 — find_implementation
+# Tool 1 - find_implementation
 # ---------------------------------------------------------------------------
 
 
@@ -176,14 +204,14 @@ def find_implementation(concept: str) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Tool 2 — trace_lineage
+# Tool 2 - trace_lineage
 # ---------------------------------------------------------------------------
 
 
 @tool
 def trace_lineage(dataset: str, direction: str = "upstream") -> str:
     """
-    Trace the data lineage for a dataset — find all upstream sources or
+    Trace the data lineage for a dataset - find all upstream sources or
     downstream consumers using BFS traversal of the lineage graph.
 
     Args:
@@ -258,14 +286,14 @@ def trace_lineage(dataset: str, direction: str = "upstream") -> str:
 
 
 # ---------------------------------------------------------------------------
-# Tool 3 — blast_radius
+# Tool 3 - blast_radius
 # ---------------------------------------------------------------------------
 
 
 @tool
 def blast_radius(module_path: str) -> str:
     """
-    Find the blast radius of a module — all downstream nodes that would be
+    Find the blast radius of a module - all downstream nodes that would be
     affected if this module changes its interface. Uses DFS traversal.
 
     Args:
@@ -294,7 +322,7 @@ def blast_radius(module_path: str) -> str:
     descendants = nx.descendants(G, node)
     if not descendants:
         return (
-            f"[blast_radius] '{node}' has no downstream dependents — safe to change.\n"
+            f"[blast_radius] '{node}' has no downstream dependents - safe to change.\n"
             f"Evidence source: static analysis (lineage_graph.json)"
         )
 
@@ -315,34 +343,62 @@ def blast_radius(module_path: str) -> str:
     for dist in sorted(by_distance.keys()):
         result.append(f"Distance {dist}:")
         for dep in by_distance[dist]:
-            path = nx.shortest_path(G, node, dep)
+            shortest_paths = list(nx.all_shortest_paths(G, node, dep))
+            selected_path = shortest_paths[0]
             min_conf = 1.0
             weakest = None
             weakest_reason = "no reason recorded"
             weakest_file = "unknown"
+            unknown_edges = 0
 
-            for path_u, path_v in zip(path, path[1:], strict=False):
-                edge_data = G.get_edge_data(path_u, path_v) or {}
-                conf = _confidence_to_float(edge_data.get("confidence", 1.0))
-                if conf <= min_conf:
-                    min_conf = conf
-                    weakest = (path_u, path_v)
-                    weakest_reason = edge_data.get("confidence_reason", "no reason recorded")
-                    weakest_file = edge_data.get("source_file", "unknown")
+            for path in shortest_paths:
+                path_min_conf = 1.0
+                path_weakest = None
+                path_reason = "no reason recorded"
+                path_file = "unknown"
+                path_unknown_edges = 0
 
-            warn = " ⚠️" if min_conf < 0.80 else ""
-            edge_label = f"{weakest[0]} -> {weakest[1]}" if weakest else f"{path[0]} -> {path[-1]}"
+                for path_u, path_v in zip(path, path[1:], strict=False):
+                    edge_data = G.get_edge_data(path_u, path_v) or {}
+                    conf, is_unknown = _edge_confidence(edge_data)
+                    if is_unknown:
+                        path_unknown_edges += 1
+                    if conf <= path_min_conf:
+                        path_min_conf = conf
+                        path_weakest = (path_u, path_v)
+                        path_reason = edge_data.get(
+                            "confidence_reason",
+                            "confidence missing; treated as uncertain",
+                        )
+                        path_file = edge_data.get("source_file", "unknown")
+
+                if path_min_conf < min_conf or (
+                    path_min_conf == min_conf and path_unknown_edges > unknown_edges
+                ):
+                    selected_path = path
+                    min_conf = path_min_conf
+                    weakest = path_weakest
+                    weakest_reason = path_reason
+                    weakest_file = path_file
+                    unknown_edges = path_unknown_edges
+
+            warn = " [low-confidence]" if min_conf < 0.80 else ""
+            edge_label = (
+                f"{weakest[0]} -> {weakest[1]}"
+                if weakest
+                else f"{selected_path[0]} -> {selected_path[-1]}"
+            )
             result.append(
                 f"  - {dep}  [path confidence: {min_conf:.2f}{warn}; "
-                f"weakest edge: {edge_label}; file: {weakest_file}]"
+                f"weakest edge: {edge_label}; file: {weakest_file}; "
+                f"unknown confidence edges: {unknown_edges}]"
             )
             result.append(f"    reason: {weakest_reason}")
-
     return "\n".join(result)
 
 
 # ---------------------------------------------------------------------------
-# Tool 4 — explain_module
+# Tool 4 - explain_module
 # ---------------------------------------------------------------------------
 
 
@@ -392,7 +448,7 @@ def explain_module(path: str) -> str:
         except Exception:
             code = "(could not read file)"
     else:
-        code = "(file not found on disk — explaining from graph context only)"
+        code = "(file not found on disk - explaining from graph context only)"
 
     # Get lineage context
     G = _load_lineage_graph()
@@ -453,7 +509,7 @@ def _route(question: str) -> tuple[str, dict]:
     """Route question to the right tool using keyword heuristics. No LLM needed."""
     q = question.lower()
 
-    # blast_radius — must check before lineage
+    # blast_radius - must check before lineage
     if any(
         w in q
         for w in ["blast", "breaks", "break if", "impact of changing", "affect if", "what breaks"]
@@ -469,7 +525,7 @@ def _route(question: str) -> tuple[str, dict]:
         )
         return "blast_radius", {"module_path": module}
 
-    # trace_lineage — upstream/downstream/sources/produces/how does X reach Y
+    # trace_lineage - upstream/downstream/sources/produces/how does X reach Y
     if any(
         w in q
         for w in [
@@ -500,14 +556,14 @@ def _route(question: str) -> tuple[str, dict]:
             if any(w in q for w in ["downstream", "consumer", "depends on"])
             else "upstream"
         )
-        # For "how does X reach Y" — prefer the destination node (last snake_case token)
+        # For "how does X reach Y" - prefer the destination node (last snake_case token)
         words = question.replace("?", "").split()
         dataset = next(
             (w.strip("'\"`,") for w in reversed(words) if "_" in w and len(w) > 3), words[-1]
         )
         return "trace_lineage", {"dataset": dataset, "direction": direction}
 
-    # explain_module — explain/describe/what does/purpose
+    # explain_module - explain/describe/what does/purpose
     if any(w in q for w in ["explain", "describe", "what does", "purpose of", "what is"]):
         words = question.replace("?", "").split()
         path = next(
@@ -520,7 +576,7 @@ def _route(question: str) -> tuple[str, dict]:
         )
         return "explain_module", {"path": path}
 
-    # find_implementation — where/find/locate/which module/implement
+    # find_implementation - where/find/locate/which module/implement
     if any(w in q for w in ["where", "find", "locate", "which module", "implement", "who handles"]):
         return "find_implementation", {"concept": question}
 
@@ -535,10 +591,10 @@ def _route_multi(question: str) -> list[tuple[str, dict]]:
     """
     q = question.lower()
 
-    # "how does X get transformed ... Y" — chain: upstream(Y) + upstream(intermediate) + explain each
+    # "how does X get transformed ... Y" - chain: upstream(Y) + upstream(intermediate) + explain each
     if any(w in q for w in ["how does", "walk through", "every step", "transformation chain"]):
         words = question.replace("?", "").split()
-        # Find all snake_case tokens — first is likely source, last is likely destination
+        # Find all snake_case tokens - first is likely source, last is likely destination
         snake_tokens = [w.strip("'\"`,") for w in words if "_" in w and len(w) > 3]
         if len(snake_tokens) >= 2:
             destination = snake_tokens[-1]
@@ -579,12 +635,12 @@ def _synthesise(question: str, tool_result: str) -> str:
     try:
         return _ollama_generate(FAST_MODEL, prompt, timeout=90)
     except Exception:
-        # If synthesis fails just return the raw result — still useful
+        # If synthesis fails just return the raw result - still useful
         return tool_result
 
 
 # ---------------------------------------------------------------------------
-# LangGraph state graph (route → tool → synthesise)
+# LangGraph state graph (route -> tool -> synthesise)
 # ---------------------------------------------------------------------------
 
 
