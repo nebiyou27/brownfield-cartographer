@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from datetime import datetime
 from pathlib import Path
 
@@ -10,6 +11,7 @@ logger = get_logger(__name__)
 
 # Pseudo-node prefixes emitted by tree-sitter — never real files
 _PSEUDO_PREFIXES = ("<dynamic>", "SELECT", "INSERT", "UPDATE", "DELETE")
+_CITATION_RE = re.compile(r"\[\s*`?([^\]`]+?):\d+`?\s*\]")
 
 
 def _is_pseudo(node_id: str) -> bool:
@@ -69,11 +71,9 @@ class Archivist:
                 if not stripped:
                     lines.append("")
                     continue
-                citation = self._pick_evidence_for_line(stripped, candidates)
-                if "`" in stripped and ":" in stripped:
-                    lines.append(stripped)
-                else:
-                    lines.append(f"{stripped} [{citation}]")
+                content = self._strip_existing_citations(stripped)
+                citation = self._pick_evidence_for_line(content, candidates)
+                lines.append(f"{content} [{citation}]")
         else:
             fallback = self._pick_evidence_for_line("", candidates)
             lines.append(f"No semantic day-one answers were generated. [{fallback}]")
@@ -370,40 +370,202 @@ class Archivist:
 
     def _collect_evidence_candidates(
         self, module_graph: KnowledgeGraph, lineage_graph: KnowledgeGraph
-    ) -> list[str]:
-        candidates: list[str] = []
-        seen: set[str] = set()
+    ) -> list[dict]:
+        candidates: list[dict] = []
+        seen: set[tuple[str, int]] = set()
 
-        def _add(path: str | None, line: int | None = None):
-            evidence = self._format_evidence(path, line)
-            if evidence and evidence not in seen:
-                seen.add(evidence)
-                candidates.append(evidence)
+        def _add(
+            path: str | None,
+            source_line: int | None = None,
+            line_range: list[int] | None = None,
+            aliases: list[str] | None = None,
+        ):
+            normalized_path = self._normalize_candidate_path(path)
+            if not normalized_path:
+                return
+            line = self._resolve_line_number(source_line, line_range)
+            key = (normalized_path, line)
+            if key in seen:
+                return
+            seen.add(key)
+            evidence = self._format_evidence(normalized_path, line)
+            if not evidence:
+                return
+            alias_set = self._build_aliases(normalized_path, aliases or [])
+            candidates.append(
+                {
+                    "path": normalized_path,
+                    "line": line,
+                    "evidence": evidence,
+                    "aliases": alias_set,
+                }
+            )
 
-        for _, attrs in module_graph.graph.nodes(data=True):
-            _add(attrs.get("source_file"), attrs.get("source_line"))
+        for node_id, attrs in module_graph.graph.nodes(data=True):
+            source_file = attrs.get("source_file")
+            fallback_path = source_file or (node_id if self._looks_like_path(node_id) else None)
+            _add(
+                fallback_path,
+                attrs.get("source_line"),
+                attrs.get("line_range"),
+                aliases=[node_id],
+            )
 
-        for _, attrs in lineage_graph.graph.nodes(data=True):
-            _add(attrs.get("source_file"), attrs.get("source_line"))
+        for node_id, attrs in lineage_graph.graph.nodes(data=True):
+            source_file = attrs.get("source_file")
+            fallback_path = source_file or (node_id if self._looks_like_path(node_id) else None)
+            _add(
+                fallback_path,
+                attrs.get("source_line"),
+                attrs.get("line_range"),
+                aliases=[node_id],
+            )
 
-        for _, _, data in lineage_graph.graph.edges(data=True):
-            _add(data.get("source_file"), data.get("source_line"))
+        for src, tgt, data in lineage_graph.graph.edges(data=True):
+            _add(
+                data.get("source_file"),
+                data.get("source_line"),
+                data.get("line_range"),
+                aliases=[src, tgt],
+            )
 
         if not candidates:
-            candidates.append("src/agents/archivist.py:1")
+            candidates.append(
+                {
+                    "path": "src/agents/archivist.py",
+                    "line": 1,
+                    "evidence": "src/agents/archivist.py:1",
+                    "aliases": {"src/agents/archivist.py", "archivist", "archivist.py"},
+                }
+            )
         return candidates
 
-    def _pick_evidence_for_line(self, line: str, candidates: list[str]) -> str:
+    def _pick_evidence_for_line(self, line: str, candidates: list[dict]) -> str:
         if not candidates:
             return "`src/agents/archivist.py:1`"
 
-        low = line.lower()
-        for evidence in candidates:
-            file_path = evidence.split(":", 1)[0]
-            stem = Path(file_path).stem.lower()
-            if stem and stem in low:
-                return f"`{evidence}`"
-        return f"`{candidates[0]}`"
+        explicit_refs = re.findall(r"([A-Za-z0-9_./\\-]+\.[A-Za-z0-9_]+):(\d+)", line)
+        if explicit_refs:
+            for raw_path, raw_line in explicit_refs:
+                normalized = self._canonical_path(raw_path).lower()
+                for candidate in candidates:
+                    candidate_path = str(candidate.get("path", "")).lower()
+                    if normalized == candidate_path:
+                        return f"`{normalized}:{int(raw_line)}`"
+
+        line_norm = self._canonical_path(line).lower()
+        line_tokens = set(re.findall(r"[a-z0-9_./-]+", line_norm))
+        mentioned_paths = [self._canonical_path(p).lower() for p in re.findall(r"`([^`]+)`", line)]
+
+        best_score = -1
+        best = candidates[0]
+        for candidate in candidates:
+            score = 0
+            candidate_path = str(candidate.get("path", "")).lower()
+            aliases = candidate.get("aliases", set())
+
+            if candidate_path and candidate_path in line_norm:
+                score += 120
+
+            for mentioned_path in mentioned_paths:
+                if mentioned_path == candidate_path:
+                    score += 160
+                elif mentioned_path.endswith("/" + Path(candidate_path).name):
+                    score += 120
+
+            if aliases:
+                overlap = aliases.intersection(line_tokens)
+                score += len(overlap) * 25
+
+            if score > best_score:
+                best_score = score
+                best = candidate
+
+        if best_score <= 0:
+            best = self._fallback_candidate(candidates)
+
+        return f"`{best['evidence']}`"
+
+    @staticmethod
+    def _strip_existing_citations(line: str) -> str:
+        return _CITATION_RE.sub("", line).strip()
+
+    @staticmethod
+    def _looks_like_path(text: str) -> bool:
+        if not isinstance(text, str) or not text:
+            return False
+        return "/" in text or "\\" in text or "." in Path(text).name
+
+    def _normalize_candidate_path(self, path: str | None) -> str | None:
+        if not isinstance(path, str) or not path.strip():
+            return None
+        normalized = self._canonical_path(path.strip())
+        if _is_pseudo(normalized):
+            return None
+        return normalized
+
+    @staticmethod
+    def _resolve_line_number(
+        source_line: int | None, line_range: list[int] | tuple[int, ...] | None = None
+    ) -> int:
+        if isinstance(source_line, int) and source_line > 0:
+            return source_line
+        if isinstance(line_range, list | tuple) and line_range:
+            start = line_range[0]
+            if isinstance(start, int) and start > 0:
+                return start
+        return 1
+
+    def _build_aliases(self, path: str, extras: list[str]) -> set[str]:
+        aliases: set[str] = set()
+        normalized_path = self._canonical_path(path).lower()
+        aliases.add(normalized_path)
+
+        basename = Path(normalized_path).name
+        stem = Path(normalized_path).stem
+        if basename:
+            aliases.add(basename)
+        if stem:
+            aliases.add(stem)
+
+        for item in extras:
+            if not isinstance(item, str):
+                continue
+            normalized = self._canonical_path(item).lower()
+            aliases.add(normalized)
+            if self._looks_like_path(normalized):
+                item_basename = Path(normalized).name
+                item_stem = Path(normalized).stem
+                if item_basename:
+                    aliases.add(item_basename)
+                if item_stem:
+                    aliases.add(item_stem)
+                continue
+
+            aliases.update(
+                token
+                for token in re.findall(r"[a-z0-9_./-]+", normalized)
+                if len(token) > 2 and token not in {"data", "make", "open", "test", "tests"}
+            )
+
+        return aliases
+
+    @staticmethod
+    def _fallback_candidate(candidates: list[dict]) -> dict:
+        by_path: dict[str, int] = {}
+        for candidate in candidates:
+            path = str(candidate.get("path", "")).lower()
+            by_path[path] = by_path.get(path, 0) + 1
+
+        def _rank(candidate: dict) -> tuple[int, int]:
+            path = str(candidate.get("path", "")).lower()
+            ext = Path(path).suffix.lower()
+            ext_rank = (
+                2 if ext in {".py", ".sql"} else (1 if ext in {".csv", ".yml", ".yaml"} else 0)
+            )
+            return (ext_rank, by_path.get(path, 0))
+
+        return max(candidates, key=_rank)
 
     def _load_purpose_statements(self, semantic_results: dict) -> dict[str, str]:
         persisted_path = os.path.join(self.output_dir, "purpose_statements.json")

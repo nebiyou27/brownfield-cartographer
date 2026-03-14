@@ -331,6 +331,47 @@ def test_archivist_helpers_and_archive(monkeypatch, tmp_path):
         assert "`" in answer_line
 
 
+def test_archivist_onboarding_citations_use_real_metadata_and_correct_source(monkeypatch, tmp_path):
+    monkeypatch.chdir(tmp_path)
+    archivist = Archivist("repo")
+    module_graph = KnowledgeGraph("module")
+    lineage_graph = KnowledgeGraph("lineage")
+
+    module_graph.graph.add_node(
+        "load/loaders.py",
+        source_file="load/loaders.py",
+        source_line=35,
+        file_type="python",
+    )
+    module_graph.graph.add_node(
+        "tests/load/test_loaders.py",
+        source_file="tests/load/test_loaders.py",
+        source_line=12,
+        file_type="python",
+    )
+    lineage_graph.graph.add_edge(
+        "raw.seveso_2024",
+        "seveso_2024",
+        source_file="1_data/prepare/risques/sites_seveso.sql",
+        source_line=None,
+        line_range=[27, 50],
+    )
+
+    candidates = archivist._collect_evidence_candidates(module_graph, lineage_graph)
+
+    q2 = "- `seveso_2024` is a critical output dataset."
+    q3 = "- `tests/load/test_loaders.py` is in the blast radius."
+    q5 = "Most frequent changes are in `load/loaders.py`."
+    explicit = "Write to PostGIS via `load/loaders.py:148`."
+
+    assert archivist._pick_evidence_for_line(q2, candidates) == (
+        "`1_data/prepare/risques/sites_seveso.sql:27`"
+    )
+    assert archivist._pick_evidence_for_line(q3, candidates) == "`tests/load/test_loaders.py:12`"
+    assert archivist._pick_evidence_for_line(q5, candidates) == "`load/loaders.py:35`"
+    assert archivist._pick_evidence_for_line(explicit, candidates) == "`load/loaders.py:148`"
+
+
 def test_archivist_module_purpose_index_uses_persisted_json(monkeypatch, tmp_path):
     monkeypatch.chdir(tmp_path)
     output_dir = tmp_path / ".cartography"
