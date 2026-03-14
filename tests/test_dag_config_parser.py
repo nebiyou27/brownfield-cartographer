@@ -120,3 +120,52 @@ macro-paths: ["warehouse/macros"]
     assert results["seed_paths"] == ["warehouse/seeds"]
     assert results["macro_paths"] == ["warehouse/macros"]
     assert results["datasets"] == []
+
+
+def test_extract_lineage_edges_from_schema_yml(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    schema = tmp_path / "models" / "schema.yml"
+    schema.parent.mkdir()
+    schema.write_text(
+        """
+models:
+  - name: mart_orders
+    depends_on:
+      - "{{ ref('stg_orders') }}"
+      - "{{ source('raw', 'orders') }}"
+sources:
+  - name: raw
+    tables:
+      - name: orders
+""",
+        encoding="utf-8",
+    )
+
+    edges = parser.extract_lineage_edges_from_schema_yml(str(schema))
+    pairs = {(e.source_dataset, e.target_dataset) for e in edges}
+
+    assert ("stg_orders", "mart_orders") in pairs
+    assert ("orders", "mart_orders") in pairs
+    assert ("raw", "orders") in pairs
+    assert all(e.transformation_type == "config" for e in edges)
+    assert all(e.confidence == 1.0 for e in edges)
+    assert all(e.method == "static" for e in edges)
+
+
+def test_analyze_all_dag_config_files_scans_model_paths(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    schema = tmp_path / "warehouse" / "models" / "schema.yml"
+    schema.parent.mkdir(parents=True)
+    schema.write_text(
+        """
+models:
+  - name: target_model
+    refs: [upstream_model]
+""",
+        encoding="utf-8",
+    )
+
+    edges = parser.analyze_all_dag_config_files(str(tmp_path), ["warehouse/models"])
+    assert any(
+        e.source_dataset == "upstream_model" and e.target_dataset == "target_model" for e in edges
+    )

@@ -49,7 +49,7 @@ PANDAS_WRITE_PATTERNS = {
 }
 
 # SQLAlchemy / psycopg patterns
-SQLALCHEMY_PATTERNS = {"create_engine"}
+SQLALCHEMY_PATTERNS = {"create_engine", "engine.execute", "session.query", "engine.connect"}
 DB_EXECUTE_PATTERNS = {"execute"}
 
 
@@ -165,7 +165,8 @@ class PythonAnalyzer:
                     target_dataset=target_id,
                     source_file=target_id,
                     source_line=line_no,
-                    transformation_type="imports",
+                    transformation_type="config",
+                    line_range=[line_no, line_no],
                     confidence=0.95,
                     confidence_reason=f"structural Python import of '{module_path_str}'",
                 )
@@ -214,11 +215,69 @@ class PythonAnalyzer:
                 )
                 return
 
+        # --- PySpark reads: spark.read.<method>(...) -----------------------
+        if func_text.startswith("spark.read"):
+            self._handle_data_call(
+                call_node,
+                "spark.read",
+                "consumes",
+                dataset_type="file_source",
+            )
+            return
+
+        # --- PySpark writes: df.write.<method>(...) ------------------------
+        if re.match(r"^[A-Za-z_][A-Za-z0-9_]*\.write(\.|$)", func_text):
+            self._handle_data_call(
+                call_node,
+                "df.write",
+                "produces",
+                dataset_type="file_sink",
+            )
+            return
+
+        # --- PySpark SQL: spark.sql(...) -----------------------------------
+        if func_text.endswith("spark.sql"):
+            self._handle_data_call(
+                call_node,
+                "spark.sql",
+                "consumes",
+                dataset_type="database_query",
+            )
+            return
+
         # --- SQLAlchemy create_engine(...) ----------------------------------
         if func_text.endswith("create_engine"):
             self._handle_data_call(
                 call_node,
                 "create_engine",
+                "consumes",
+                dataset_type="database",
+            )
+            return
+
+        # --- SQLAlchemy engine/session patterns -----------------------------
+        if func_text.endswith("engine.execute"):
+            self._handle_data_call(
+                call_node,
+                "engine.execute",
+                "consumes",
+                dataset_type="database_query",
+            )
+            return
+
+        if func_text.endswith("session.query"):
+            self._handle_data_call(
+                call_node,
+                "session.query",
+                "consumes",
+                dataset_type="database_query",
+            )
+            return
+
+        if func_text.endswith("engine.connect"):
+            self._handle_data_call(
+                call_node,
+                "engine.connect",
                 "consumes",
                 dataset_type="database",
             )
@@ -309,7 +368,8 @@ class PythonAnalyzer:
                 target_dataset=self.rel_path,
                 source_file=self.rel_path,
                 source_line=line_no,
-                transformation_type="consumes",
+                transformation_type="python_read",
+                line_range=[line_no, line_no],
                 confidence=confidence,
                 confidence_reason=reason,
             )
@@ -319,7 +379,8 @@ class PythonAnalyzer:
                 target_dataset=dataset_id,
                 source_file=self.rel_path,
                 source_line=line_no,
-                transformation_type="produces",
+                transformation_type="python_write",
+                line_range=[line_no, line_no],
                 confidence=confidence,
                 confidence_reason=reason,
             )
@@ -396,7 +457,8 @@ class PythonAnalyzer:
                         target_dataset=asset_name,
                         source_file=self.rel_path,
                         source_line=param.start_point[0] + 1,
-                        transformation_type="depends_on",
+                        transformation_type="config",
+                        line_range=[param.start_point[0] + 1, param.end_point[0] + 1],
                         confidence=0.95,
                         confidence_reason=f"explicit Dagster orchestration dependency in '{asset_name}'",
                     )

@@ -85,7 +85,15 @@ class TransformationEdge(BaseModel):
 
     # Type of transformation
     transformation_type: str = Field(
-        "sql_select", description="The type of transformation (e.g., 'sql_select')"
+        "select",
+        description=(
+            "Transformation type. Preferred values: "
+            "'select', 'join', 'cte', 'insert', 'python_read', 'python_write', 'config'"
+        ),
+    )
+    line_range: list[int] | None = Field(
+        None,
+        description="Two-item list [start_line, end_line] where transformation occurs in source_file",
     )
 
     # Confidence Score
@@ -95,3 +103,4 @@ class TransformationEdge(BaseModel):
     confidence_reason: str = Field(
         "assumed high", description="Detailed reason for the assigned confidence score"
     )
+    method: str = Field("static", description="How this edge was inferred: 'static' or 'llm'")

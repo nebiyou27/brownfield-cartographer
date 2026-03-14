@@ -24,7 +24,7 @@
       "id": "load/loaders.py",
       "source_file": "load/loaders.py",
       "source_line": null,
-      "description": "Python module with 8 imports, 9 data-flow edges",
+      "description": "Python module with 8 imports, 10 data-flow edges",
       "file_type": "python",
       "logical_name": "loaders",
       "git_change_velocity": 5
@@ -174,6 +174,15 @@
       "column_descriptions": {}
     },
     {
+      "id": "<dynamic>:df.write:load/loaders.py:122",
+      "source_file": "load/loaders.py",
+      "source_line": 122,
+      "description": "df.write() call",
+      "dataset_type": "file_sink",
+      "columns": [],
+      "column_descriptions": {}
+    },
+    {
       "id": "<dynamic>:create_engine:load/loaders.py:144",
       "source_file": "load/loaders.py",
       "source_line": 144,
@@ -216,20 +225,46 @@
       "target_dataset": "<dynamic>:to_csv:load/loaders.py:60",
       "source_file": "load/loaders.py",
       "source_line": 60,
-      "transformation_type": "produces",
+      "transformation_type": "python_write",
+      "line_range": [
+        60,
+        60
+      ],
       "confidence": 0.6,
       "confidence_reason": "inferred from dynamic to_csv() call (f-string or variable)",
+      "method": "static",
       "source": "load/loaders.py",
       "target": "<dynamic>:to_csv:load/loaders.py:60"
+    },
+    {
+      "source_dataset": "load/loaders.py",
+      "target_dataset": "<dynamic>:df.write:load/loaders.py:122",
+      "source_file": "load/loaders.py",
+      "source_line": 122,
+      "transformation_type": "python_write",
+      "line_range": [
+        122,
+        122
+      ],
+      "confidence": 0.6,
+      "confidence_reason": "inferred from dynamic df.write() call (f-string or variable)",
+      "method": "static",
+      "source": "load/loaders.py",
+      "target": "<dynamic>:df.write:load/loaders.py:122"
     },
     {
       "source_dataset": "load/loaders.py",
       "target_dataset": "<dynamic>:to_postgis:load/loaders.py:148",
       "source_file": "load/loaders.py",
       "source_line": 148,
-      "transformation_type": "produces",
+      "transformation_type": "python_write",
+      "line_range": [
+        148,
+        148
+      ],
       "confidence": 0.6,
       "confidence_reason": "inferred from dynamic to_postgis() call (f-string or variable)",
+      "method": "static",
       "source": "load/loaders.py",
       "target": "<dynamic>:to_postgis:load/loaders.py:148"
     },
@@ -238,9 +273,14 @@
       "target_dataset": "load/__main__.py",
       "source_file": "load/__main__.py",
       "source_line": 11,
-      "transformation_type": "imports",
+      "transformation_type": "config",
+      "line_range": [
+        11,
+        11
+      ],
       "confidence": 0.95,
       "confidence_reason": "structural Python import of 'load.loaders'",
+      "method": "static",
       "source": "load/loaders.py",
       "target": "load/__main__.py"
     },
@@ -249,9 +289,14 @@
       "target_dataset": "tests/load/test_loaders.py",
       "source_file": "tests/load/test_loaders.py",
       "source_line": 10,
-      "transformation_type": "imports",
+      "transformation_type": "config",
+      "line_range": [
+        10,
+        10
+      ],
       "confidence": 0.95,
       "confidence_reason": "structural Python import of 'load.loaders'",
+      "method": "static",
       "source": "load/loaders.py",
       "target": "tests/load/test_loaders.py"
     },
@@ -260,9 +305,14 @@
       "target_dataset": "tests/load/test_loaders.py",
       "source_file": "tests/load/test_loaders.py",
       "source_line": 9,
-      "transformation_type": "imports",
+      "transformation_type": "config",
+      "line_range": [
+        9,
+        9
+      ],
       "confidence": 0.95,
       "confidence_reason": "structural Python import of 'load'",
+      "method": "static",
       "source": "load/__init__.py",
       "target": "tests/load/test_loaders.py"
     },
@@ -271,9 +321,14 @@
       "target_dataset": "load/loaders.py",
       "source_file": "load/loaders.py",
       "source_line": 35,
-      "transformation_type": "consumes",
+      "transformation_type": "python_read",
+      "line_range": [
+        35,
+        35
+      ],
       "confidence": 0.6,
       "confidence_reason": "inferred from dynamic execute() call (f-string or variable)",
+      "method": "static",
       "source": "<dynamic>:execute:load/loaders.py:35",
       "target": "load/loaders.py"
     },
@@ -282,9 +337,14 @@
       "target_dataset": "load/loaders.py",
       "source_file": "load/loaders.py",
       "source_line": 59,
-      "transformation_type": "consumes",
+      "transformation_type": "python_read",
+      "line_range": [
+        59,
+        59
+      ],
       "confidence": 0.6,
       "confidence_reason": "inferred from dynamic read_json() call (f-string or variable)",
+      "method": "static",
       "source": "<dynamic>:read_json:load/loaders.py:59",
       "target": "load/loaders.py"
     },
@@ -293,9 +353,14 @@
       "target_dataset": "load/loaders.py",
       "source_file": "load/loaders.py",
       "source_line": 70,
-      "transformation_type": "consumes",
+      "transformation_type": "python_read",
+      "line_range": [
+        70,
+        70
+      ],
       "confidence": 0.6,
       "confidence_reason": "inferred from dynamic read_csv() call (f-string or variable)",
+      "method": "static",
       "source": "<dynamic>:read_csv:load/loaders.py:70",
       "target": "load/loaders.py"
     },
@@ -304,9 +369,14 @@
       "target_dataset": "load/loaders.py",
       "source_file": "load/loaders.py",
       "source_line": 99,
-      "transformation_type": "consumes",
+      "transformation_type": "python_read",
+      "line_range": [
+        99,
+        99
+      ],
       "confidence": 0.6,
       "confidence_reason": "inferred from dynamic execute() call (f-string or variable)",
+      "method": "static",
       "source": "<dynamic>:execute:load/loaders.py:99",
       "target": "load/loaders.py"
     },
@@ -315,9 +385,14 @@
       "target_dataset": "load/loaders.py",
       "source_file": "load/loaders.py",
       "source_line": 105,
-      "transformation_type": "consumes",
+      "transformation_type": "python_read",
+      "line_range": [
+        105,
+        105
+      ],
       "confidence": 0.6,
       "confidence_reason": "inferred from dynamic execute() call (f-string or variable)",
+      "method": "static",
       "source": "<dynamic>:execute:load/loaders.py:105",
       "target": "load/loaders.py"
     },
@@ -326,9 +401,14 @@
       "target_dataset": "load/loaders.py",
       "source_file": "load/loaders.py",
       "source_line": 112,
-      "transformation_type": "consumes",
+      "transformation_type": "python_read",
+      "line_range": [
+        112,
+        112
+      ],
       "confidence": 0.6,
       "confidence_reason": "inferred from dynamic execute() call (f-string or variable)",
+      "method": "static",
       "source": "<dynamic>:execute:load/loaders.py:112",
       "target": "load/loaders.py"
     },
@@ -337,9 +417,14 @@
       "target_dataset": "load/loaders.py",
       "source_file": "load/loaders.py",
       "source_line": 144,
-      "transformation_type": "consumes",
+      "transformation_type": "python_read",
+      "line_range": [
+        144,
+        144
+      ],
       "confidence": 0.6,
       "confidence_reason": "inferred from dynamic create_engine() call (f-string or variable)",
+      "method": "static",
       "source": "<dynamic>:create_engine:load/loaders.py:144",
       "target": "load/loaders.py"
     },
@@ -348,9 +433,14 @@
       "target_dataset": "tests/load/test_loaders.py",
       "source_file": "tests/load/test_loaders.py",
       "source_line": 111,
-      "transformation_type": "consumes",
+      "transformation_type": "python_read",
+      "line_range": [
+        111,
+        111
+      ],
       "confidence": 0.75,
       "confidence_reason": "inferred from literal argument in execute() call",
+      "method": "static",
       "source": "SELECT * from test_sources.test_load_file_to_pg",
       "target": "tests/load/test_loaders.py"
     },
@@ -359,9 +449,14 @@
       "target_dataset": "utils/generer_doc_recenssement.py",
       "source_file": "utils/generer_doc_recenssement.py",
       "source_line": 14,
-      "transformation_type": "consumes",
+      "transformation_type": "python_read",
+      "line_range": [
+        14,
+        14
+      ],
       "confidence": 0.75,
       "confidence_reason": "inferred from literal argument in read_csv() call",
+      "method": "static",
       "source": "4_seeds/logement_2020_valeurs.csv",
       "target": "utils/generer_doc_recenssement.py"
     }

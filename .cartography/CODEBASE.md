@@ -1,50 +1,53 @@
-<!-- CARTOGRAPHER v1 | generated: 2026-03-14T14:49:50.716285 | nodes: 112 | edges: 121 -->
+<!-- CARTOGRAPHER v1 | generated: 2026-03-14T15:14:54.082234 | nodes: 116 | edges: 164 -->
 
 ## SECTION:ARCHITECTURE_SUMMARY
 target_dir=D:\TRP-1\Week-4\brownfield-cartographer\make-open-data
 module_nodes=13
-dataset_nodes=99
-lineage_edges=121
+dataset_nodes=103
+lineage_edges=164
 domain_count=5
 
 ## SECTION:CRITICAL_PATH
-1|node=ventes_immobilieres|pagerank=0.1001|why=Centrality driven by 23 upstream sources and 1 downstream dependents.|purpose=
-2|node=ventes_immobilieres_enrichies|pagerank=0.0899|why=Centrality driven by 1 upstream sources and 0 downstream dependents.|purpose=
-3|node=load/loaders.py|pagerank=0.0338|why=Centrality driven by 7 upstream sources and 4 downstream dependents.|purpose=The module enables the ingestion of structured data (CSV, JSON, shapefiles) from external storage into a PostgreSQL database, facilitating data integration and persistent storage for downstream applications. It handles file downloading, format conversion, and table creation with proper schema management, ensuring data is correctly structured and validated before insertion.
-4|node=infos_communes|pagerank=0.0252|why=Centrality driven by 7 upstream sources and 9 downstream dependents.|purpose=
-5|node=tests/load/test_loaders.py|pagerank=0.0203|why=Centrality driven by 3 upstream sources and 0 downstream dependents.|purpose=The module enables the ingestion of CSV data into a PostgreSQL database, ensuring that the data is correctly formatted and mapped to the target schema. It verifies the integrity of the loaded data through automated tests, allowing for reliable data entry and retrieval.
+1|node=ventes_immobilieres|pagerank=0.0986|why=Centrality driven by 23 upstream sources and 1 downstream dependents.|purpose=
+2|node=ventes_immobilieres_enrichies|pagerank=0.0885|why=Centrality driven by 1 upstream sources and 0 downstream dependents.|purpose=
+3|node=load/loaders.py|pagerank=0.0327|why=Centrality driven by 7 upstream sources and 5 downstream dependents.|purpose=The module enables the ingestion of structured data (CSV, JSON, shapefiles) from external storage into a PostgreSQL database, facilitating data integration and persistent storage for downstream applications. It handles file downloading, format conversion, and table creation with proper schema management, ensuring data is correctly structured and validated before insertion.
+4|node=infos_communes|pagerank=0.0248|why=Centrality driven by 7 upstream sources and 9 downstream dependents.|purpose=
+5|node=tests/load/test_loaders.py|pagerank=0.0183|why=Centrality driven by 3 upstream sources and 0 downstream dependents.|purpose=The module enables the ingestion of CSV data into a PostgreSQL database, ensuring that the data is correctly formatted and mapped to the target schema. It verifies the integrity of the loaded data through automated tests, allowing for reliable data entry and retrieval.
 
 ## SECTION:SOURCES
 node=4_seeds/logement_2020_valeurs.csv
-node=bmo_2024
-node=cog_arrondissements
-node=cog_communes
-node=cog_departements
-node=cog_poste
-node=cog_regions
-node=communes_to_scot
-node=datatourisme_place
-node=dvf_2014
-node=dvf_2014_dev
-node=dvf_2015
-node=dvf_2015_dev
-node=dvf_2016
-node=dvf_2016_dev
-node=dvf_2017
-node=dvf_2017_dev
-node=dvf_2018
-node=dvf_2018_dev
-node=dvf_2019
+node=load/__init__.py
+node=logement_2020_valeurs
+node=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+node=make-open-data/1_data/intermediaires/recensement/activite_renomee.sql
+node=make-open-data/1_data/intermediaires/recensement/demographie_renomee.sql
+node=make-open-data/1_data/intermediaires/recensement/habitat_renomee.sql
+node=make-open-data/1_data/intermediaires/recensement/mobilite_renomee.sql
+node=make-open-data/1_data/prepare/recensement/activite/activite_communes.sql
+node=make-open-data/1_data/prepare/recensement/activite/activite_departements.sql
+node=make-open-data/1_data/prepare/recensement/activite/activite_iris.sql
+node=make-open-data/1_data/prepare/recensement/demographie/demographie_communes.sql
+node=make-open-data/1_data/prepare/recensement/demographie/demographie_departements.sql
+node=make-open-data/1_data/prepare/recensement/demographie/demographie_iris.sql
+node=make-open-data/1_data/prepare/recensement/habitat/habitat_communes.sql
+node=make-open-data/1_data/prepare/recensement/habitat/habitat_departements.sql
+node=make-open-data/1_data/prepare/recensement/habitat/habitat_iris.sql
+node=make-open-data/1_data/prepare/recensement/mobilite/mobilite_communes.sql
+node=make-open-data/1_data/prepare/recensement/mobilite/mobilite_departements.sql
+node=make-open-data/1_data/prepare/recensement/mobilite/mobilite_iris.sql
 
 ## SECTION:SINKS
 node=activite_departements
 node=activite_iris
 node=activite_renomee
 node=besoin_main_oeuvre_departement
+node=bpe_2023
+node=bpe_metadata
 node=commune_centroid_poste
 node=demographie_departements
 node=demographie_iris
 node=demographie_renomee
+node=filosofi_iris_2021
 node=habitat_departements
 node=habitat_iris
 node=infos_postes
@@ -54,9 +57,6 @@ node=mobilite_departements
 node=mobilite_iris
 node=mobilite_renomee
 node=place
-node=postes_communes
-node=professionels_sante_departement
-node=revenu_commune
 
 ## SECTION:KNOWN_DEBT
 cycles=0
@@ -104,29 +104,6 @@ module=tests/load/test_loaders.py|purpose=The module enables the ingestion of CS
 module=utils/generer_doc_recenssement.py|purpose=The module generates structured documentation for demography-related variables in a commune, extracting and formatting data from a CSV file to provide clear insights into household counts and response patterns. It ensures consistent labeling and presentation of demographic data, aiding in data interpretation and system documentation.
 
 ## SECTION:LOW_CONFIDENCE_LINEAGE
-edge=dvf_2024_dev->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
-edge=dvf_2024->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
-edge=dvf_2023_dev->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
-edge=dvf_2023->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
-edge=dvf_2022_dev->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
-edge=dvf_2022->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
-edge=dvf_2021_dev->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
-edge=dvf_2021->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
-edge=dvf_2020_dev->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
-edge=dvf_2020->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
-edge=dvf_2019_dev->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
-edge=dvf_2019->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
-edge=dvf_2018_dev->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
-edge=dvf_2018->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
-edge=dvf_2017_dev->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
-edge=dvf_2017->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
-edge=dvf_2016_dev->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
-edge=dvf_2016->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
-edge=dvf_2015_dev->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
-edge=dvf_2015->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
-edge=dvf_2014_dev->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
-edge=dvf_default->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
-edge=dvf_2014->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
 edge=logement_2020->activite_renomee|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/recensement/activite_renomee.sql
 edge=logement_2020->demographie_renomee|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/recensement/demographie_renomee.sql
 edge=logement_2020->habitat_renomee|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/recensement/habitat_renomee.sql
@@ -135,7 +112,30 @@ edge=logement_2020_dev->activite_renomee|confidence=0.70|reason=extracted via sq
 edge=logement_2020_dev->demographie_renomee|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/recensement/demographie_renomee.sql
 edge=logement_2020_dev->habitat_renomee|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/recensement/habitat_renomee.sql
 edge=logement_2020_dev->mobilite_renomee|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/recensement/mobilite_renomee.sql
-edge=infos_communes->revenu_commune|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/prepare/revenu/revenu_commune.sql
 edge=filosofi_commune_2021->revenu_commune|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/prepare/revenu/revenu_commune.sql
+edge=dvf_default->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=dvf_2014_dev->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=dvf_2015_dev->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=dvf_2016_dev->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=dvf_2017_dev->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=dvf_2018_dev->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=dvf_2019_dev->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=dvf_2020_dev->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=dvf_2021_dev->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=dvf_2022_dev->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=dvf_2023_dev->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=dvf_2024_dev->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=dvf_2014->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=dvf_2015->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=dvf_2016->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=dvf_2017->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=dvf_2018->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=dvf_2019->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=dvf_2020->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=dvf_2021->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=dvf_2022->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=dvf_2023->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=dvf_2024->ventes_immobilieres|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/intermediaires/foncier/ventes_immobilieres.sql
+edge=infos_communes->revenu_commune|confidence=0.70|reason=extracted via sqlglot but found Jinja placeholders, structural integrity uncertain|source=make-open-data/1_data/prepare/revenu/revenu_commune.sql
 edge=4_seeds/logement_2020_valeurs.csv->utils/generer_doc_recenssement.py|confidence=0.75|reason=inferred from literal argument in read_csv() call|source=utils/generer_doc_recenssement.py
 

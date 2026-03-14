@@ -7,6 +7,7 @@ from pathlib import Path
 
 import sqlglot
 from sqlglot import exp
+from sqlglot.errors import ParseError
 
 # Add project root to sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
@@ -15,6 +16,7 @@ from src.models.schemas import TransformationEdge
 from src.path_utils import normalize_path_key
 
 logger = get_logger(__name__)
+DEFAULT_DIALECT_ORDER = ["duckdb", "postgres", "bigquery", "snowflake"]
 
 
 def _relative_file_path(file_path: str) -> str:
@@ -272,6 +274,145 @@ def get_macros_map(macros_dir: str) -> dict[str, str]:
     return macro_map
 
 
+def _count_parse_errors(error: Exception) -> int:
+    if getattr(error, "errors", None):
+        return max(1, len(error.errors))
+    if isinstance(error, ParseError) and getattr(error, "errors", None):
+        return max(1, len(error.errors))
+    return 1
+
+
+def _has_ancestor(node: exp.Expression, ancestor_type: type[exp.Expression]) -> bool:
+    current = getattr(node, "parent", None)
+    while current is not None:
+        if isinstance(current, ancestor_type):
+            return True
+        current = getattr(current, "parent", None)
+    return False
+
+
+class SQLLineageAnalyzer:
+    """
+    SQL lineage analyzer with configurable dialects and automatic dialect detection.
+    """
+
+    def __init__(self, dialects: list[str] | None = None):
+        self.dialects = dialects or list(DEFAULT_DIALECT_ORDER)
+
+    def _parse_with_best_dialect(
+        self, sql: str, source_file: str, dialect: str | None = None
+    ) -> tuple[list, str | None, list[str]]:
+        if dialect:
+            parsed = sqlglot.parse(sql, read=dialect)
+            logger.info("[SQL Lineage] Selected dialect '%s' for %s", dialect, source_file)
+            return parsed, dialect, []
+
+        failures: list[tuple[str, int, str]] = []
+        for candidate in self.dialects:
+            try:
+                parsed = sqlglot.parse(sql, read=candidate)
+                logger.info("[SQL Lineage] Selected dialect '%s' for %s", candidate, source_file)
+                return parsed, candidate, []
+            except Exception as e:
+                failures.append((candidate, _count_parse_errors(e), str(e)))
+
+        if failures:
+            best_dialect, best_count, best_error = min(failures, key=lambda item: item[1])
+            logger.warning(
+                "[SQL Lineage] Could not parse %s with any dialect. Best candidate by parse errors: "
+                "'%s' (%d error(s))",
+                source_file,
+                best_dialect,
+                best_count,
+            )
+            return [], best_dialect, [f"{best_dialect}: {best_error}"]
+        return [], None, []
+
+    def get_lineage_from_sql(
+        self,
+        sql: str,
+        target_name: str,
+        source_file: str,
+        confidence: float = 0.95,
+        confidence_reason: str = "extracted via sqlglot from direct SELECT with no Jinja substitution",
+        dialect: str | None = None,
+    ) -> list[TransformationEdge]:
+        """
+        Parse cleaned SQL and return TransformationEdges.
+        Auto-detects dialect by trying configured dialects and choosing first successful parse.
+        """
+        sql = sanitize_sql_for_sqlglot(sql, source_file)
+        total_lines = max(1, sql.count("\n") + 1)
+        try:
+            parsed_statements, _selected_dialect, parse_errors = self._parse_with_best_dialect(
+                sql, source_file, dialect=dialect
+            )
+        except Exception as e:
+            safe_error = str(e).encode("ascii", "backslashreplace").decode("ascii")
+            logger.warning("Could not parse %s with dialect '%s' - skipped", source_file, dialect)
+            logger.debug("Parse error: %s", safe_error)
+            _add_parse_failure_placeholder_node(
+                source_file,
+                f"sql parse failure ({safe_error})",
+            )
+            return []
+
+        if not parsed_statements:
+            logger.warning("Could not parse %s with any dialect - skipped", source_file)
+            if parse_errors:
+                safe_error = parse_errors[-1].encode("ascii", "backslashreplace").decode("ascii")
+                logger.debug("Last parse error: %s", safe_error)
+                _add_parse_failure_placeholder_node(
+                    source_file,
+                    f"sql parse failure ({safe_error})",
+                )
+            else:
+                _add_parse_failure_placeholder_node(source_file, "sql parse failure")
+            return []
+
+        edges = []
+        for statement in parsed_statements:
+            if not statement:
+                continue
+
+            cte_names = set()
+            for cte in statement.find_all(exp.CTE):
+                if cte.alias:
+                    cte_names.add(cte.alias.lower())
+
+            for table in statement.find_all(exp.Table):
+                if not table.name:
+                    continue
+                table_name = table.name.lower()
+
+                if table_name not in cte_names and table_name != target_name.lower():
+                    if _has_ancestor(table, exp.Join):
+                        transformation_type = "join"
+                    elif _has_ancestor(table, exp.CTE):
+                        transformation_type = "cte"
+                    elif _has_ancestor(table, exp.Insert):
+                        transformation_type = "insert"
+                    else:
+                        transformation_type = "select"
+                    edges.append(
+                        TransformationEdge(
+                            source_dataset=table_name,
+                            target_dataset=target_name,
+                            source_file=source_file,
+                            source_line=None,
+                            transformation_type=transformation_type,
+                            line_range=[1, total_lines],
+                            confidence=confidence,
+                            confidence_reason=confidence_reason,
+                        )
+                    )
+
+        return edges
+
+
+_DEFAULT_SQL_ANALYZER = SQLLineageAnalyzer()
+
+
 def get_lineage_from_sql(
     sql: str,
     target_name: str,
@@ -279,71 +420,13 @@ def get_lineage_from_sql(
     confidence: float = 0.95,
     confidence_reason: str = "extracted via sqlglot from direct SELECT with no Jinja substitution",
 ) -> list[TransformationEdge]:
-    """
-    Parse cleaned SQL and return TransformationEdges.
-    Tries multiple sqlglot dialects for better compatibility.
-    """
-    dialects = ["duckdb", "bigquery", "snowflake", "postgres"]
-    parsed_statements = []
-    parse_errors = []
-
-    sql = sanitize_sql_for_sqlglot(sql, source_file)
-
-    # Try multiple dialects
-    for dialect in dialects:
-        try:
-            parsed_statements = sqlglot.parse(sql, read=dialect)
-            if parsed_statements:
-                break
-        except Exception as e:
-            parse_errors.append(f"{dialect}: {e}")
-            continue
-
-    if not parsed_statements:
-        logger.warning("Could not parse %s with any dialect - skipped", source_file)
-        if parse_errors:
-            safe_error = parse_errors[-1].encode("ascii", "backslashreplace").decode("ascii")
-            logger.debug("Last parse error: %s", safe_error)
-            _add_parse_failure_placeholder_node(
-                source_file,
-                f"sql parse failure ({safe_error})",
-            )
-        else:
-            _add_parse_failure_placeholder_node(source_file, "sql parse failure")
-        return []
-
-    edges = []
-    for statement in parsed_statements:
-        if not statement:
-            continue
-
-        # 1. Extract all CTE names so we can filter them out
-        cte_names = set()
-        for cte in statement.find_all(exp.CTE):
-            if cte.alias:
-                cte_names.add(cte.alias.lower())
-
-        # 2. Extract all Table references
-        for table in statement.find_all(exp.Table):
-            if not table.name:
-                continue
-            table_name = table.name.lower()
-
-            # Filter: No CTEs, no self-reference
-            if table_name not in cte_names and table_name != target_name.lower():
-                edges.append(
-                    TransformationEdge(
-                        source_dataset=table_name,
-                        target_dataset=target_name,
-                        source_file=source_file,
-                        source_line=None,
-                        transformation_type="sql_select",
-                        confidence=confidence,
-                        confidence_reason=confidence_reason,
-                    )
-                )
-
-    return edges
+    return _DEFAULT_SQL_ANALYZER.get_lineage_from_sql(
+        sql=sql,
+        target_name=target_name,
+        source_file=source_file,
+        confidence=confidence,
+        confidence_reason=confidence_reason,
+    )
 
 
 def analyze_sql_file(
@@ -379,7 +462,8 @@ def analyze_sql_file(
                         target_dataset=macro_file,
                         source_file=rel_path,
                         source_line=None,
-                        transformation_type="configures",
+                        transformation_type="config",
+                        line_range=[1, max(1, raw_sql.count("\n") + 1)],
                         confidence=0.85,
                         confidence_reason=f"inferred via macro call to '{macro_name}'",
                     )
@@ -391,13 +475,15 @@ def analyze_sql_file(
     depends_on_pattern = r"--[-]*\s*depends_on:\s*\{\{\s*ref\(\s*['\"]([^'\"]+)['\"]\s*\)\s*\}\}"
     for match in re.finditer(depends_on_pattern, raw_sql):
         upstream = match.group(1)
+        line_no = raw_sql.count("\n", 0, match.start()) + 1
         edges.append(
             TransformationEdge(
                 source_dataset=upstream,
                 target_dataset=target_name,
                 source_file=rel_path,
-                source_line=None,
-                transformation_type="sql_select",
+                source_line=line_no,
+                transformation_type="select",
+                line_range=[line_no, line_no],
                 confidence=1.0,
                 confidence_reason=f"explicitly declared via '-- depends_on' for '{upstream}'",
             )

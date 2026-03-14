@@ -1,3 +1,4 @@
+import glob
 import os
 import re
 import sys
@@ -9,7 +10,7 @@ import yaml
 # Add project root to sys.path for absolute imports when running as script
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 from src.logger import get_logger
-from src.models.schemas import DatasetNode, ModuleNode
+from src.models.schemas import DatasetNode, ModuleNode, TransformationEdge
 from src.path_utils import normalize_path_key
 
 logger = get_logger(__name__)
@@ -208,6 +209,106 @@ def extract_nodes_from_schema_yml(
     return nodes
 
 
+def _extract_dep_targets(dep: Any) -> list[str]:
+    targets: list[str] = []
+    if isinstance(dep, str):
+        ref_match = re.search(r"ref\(\s*['\"]([^'\"]+)['\"]", dep)
+        src_match = re.search(r"source\(\s*['\"][^'\"]+['\"]\s*,\s*['\"]([^'\"]+)['\"]\s*\)", dep)
+        if ref_match:
+            targets.append(ref_match.group(1))
+        elif src_match:
+            targets.append(src_match.group(1))
+        elif dep.strip():
+            targets.append(dep.strip())
+    return targets
+
+
+def extract_lineage_edges_from_schema_yml(file_path: str) -> list[TransformationEdge]:
+    """
+    Parse dbt schema.yml and extract explicit config lineage:
+    - model upstream refs (depends_on / refs)
+    - source definitions and their tables
+    """
+    edges: list[TransformationEdge] = []
+    content, parse_error = parse_yaml_file(file_path)
+    rel_path = _relative_file_path(file_path)
+
+    if parse_error:
+        return edges
+
+    total_lines = 1
+    try:
+        with open(file_path, encoding="utf-8") as f:
+            total_lines = max(1, f.read().count("\n") + 1)
+    except Exception:
+        total_lines = 1
+
+    if "models" in content and isinstance(content["models"], list):
+        for model in content["models"]:
+            model_name = model.get("name")
+            if not model_name:
+                continue
+
+            raw_deps: list[Any] = []
+            depends_on = model.get("depends_on")
+            if isinstance(depends_on, list):
+                raw_deps.extend(depends_on)
+            elif isinstance(depends_on, dict):
+                nodes = depends_on.get("nodes", [])
+                if isinstance(nodes, list):
+                    raw_deps.extend(nodes)
+
+            refs = model.get("refs")
+            if isinstance(refs, list):
+                raw_deps.extend([f"ref('{ref_name}')" for ref_name in refs])
+
+            upstreams: set[str] = set()
+            for dep in raw_deps:
+                for target in _extract_dep_targets(dep):
+                    upstreams.add(target)
+
+            for upstream in sorted(upstreams):
+                edges.append(
+                    TransformationEdge(
+                        source_dataset=upstream,
+                        target_dataset=model_name,
+                        source_file=rel_path,
+                        source_line=None,
+                        transformation_type="config",
+                        line_range=[1, total_lines],
+                        confidence=1.0,
+                        confidence_reason="explicit declaration in dbt schema.yml model dependency",
+                        method="static",
+                    )
+                )
+
+    if "sources" in content and isinstance(content["sources"], list):
+        for source in content["sources"]:
+            source_name = source.get("name")
+            tables = source.get("tables", [])
+            if not source_name or not isinstance(tables, list):
+                continue
+            for table in tables:
+                table_name = table.get("name")
+                if not table_name:
+                    continue
+                edges.append(
+                    TransformationEdge(
+                        source_dataset=source_name,
+                        target_dataset=table_name,
+                        source_file=rel_path,
+                        source_line=None,
+                        transformation_type="config",
+                        line_range=[1, total_lines],
+                        confidence=1.0,
+                        confidence_reason="explicit declaration in dbt schema.yml source table",
+                        method="static",
+                    )
+                )
+
+    return edges
+
+
 def extract_project_metadata(project_yml_path: str) -> dict[str, Any]:
     """
     Parses dbt_project.yml to extract project-level configuration.
@@ -267,6 +368,22 @@ def analyze_all_yaml_files(root_dir: str) -> dict[str, Any]:
         results["macro_paths"] = proj_metadata["macro_paths"]
         logger.info("Processed config: %s", project_path)
     return results
+
+
+def analyze_all_dag_config_files(root_dir: str, model_paths: list[str]) -> list[TransformationEdge]:
+    """
+    Discover and parse dbt schema.yml/.yaml files from configured model paths.
+    """
+    edges: list[TransformationEdge] = []
+    for model_path in model_paths:
+        absolute = os.path.join(root_dir, model_path)
+        if not os.path.exists(absolute):
+            continue
+        for pattern in ("**/schema.yml", "**/schema.yaml"):
+            for file_path in glob.glob(os.path.join(absolute, pattern), recursive=True):
+                logger.info("[DAG Config] Processing: %s", file_path)
+                edges.extend(extract_lineage_edges_from_schema_yml(file_path))
+    return edges
 
 
 if __name__ == "__main__":

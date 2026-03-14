@@ -4,11 +4,11 @@
   "load/__init__.py": "loader",
   "load/__main__.py": "ingestion",
   "tests/conftest.py": "db",
-  "tests/__init__.py": "test",
-  "tests/fixtures/db.py": "test",
-  "tests/fixtures/__init__.py": "test",
+  "tests/__init__.py": "testenv",
+  "tests/fixtures/db.py": "testenv",
+  "tests/fixtures/__init__.py": "testenv",
   "tests/load/test_loaders.py": "ingestion",
-  "tests/load/__init__.py": "test",
-  "utils/generer_doc_recenssement.py": "doc",
-  "4_seeds/logement_2020_valeurs.csv": "doc"
+  "tests/load/__init__.py": "testenv",
+  "utils/generer_doc_recenssement.py": "demographic",
+  "4_seeds/logement_2020_valeurs.csv": "demographic"
 }

@@ -65,3 +65,15 @@ class KnowledgeGraph:
             source_file = data.get("source_file", "unknown")
             lines.append(f"{source} -> {target} (from {source_file})")
         return "\n".join(lines)
+
+    def find_sources(self) -> list:
+        """
+        Return nodes with in-degree 0 (no upstream dependencies).
+        """
+        return [node for node, degree in self.graph.in_degree() if degree == 0]
+
+    def find_sinks(self) -> list:
+        """
+        Return nodes with out-degree 0 (no downstream dependents).
+        """
+        return [node for node, degree in self.graph.out_degree() if degree == 0]

@@ -64,7 +64,7 @@ def test_hydrologist_trace_lineage_adds_nodes_and_edges(monkeypatch, tmp_path):
         source_dataset="python.extract",
         target_dataset="raw.orders",
         source_file="src/extract.py",
-        transformation_type="imports",
+        transformation_type="config",
         confidence=0.95,
         confidence_reason="precomputed",
     )
@@ -81,6 +81,85 @@ def test_hydrologist_trace_lineage_adds_nodes_and_edges(monkeypatch, tmp_path):
     assert graph.graph.has_edge("python.extract", "raw.orders")
     assert graph.graph.has_edge("raw.orders", "stg.orders")
     assert "stg.orders" in graph.graph.nodes
+    assert set(graph.graph.nodes["raw.orders"]["sources"]) == {"config", "python", "sql"}
+    assert set(graph.graph.nodes["stg.orders"]["sources"]) == {"sql"}
+
+
+def test_hydrologist_merges_duplicate_edges_and_preserves_edge_metadata(monkeypatch, tmp_path):
+    repo_models = tmp_path / "models"
+    repo_models.mkdir()
+    sql_edge = TransformationEdge(
+        source_dataset="raw.orders",
+        target_dataset="stg.orders",
+        source_file="models/stg_orders.sql",
+        transformation_type="select",
+        line_range=[1, 2],
+        confidence=0.95,
+        confidence_reason="sql parse",
+    )
+    python_edge = TransformationEdge(
+        source_dataset="raw.orders",
+        target_dataset="stg.orders",
+        source_file="src/pipeline.py",
+        transformation_type="python_read",
+        line_range=[10, 10],
+        confidence=0.70,
+        confidence_reason="python read",
+    )
+    monkeypatch.setattr(
+        "src.agents.hydrologist.analyze_all_sql_files", lambda path, macros_dirs: [sql_edge]
+    )
+
+    graph = KnowledgeGraph("lineage")
+    Hydrologist(str(tmp_path)).trace_lineage(
+        graph,
+        datasets=[],
+        model_paths=["models"],
+        macro_paths=[],
+        precomputed_edges=[python_edge],
+    )
+
+    edge_data = graph.graph.get_edge_data("raw.orders", "stg.orders")
+    assert edge_data is not None
+    assert set(edge_data["sources"]) == {"python", "sql"}
+    assert len(edge_data.get("edge_variants", [])) >= 2
+
+
+def test_hydrologist_includes_dag_config_edges(monkeypatch, tmp_path):
+    repo_models = tmp_path / "models"
+    repo_models.mkdir()
+
+    monkeypatch.setattr(
+        "src.agents.hydrologist.analyze_all_sql_files", lambda path, macros_dirs: []
+    )
+    config_edge = TransformationEdge(
+        source_dataset="raw",
+        target_dataset="orders",
+        source_file="models/schema.yml",
+        transformation_type="config",
+        line_range=[1, 10],
+        confidence=1.0,
+        confidence_reason="explicit declaration",
+        method="static",
+    )
+    monkeypatch.setattr(
+        "src.agents.hydrologist.analyze_all_dag_config_files",
+        lambda repo_path, model_paths: [config_edge],
+    )
+
+    graph = KnowledgeGraph("lineage")
+    Hydrologist(str(tmp_path)).trace_lineage(
+        graph,
+        datasets=[],
+        model_paths=["models"],
+        macro_paths=[],
+        precomputed_edges=[],
+    )
+
+    assert graph.graph.has_edge("raw", "orders")
+    edge_data = graph.graph.get_edge_data("raw", "orders")
+    assert edge_data["transformation_type"] == "config"
+    assert edge_data["method"] == "static"
 
 
 def test_surveyor_combines_yaml_and_python_analysis(monkeypatch, tmp_path):
@@ -114,7 +193,7 @@ def test_surveyor_combines_yaml_and_python_analysis(monkeypatch, tmp_path):
         source_dataset="orders",
         target_dataset="derived.orders",
         source_file="src/app.py",
-        transformation_type="imports",
+        transformation_type="config",
     )
 
     monkeypatch.setattr(
@@ -297,9 +376,9 @@ def test_semanticist_helpers_and_generation(monkeypatch, tmp_path):
 
     graph = KnowledgeGraph("module")
     graph.graph.add_node("src/app.py", file_type="python")
-    graph.graph.add_edge("raw.orders", "stg.orders", transformation_type="sql_select")
+    graph.graph.add_edge("raw.orders", "stg.orders", transformation_type="select")
     assert "src/app.py [python]" in _summarise_modules(graph)
-    assert "raw.orders --[sql_select]--> stg.orders" in _summarise_lineage(graph)
+    assert "raw.orders --[select]--> stg.orders" in _summarise_lineage(graph)
 
     monkeypatch.setattr(
         "src.agents.semanticist._ollama_generate",

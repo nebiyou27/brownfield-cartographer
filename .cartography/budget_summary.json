@@ -3,6 +3,6 @@
     "deepseek-r1:8b": 1
   },
   "estimated_tokens_per_model": {
-    "deepseek-r1:8b": 2325
+    "deepseek-r1:8b": 2235
   }
 }

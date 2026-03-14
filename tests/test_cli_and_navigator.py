@@ -212,7 +212,7 @@ def test_trace_lineage_handles_upstream_downstream_and_missing(monkeypatch):
     graph.add_edge(
         "raw.orders",
         "stg.orders",
-        transformation_type="sql_select",
+        transformation_type="select",
         source_file="models/stg_orders.sql",
         confidence=0.95,
         confidence_reason="direct select parse",
@@ -220,7 +220,7 @@ def test_trace_lineage_handles_upstream_downstream_and_missing(monkeypatch):
     graph.add_edge(
         "stg.orders",
         "mart.orders",
-        transformation_type="aggregate",
+        transformation_type="join",
         source_file="models/mart_orders.sql",
         confidence=0.70,
         confidence_reason="jinja placeholders reduced certainty",
@@ -233,9 +233,9 @@ def test_trace_lineage_handles_upstream_downstream_and_missing(monkeypatch):
     )
     missing = navigator.trace_lineage.invoke({"dataset": "unknown", "direction": "upstream"})
 
-    assert "raw.orders --[sql_select]--> stg.orders" in upstream
+    assert "raw.orders --[select]--> stg.orders" in upstream
     assert "confidence: 0.95" in upstream
-    assert "stg.orders --[aggregate]--> mart.orders" in downstream
+    assert "stg.orders --[join]--> mart.orders" in downstream
     assert "confidence: 0.70" in downstream
     assert "not found in lineage graph" in missing
 
