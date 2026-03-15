@@ -511,6 +511,12 @@
       ]
     },
     {
+      "id": "activite_renomee",
+      "sources": [
+        "sql"
+      ]
+    },
+    {
       "id": "make-open-data/1_data/intermediaires/recensement/activite_renomee.sql",
       "sources": [
         "sql"
@@ -523,7 +529,7 @@
       ]
     },
     {
-      "id": "activite_renomee",
+      "id": "demographie_renomee",
       "sources": [
         "sql"
       ]
@@ -535,7 +541,7 @@
       ]
     },
     {
-      "id": "demographie_renomee",
+      "id": "habitat_renomee",
       "sources": [
         "sql"
       ]
@@ -547,19 +553,13 @@
       ]
     },
     {
-      "id": "habitat_renomee",
+      "id": "mobilite_renomee",
       "sources": [
         "sql"
       ]
     },
     {
       "id": "make-open-data/1_data/intermediaires/recensement/mobilite_renomee.sql",
-      "sources": [
-        "sql"
-      ]
-    },
-    {
-      "id": "mobilite_renomee",
       "sources": [
         "sql"
       ]
@@ -2158,16 +2158,46 @@
       "target_dataset": "activite_renomee",
       "source_file": "make-open-data/1_data/intermediaires/recensement/activite_renomee.sql",
       "source_line": null,
-      "transformation_type": "cte",
+      "transformation_type": "select",
       "line_range": [
         1,
-        10
+        23
       ],
-      "confidence": 0.7,
-      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "confidence": 0.6,
+      "confidence_reason": "conditional Jinja branch \u2014 one path active at runtime",
       "method": "static",
       "sources": [
         "sql"
+      ],
+      "edge_variants": [
+        {
+          "source_dataset": "logement_2020",
+          "target_dataset": "activite_renomee",
+          "source_file": "make-open-data/1_data/intermediaires/recensement/activite_renomee.sql",
+          "source_line": null,
+          "transformation_type": "select",
+          "line_range": [
+            1,
+            23
+          ],
+          "confidence": 0.6,
+          "confidence_reason": "conditional Jinja branch \u2014 one path active at runtime",
+          "method": "static"
+        },
+        {
+          "source_dataset": "logement_2020",
+          "target_dataset": "activite_renomee",
+          "source_file": "make-open-data/1_data/intermediaires/recensement/activite_renomee.sql",
+          "source_line": null,
+          "transformation_type": "cte",
+          "line_range": [
+            1,
+            10
+          ],
+          "confidence": 0.7,
+          "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+          "method": "static"
+        }
       ],
       "source": "logement_2020",
       "target": "activite_renomee"
@@ -2177,16 +2207,46 @@
       "target_dataset": "demographie_renomee",
       "source_file": "make-open-data/1_data/intermediaires/recensement/demographie_renomee.sql",
       "source_line": null,
-      "transformation_type": "cte",
+      "transformation_type": "select",
       "line_range": [
         1,
-        10
+        23
       ],
-      "confidence": 0.7,
-      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "confidence": 0.6,
+      "confidence_reason": "conditional Jinja branch \u2014 one path active at runtime",
       "method": "static",
       "sources": [
         "sql"
+      ],
+      "edge_variants": [
+        {
+          "source_dataset": "logement_2020",
+          "target_dataset": "demographie_renomee",
+          "source_file": "make-open-data/1_data/intermediaires/recensement/demographie_renomee.sql",
+          "source_line": null,
+          "transformation_type": "select",
+          "line_range": [
+            1,
+            23
+          ],
+          "confidence": 0.6,
+          "confidence_reason": "conditional Jinja branch \u2014 one path active at runtime",
+          "method": "static"
+        },
+        {
+          "source_dataset": "logement_2020",
+          "target_dataset": "demographie_renomee",
+          "source_file": "make-open-data/1_data/intermediaires/recensement/demographie_renomee.sql",
+          "source_line": null,
+          "transformation_type": "cte",
+          "line_range": [
+            1,
+            10
+          ],
+          "confidence": 0.7,
+          "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+          "method": "static"
+        }
       ],
       "source": "logement_2020",
       "target": "demographie_renomee"
@@ -2196,16 +2256,46 @@
       "target_dataset": "habitat_renomee",
       "source_file": "make-open-data/1_data/intermediaires/recensement/habitat_renomee.sql",
       "source_line": null,
-      "transformation_type": "cte",
+      "transformation_type": "select",
       "line_range": [
         1,
-        10
+        23
       ],
-      "confidence": 0.7,
-      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "confidence": 0.6,
+      "confidence_reason": "conditional Jinja branch \u2014 one path active at runtime",
       "method": "static",
       "sources": [
         "sql"
+      ],
+      "edge_variants": [
+        {
+          "source_dataset": "logement_2020",
+          "target_dataset": "habitat_renomee",
+          "source_file": "make-open-data/1_data/intermediaires/recensement/habitat_renomee.sql",
+          "source_line": null,
+          "transformation_type": "select",
+          "line_range": [
+            1,
+            23
+          ],
+          "confidence": 0.6,
+          "confidence_reason": "conditional Jinja branch \u2014 one path active at runtime",
+          "method": "static"
+        },
+        {
+          "source_dataset": "logement_2020",
+          "target_dataset": "habitat_renomee",
+          "source_file": "make-open-data/1_data/intermediaires/recensement/habitat_renomee.sql",
+          "source_line": null,
+          "transformation_type": "cte",
+          "line_range": [
+            1,
+            10
+          ],
+          "confidence": 0.7,
+          "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+          "method": "static"
+        }
       ],
       "source": "logement_2020",
       "target": "habitat_renomee"
@@ -2215,16 +2305,46 @@
       "target_dataset": "mobilite_renomee",
       "source_file": "make-open-data/1_data/intermediaires/recensement/mobilite_renomee.sql",
       "source_line": null,
-      "transformation_type": "cte",
+      "transformation_type": "select",
       "line_range": [
         1,
-        10
+        23
       ],
-      "confidence": 0.7,
-      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "confidence": 0.6,
+      "confidence_reason": "conditional Jinja branch \u2014 one path active at runtime",
       "method": "static",
       "sources": [
         "sql"
+      ],
+      "edge_variants": [
+        {
+          "source_dataset": "logement_2020",
+          "target_dataset": "mobilite_renomee",
+          "source_file": "make-open-data/1_data/intermediaires/recensement/mobilite_renomee.sql",
+          "source_line": null,
+          "transformation_type": "select",
+          "line_range": [
+            1,
+            23
+          ],
+          "confidence": 0.6,
+          "confidence_reason": "conditional Jinja branch \u2014 one path active at runtime",
+          "method": "static"
+        },
+        {
+          "source_dataset": "logement_2020",
+          "target_dataset": "mobilite_renomee",
+          "source_file": "make-open-data/1_data/intermediaires/recensement/mobilite_renomee.sql",
+          "source_line": null,
+          "transformation_type": "cte",
+          "line_range": [
+            1,
+            10
+          ],
+          "confidence": 0.7,
+          "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+          "method": "static"
+        }
       ],
       "source": "logement_2020",
       "target": "mobilite_renomee"
@@ -2253,16 +2373,46 @@
       "target_dataset": "activite_renomee",
       "source_file": "make-open-data/1_data/intermediaires/recensement/activite_renomee.sql",
       "source_line": null,
-      "transformation_type": "cte",
+      "transformation_type": "select",
       "line_range": [
         1,
-        10
+        23
       ],
-      "confidence": 0.7,
-      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "confidence": 0.6,
+      "confidence_reason": "conditional Jinja branch \u2014 one path active at runtime",
       "method": "static",
       "sources": [
         "sql"
+      ],
+      "edge_variants": [
+        {
+          "source_dataset": "logement_2020_dev",
+          "target_dataset": "activite_renomee",
+          "source_file": "make-open-data/1_data/intermediaires/recensement/activite_renomee.sql",
+          "source_line": null,
+          "transformation_type": "select",
+          "line_range": [
+            1,
+            23
+          ],
+          "confidence": 0.6,
+          "confidence_reason": "conditional Jinja branch \u2014 one path active at runtime",
+          "method": "static"
+        },
+        {
+          "source_dataset": "logement_2020_dev",
+          "target_dataset": "activite_renomee",
+          "source_file": "make-open-data/1_data/intermediaires/recensement/activite_renomee.sql",
+          "source_line": null,
+          "transformation_type": "cte",
+          "line_range": [
+            1,
+            10
+          ],
+          "confidence": 0.7,
+          "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+          "method": "static"
+        }
       ],
       "source": "logement_2020_dev",
       "target": "activite_renomee"
@@ -2272,16 +2422,46 @@
       "target_dataset": "demographie_renomee",
       "source_file": "make-open-data/1_data/intermediaires/recensement/demographie_renomee.sql",
       "source_line": null,
-      "transformation_type": "cte",
+      "transformation_type": "select",
       "line_range": [
         1,
-        10
+        23
       ],
-      "confidence": 0.7,
-      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "confidence": 0.6,
+      "confidence_reason": "conditional Jinja branch \u2014 one path active at runtime",
       "method": "static",
       "sources": [
         "sql"
+      ],
+      "edge_variants": [
+        {
+          "source_dataset": "logement_2020_dev",
+          "target_dataset": "demographie_renomee",
+          "source_file": "make-open-data/1_data/intermediaires/recensement/demographie_renomee.sql",
+          "source_line": null,
+          "transformation_type": "select",
+          "line_range": [
+            1,
+            23
+          ],
+          "confidence": 0.6,
+          "confidence_reason": "conditional Jinja branch \u2014 one path active at runtime",
+          "method": "static"
+        },
+        {
+          "source_dataset": "logement_2020_dev",
+          "target_dataset": "demographie_renomee",
+          "source_file": "make-open-data/1_data/intermediaires/recensement/demographie_renomee.sql",
+          "source_line": null,
+          "transformation_type": "cte",
+          "line_range": [
+            1,
+            10
+          ],
+          "confidence": 0.7,
+          "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+          "method": "static"
+        }
       ],
       "source": "logement_2020_dev",
       "target": "demographie_renomee"
@@ -2291,16 +2471,46 @@
       "target_dataset": "habitat_renomee",
       "source_file": "make-open-data/1_data/intermediaires/recensement/habitat_renomee.sql",
       "source_line": null,
-      "transformation_type": "cte",
+      "transformation_type": "select",
       "line_range": [
         1,
-        10
+        23
       ],
-      "confidence": 0.7,
-      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "confidence": 0.6,
+      "confidence_reason": "conditional Jinja branch \u2014 one path active at runtime",
       "method": "static",
       "sources": [
         "sql"
+      ],
+      "edge_variants": [
+        {
+          "source_dataset": "logement_2020_dev",
+          "target_dataset": "habitat_renomee",
+          "source_file": "make-open-data/1_data/intermediaires/recensement/habitat_renomee.sql",
+          "source_line": null,
+          "transformation_type": "select",
+          "line_range": [
+            1,
+            23
+          ],
+          "confidence": 0.6,
+          "confidence_reason": "conditional Jinja branch \u2014 one path active at runtime",
+          "method": "static"
+        },
+        {
+          "source_dataset": "logement_2020_dev",
+          "target_dataset": "habitat_renomee",
+          "source_file": "make-open-data/1_data/intermediaires/recensement/habitat_renomee.sql",
+          "source_line": null,
+          "transformation_type": "cte",
+          "line_range": [
+            1,
+            10
+          ],
+          "confidence": 0.7,
+          "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+          "method": "static"
+        }
       ],
       "source": "logement_2020_dev",
       "target": "habitat_renomee"
@@ -2310,16 +2520,46 @@
       "target_dataset": "mobilite_renomee",
       "source_file": "make-open-data/1_data/intermediaires/recensement/mobilite_renomee.sql",
       "source_line": null,
-      "transformation_type": "cte",
+      "transformation_type": "select",
       "line_range": [
         1,
-        10
+        23
       ],
-      "confidence": 0.7,
-      "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+      "confidence": 0.6,
+      "confidence_reason": "conditional Jinja branch \u2014 one path active at runtime",
       "method": "static",
       "sources": [
         "sql"
+      ],
+      "edge_variants": [
+        {
+          "source_dataset": "logement_2020_dev",
+          "target_dataset": "mobilite_renomee",
+          "source_file": "make-open-data/1_data/intermediaires/recensement/mobilite_renomee.sql",
+          "source_line": null,
+          "transformation_type": "select",
+          "line_range": [
+            1,
+            23
+          ],
+          "confidence": 0.6,
+          "confidence_reason": "conditional Jinja branch \u2014 one path active at runtime",
+          "method": "static"
+        },
+        {
+          "source_dataset": "logement_2020_dev",
+          "target_dataset": "mobilite_renomee",
+          "source_file": "make-open-data/1_data/intermediaires/recensement/mobilite_renomee.sql",
+          "source_line": null,
+          "transformation_type": "cte",
+          "line_range": [
+            1,
+            10
+          ],
+          "confidence": 0.7,
+          "confidence_reason": "extracted via sqlglot but found Jinja placeholders, structural integrity uncertain",
+          "method": "static"
+        }
       ],
       "source": "logement_2020_dev",
       "target": "mobilite_renomee"
@@ -3020,25 +3260,6 @@
       "target": "make-open-data\\5_macros\\recensement\\renommer_colonnes_valeurs_logement.sql"
     },
     {
-      "source_dataset": "make-open-data/1_data/intermediaires/recensement/habitat_renomee.sql",
-      "target_dataset": "make-open-data\\5_macros\\recensement\\renommer_colonnes_valeurs_logement.sql",
-      "source_file": "make-open-data/1_data/intermediaires/recensement/habitat_renomee.sql",
-      "source_line": null,
-      "transformation_type": "config",
-      "line_range": [
-        1,
-        23
-      ],
-      "confidence": 0.85,
-      "confidence_reason": "inferred via macro call to 'renommer_colonnes_values_logement'",
-      "method": "static",
-      "sources": [
-        "sql"
-      ],
-      "source": "make-open-data/1_data/intermediaires/recensement/habitat_renomee.sql",
-      "target": "make-open-data\\5_macros\\recensement\\renommer_colonnes_valeurs_logement.sql"
-    },
-    {
       "source_dataset": "habitat_renomee",
       "target_dataset": "habitat_communes",
       "source_file": "make-open-data/1_data/prepare/recensement/habitat/habitat_communes.sql",
@@ -3056,6 +3277,25 @@
       ],
       "source": "habitat_renomee",
       "target": "habitat_communes"
+    },
+    {
+      "source_dataset": "make-open-data/1_data/intermediaires/recensement/habitat_renomee.sql",
+      "target_dataset": "make-open-data\\5_macros\\recensement\\renommer_colonnes_valeurs_logement.sql",
+      "source_file": "make-open-data/1_data/intermediaires/recensement/habitat_renomee.sql",
+      "source_line": null,
+      "transformation_type": "config",
+      "line_range": [
+        1,
+        23
+      ],
+      "confidence": 0.85,
+      "confidence_reason": "inferred via macro call to 'renommer_colonnes_values_logement'",
+      "method": "static",
+      "sources": [
+        "sql"
+      ],
+      "source": "make-open-data/1_data/intermediaires/recensement/habitat_renomee.sql",
+      "target": "make-open-data\\5_macros\\recensement\\renommer_colonnes_valeurs_logement.sql"
     },
     {
       "source_dataset": "make-open-data/1_data/intermediaires/recensement/mobilite_renomee.sql",

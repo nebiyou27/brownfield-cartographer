@@ -2,6 +2,7 @@ import json
 import os
 import subprocess
 import warnings
+from collections import Counter
 
 import networkx as nx
 
@@ -187,6 +188,9 @@ class Orchestrator:
             "true_sinks": [],
             "blast_radius_top5": {},
             "high_velocity_files": [],
+            "ingestion_pipeline": [],
+            "cross_domain_risk": [],
+            "macro_summary": {},
         }
 
         try:
@@ -212,9 +216,179 @@ class Orchestrator:
             node_id = item["node"]
             intelligence["blast_radius_top5"][node_id] = lineage_graph.blast_radius(node_id)
 
+        target_domain_tokens = {
+            "recensement",
+            "geographie",
+            "foncier",
+            "sante",
+            "revenu",
+            "emploi",
+            "datatourisme",
+            "risques",
+        }
+
+        def _extract_domain_tokens(value: str) -> set[str]:
+            normalized = normalize_path_key(value).lower()
+            tokens = set(normalized.split("/"))
+            return {token for token in target_domain_tokens if token in tokens}
+
+        def _domains_from_path_edges(path_nodes: list[str]) -> set[str]:
+            domains: set[str] = set()
+            for path_u, path_v in zip(path_nodes, path_nodes[1:], strict=False):
+                edge_data = lineage_graph.graph.get_edge_data(path_u, path_v) or {}
+                source_file = edge_data.get("source_file")
+                if isinstance(source_file, str):
+                    domains.update(_extract_domain_tokens(source_file))
+            return domains
+
+        def _domains_for_lineage_identity(node_id: str) -> set[str]:
+            domains = _extract_domain_tokens(str(node_id))
+            if node_id in lineage_graph.graph:
+                source_file = lineage_graph.graph.nodes[node_id].get("source_file")
+                if isinstance(source_file, str):
+                    domains.update(_extract_domain_tokens(source_file))
+            if node_id in module_graph.graph:
+                source_file = module_graph.graph.nodes[node_id].get("source_file")
+                if isinstance(source_file, str):
+                    domains.update(_extract_domain_tokens(source_file))
+            return domains
+
+        def _map_domain_from_path(path: str) -> str | None:
+            normalized = normalize_path_key(path).lower()
+            tokens = normalized.split("/")
+            mapping = {
+                "recensement": "census",
+                "census": "census",
+                "geographie": "geography",
+                "geography": "geography",
+                "geo": "geography",
+                "revenu": "income",
+                "income": "income",
+                "sante": "health",
+                "health": "health",
+                "foncier": "real_estate",
+                "immobilier": "real_estate",
+                "real_estate": "real_estate",
+                "dvf": "real_estate",
+            }
+            for token in tokens:
+                if token in mapping:
+                    return mapping[token]
+            return None
+
+        def _domains_for_node(node_id: str) -> set[str]:
+            domains: set[str] = set()
+            if node_id in module_graph.graph:
+                source_file = module_graph.graph.nodes[node_id].get("source_file")
+                if isinstance(source_file, str):
+                    mapped = _map_domain_from_path(source_file)
+                    if mapped:
+                        domains.add(mapped)
+            for src, _tgt, edge_data in lineage_graph.graph.in_edges(node_id, data=True):
+                source_file = edge_data.get("source_file")
+                if isinstance(source_file, str):
+                    mapped = _map_domain_from_path(source_file)
+                    if mapped:
+                        domains.add(mapped)
+                if src in module_graph.graph:
+                    src_file = module_graph.graph.nodes[src].get("source_file")
+                    if isinstance(src_file, str):
+                        mapped = _map_domain_from_path(src_file)
+                        if mapped:
+                            domains.add(mapped)
+            for _src, _tgt, edge_data in lineage_graph.graph.out_edges(node_id, data=True):
+                source_file = edge_data.get("source_file")
+                if isinstance(source_file, str):
+                    mapped = _map_domain_from_path(source_file)
+                    if mapped:
+                        domains.add(mapped)
+            return domains
+
+        cross_domain_risk: list[dict[str, object]] = []
+        node_scores = {
+            item["node"]: float(item.get("score", 0.0)) for item in intelligence["critical_nodes"]
+        }
+        for node_id in lineage_graph.graph.nodes():
+            impacted = lineage_graph.blast_radius(node_id)
+            if not impacted:
+                continue
+
+            domains = _domains_for_lineage_identity(str(node_id))
+            direct_domains: set[str] = set()
+            for _src, direct_tgt, edge_data in lineage_graph.graph.out_edges(node_id, data=True):
+                if isinstance(direct_tgt, str):
+                    direct_domains.update(_domains_for_lineage_identity(direct_tgt))
+                source_file = edge_data.get("source_file")
+                if isinstance(source_file, str):
+                    direct_domains.update(_extract_domain_tokens(source_file))
+            for impacted_item in impacted:
+                impacted_node = impacted_item.get("node")
+                if isinstance(impacted_node, str):
+                    domains.update(_domains_for_lineage_identity(impacted_node))
+                path_nodes = impacted_item.get("path")
+                if isinstance(path_nodes, list):
+                    domains.update(
+                        _domains_from_path_edges([str(path_node) for path_node in path_nodes])
+                    )
+
+            if not domains:
+                domains = _domains_for_node(node_id)
+                for impacted_item in impacted:
+                    impacted_node = impacted_item.get("node")
+                    if isinstance(impacted_node, str):
+                        domains.update(_domains_for_node(impacted_node))
+
+            if len(domains) >= 3:
+                cross_domain_risk.append(
+                    {
+                        "node": node_id,
+                        "domains": sorted(domains),
+                        "domain_count": len(domains),
+                        "direct_domain_count": len(direct_domains),
+                        "downstream_node_count": len(impacted),
+                        "blast_radius_size": len(impacted),
+                        "score": float(node_scores.get(node_id, 0.0)),
+                    }
+                )
+        intelligence["cross_domain_risk"] = sorted(
+            cross_domain_risk,
+            key=lambda item: (
+                -int(item["domain_count"]),
+                -int(item.get("direct_domain_count", 0)),
+                -int(item["downstream_node_count"]),
+                -float(item.get("score", 0.0)),
+                item["node"],
+            ),
+        )[:3]
+
+        velocity_aliases: dict[str, int] = {}
+        canonical_velocity: dict[str, int] = {}
+        for path, commits in (git_velocity or {}).items():
+            if isinstance(path, str) and isinstance(commits, int):
+                with_path_aliases(velocity_aliases, path, commits)
+                canonical = normalize_path_key(path)
+                previous = canonical_velocity.get(canonical, 0)
+                canonical_velocity[canonical] = max(previous, commits)
+
+        # Backfill missing velocity on non-Python file nodes so SQL/YAML/CSV nodes
+        # remain available to prompt sections and downstream reports.
+        for _node_id, attrs in module_graph.graph.nodes(data=True):
+            source_file = attrs.get("source_file")
+            if not isinstance(source_file, str) or not source_file:
+                continue
+            suffix = os.path.splitext(source_file)[1].lower()
+            if suffix not in (".sql", ".yml", ".yaml", ".csv"):
+                continue
+            existing = attrs.get("git_change_velocity")
+            if isinstance(existing, int) and existing > 0:
+                continue
+            resolved = velocity_aliases.get(normalize_path_key(source_file))
+            if isinstance(resolved, int) and resolved > 0:
+                attrs["git_change_velocity"] = resolved
+
         velocity_items = [
             (path, commits)
-            for path, commits in (git_velocity or {}).items()
+            for path, commits in canonical_velocity.items()
             if isinstance(commits, int) and commits > 0
         ]
         if not velocity_items:
@@ -233,6 +407,65 @@ class Orchestrator:
             {"file": path, "commits": commits}
             for path, commits in sorted(velocity_items, key=lambda item: item[1], reverse=True)[:10]
         ]
+
+        stage_order = {
+            "extraction_config": 1,
+            "loading_config": 2,
+            "dbt_sources_schema": 3,
+        }
+        pipeline_items: list[dict[str, str]] = []
+        for node_id, attrs in module_graph.graph.nodes(data=True):
+            role = attrs.get("ingestion_role")
+            if role not in stage_order:
+                continue
+            source_file = (
+                attrs.get("source_file") if isinstance(attrs.get("source_file"), str) else ""
+            )
+            pipeline_items.append(
+                {
+                    "node": str(node_id),
+                    "file": source_file or str(node_id),
+                    "role": role,
+                }
+            )
+        intelligence["ingestion_pipeline"] = sorted(
+            pipeline_items,
+            key=lambda item: (stage_order.get(item["role"], 99), item["file"], item["node"]),
+        )
+
+        macro_index: list[dict[str, str]] = []
+        macro_folders: list[str] = []
+        for _node_id, attrs in module_graph.graph.nodes(data=True):
+            logical_name = attrs.get("logical_name")
+            macro_args = attrs.get("macro_args")
+            source_file = attrs.get("source_file")
+            if not isinstance(logical_name, str) or not isinstance(macro_args, list):
+                continue
+            if not isinstance(source_file, str) or not source_file:
+                continue
+            normalized_source = normalize_path_key(source_file)
+            macro_index.append({"name": logical_name, "source_file": normalized_source})
+            parts = normalized_source.split("/")
+            for marker in ("5_macros", "macros"):
+                if marker in parts:
+                    marker_index = parts.index(marker)
+                    macro_folders.append("/".join(parts[: marker_index + 1]) + "/")
+                    break
+
+        if macro_index:
+            macro_index = sorted(macro_index, key=lambda item: (item["name"], item["source_file"]))
+            folder_counter = Counter(macro_folders)
+            intelligence["macro_summary"] = {
+                "macro_folder": folder_counter.most_common(1)[0][0] if folder_counter else "",
+                "macro_count": len(macro_index),
+                "key_macros": macro_index[:5],
+            }
+        else:
+            intelligence["macro_summary"] = {
+                "macro_folder": "",
+                "macro_count": 0,
+                "key_macros": [],
+            }
         return intelligence
 
     # ------------------------------------------------------------------

@@ -12,6 +12,7 @@ logger = get_logger(__name__)
 # Pseudo-node prefixes emitted by tree-sitter — never real files
 _PSEUDO_PREFIXES = ("<dynamic>", "SELECT", "INSERT", "UPDATE", "DELETE")
 _CITATION_RE = re.compile(r"\[\s*`?([^\]`]+?):\d+`?\s*\]")
+_UNVERIFIED_CITATION_TAG = "[UNVERIFIED: this file was not found in the analyzed graph]"
 
 
 def _is_pseudo(node_id: str) -> bool:
@@ -65,6 +66,8 @@ class Archivist:
             (semantic_results.get("day_one_answers") or "").strip()
         )
         candidates = self._collect_evidence_candidates(module_graph, lineage_graph)
+        known_graph_paths = self._collect_known_graph_paths(module_graph, lineage_graph)
+        lineage_node_ids = self._collect_lineage_node_ids(lineage_graph)
 
         lines: list[str] = []
         if raw_answers:
@@ -74,14 +77,30 @@ class Archivist:
                     lines.append("")
                     continue
                 if self._has_citation(stripped):
-                    lines.append(stripped)
+                    lines.append(
+                        self._flag_unverified_citations(
+                            stripped, known_graph_paths, lineage_node_ids
+                        )
+                    )
                     continue
                 content = self._strip_existing_citations(stripped)
                 citation = self._pick_evidence_for_line(content, candidates)
-                lines.append(f"{content} [{citation}]")
+                if citation:
+                    composed = f"{content} [{citation}]"
+                else:
+                    composed = content
+                lines.append(
+                    self._flag_unverified_citations(composed, known_graph_paths, lineage_node_ids)
+                )
         else:
             fallback = self._pick_evidence_for_line("", candidates)
-            lines.append(f"No semantic day-one answers were generated. [{fallback}]")
+            if fallback:
+                composed = f"No semantic day-one answers were generated. [{fallback}]"
+            else:
+                composed = "No semantic day-one answers were generated."
+            lines.append(
+                self._flag_unverified_citations(composed, known_graph_paths, lineage_node_ids)
+            )
 
         with open(path, "w", encoding="utf-8") as f:
             f.write("# FDE Day-One Onboarding Brief\n\n")
@@ -472,9 +491,9 @@ class Archivist:
             )
         return candidates
 
-    def _pick_evidence_for_line(self, line: str, candidates: list[dict]) -> str:
+    def _pick_evidence_for_line(self, line: str, candidates: list[dict]) -> str | None:
         if not candidates:
-            return "`src/agents/archivist.py:1`"
+            return None
 
         explicit_refs = re.findall(r"([A-Za-z0-9_./\\-]+\.[A-Za-z0-9_]+):(\d+)", line)
         if explicit_refs:
@@ -514,6 +533,8 @@ class Archivist:
                 best = candidate
 
         if best_score <= 0:
+            if mentioned_paths:
+                return None
             best = self._fallback_candidate(candidates)
 
         return f"`{best['evidence']}`"
@@ -525,6 +546,107 @@ class Archivist:
     @staticmethod
     def _has_citation(line: str) -> bool:
         return bool(_CITATION_RE.search(line))
+
+    def _collect_known_graph_paths(
+        self, module_graph: KnowledgeGraph, lineage_graph: KnowledgeGraph
+    ) -> set[str]:
+        known: set[str] = set()
+
+        def _add(value: str | None) -> None:
+            if not isinstance(value, str):
+                return
+            cleaned = value.strip()
+            if not cleaned:
+                return
+            normalized = self._canonical_path(cleaned).lower()
+            if not normalized or _is_pseudo(normalized):
+                return
+            known.add(normalized)
+
+        def _extract_path_components(node_id: str) -> set[str]:
+            components: set[str] = set()
+            normalized = self._canonical_path(node_id).strip()
+            if not normalized:
+                return components
+
+            if "/" in normalized:
+                parts = [part for part in normalized.split("/") if part]
+                for idx in range(len(parts)):
+                    candidate = "/".join(parts[idx:])
+                    if "/" in candidate or Path(candidate).suffix:
+                        components.add(candidate)
+
+            token_matches = re.findall(r"[A-Za-z0-9_./\\-]+\.[A-Za-z0-9_]+", normalized)
+            components.update(token_matches)
+            return components
+
+        for graph in (module_graph.graph, lineage_graph.graph):
+            for node_id, attrs in graph.nodes(data=True):
+                if isinstance(node_id, str):
+                    _add(node_id)
+                    for component in _extract_path_components(node_id):
+                        _add(component)
+                if isinstance(attrs, dict):
+                    source_file = attrs.get("source_file")
+                    logical_name = attrs.get("logical_name")
+                    if isinstance(source_file, str):
+                        _add(source_file)
+                    if isinstance(logical_name, str):
+                        _add(logical_name)
+        return known
+
+    def _collect_lineage_node_ids(self, lineage_graph: KnowledgeGraph) -> set[str]:
+        node_ids: set[str] = set()
+        for node_id in lineage_graph.graph.nodes:
+            if not isinstance(node_id, str):
+                continue
+            normalized = self._canonical_path(node_id).lower().strip()
+            if not normalized or _is_pseudo(normalized):
+                continue
+            node_ids.add(normalized)
+        return node_ids
+
+    @staticmethod
+    def _is_file_path_reference(ref: str) -> bool:
+        if not isinstance(ref, str):
+            return False
+        normalized = ref.strip().replace("\\", "/")
+        if not normalized or _is_pseudo(normalized):
+            return False
+        if "/" in normalized:
+            return True
+        suffix = Path(normalized).suffix.lower()
+        return suffix in {".py", ".sql", ".csv", ".yml", ".yaml", ".json", ".md"}
+
+    def _flag_unverified_citations(
+        self, line: str, known_graph_paths: set[str], lineage_node_ids: set[str]
+    ) -> str:
+        def _candidates(raw: str) -> set[str]:
+            normalized = self._canonical_path(raw).lower().strip()
+            if not normalized:
+                return set()
+            cleaned = normalized.strip("`'\"*[](){}<> ")
+            tokens = {
+                token.strip("`'\"*[](){}<> ")
+                for token in re.findall(r"[a-z0-9_./-]+", cleaned)
+                if len(token.strip()) >= 3
+            }
+            candidates = {normalized, cleaned}
+            candidates.update(token for token in tokens if token)
+            return {candidate for candidate in candidates if candidate}
+
+        def _replace(match: re.Match[str]) -> str:
+            cited_path = str(match.group(1)).strip()
+            for candidate in _candidates(cited_path):
+                if candidate in known_graph_paths:
+                    return match.group(0)
+                if any(
+                    candidate in node_id or node_id in candidate for node_id in lineage_node_ids
+                ):
+                    return match.group(0)
+            return _UNVERIFIED_CITATION_TAG
+
+        return _CITATION_RE.sub(_replace, line)
 
     @staticmethod
     def _strip_thinking_blocks(text: str) -> str:

@@ -1,4 +1,68 @@
 {
+  "macro:aggreger_ventes_immobiliers:5_macros/foncier/aggreger_ventes_immobiliers.sql:1": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "macro:filtrer_ventes_immobilieres:5_macros/foncier/filtrer_ventes_immobilieres.sql:1": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "macro:preparer_dvf_biens_immobilier:5_macros/foncier/preparer_dvf_biens_immobilier.sql:1": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "macro:selectionner_bien_principal:5_macros/foncier/selectionner_bien_principal.sql:1": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "macro:aggreger_colonnes_theme_geo:5_macros/recensement/aggreger_colonnes_theme_geo.sql:1": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "macro:aggreger_logement_par_colonne:5_macros/recensement/aggreger_logement_par_colonne.sql:1": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "macro:aggreger_supra_commune:5_macros/recensement/aggreger_supra_commune.sql:1": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "macro:filtrer_unpivot_logement:5_macros/recensement/filtrer_unpivot_logement.sql:1": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "macro:lister_colonnes_par_theme:5_macros/recensement/lister_champs_par_theme.sql:1": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "macro:lister_colonnes_modaliter_libelles:5_macros/recensement/lister_colonnes_codes_libelle.sql:1": {
+    "verdict": "DRIFT",
+    "explanation": "The docstring claims the macro returns \"Colonnes uniques\" (unique columns), but the implementation generates three lists: the first is the unique columns, while the other two are lists of modalities and their labels. The docstring does not mention the latter two lists, creating confusion about the macro's purpose."
+  },
+  "macro:lister_champs_valeurs_libelle:5_macros/recensement/lister_valeurs_un_champ.sql:1": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "macro:pivoter_logement:5_macros/recensement/pivoter_logement.sql:1": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "macro:renommer_colonnes_values_logement:5_macros/recensement/renommer_colonnes_valeurs_logement.sql:1": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "macro:renommer_logement:5_macros/recensement/renommer_logement.sql:1": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "macro:nettoyer_modalite_revenu:5_macros/revenu/nettoyer_modalite_revenu.sql:1": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
+  "extract/source_to_storage.yml": {
+    "verdict": "MISSING",
+    "explanation": "No docstring found."
+  },
   "load/loaders.py": {
     "verdict": "MISSING",
     "explanation": "No docstring found."

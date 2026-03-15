@@ -12,13 +12,243 @@
       "logical_name": "makeopendata"
     },
     {
+      "id": "macro:aggreger_ventes_immobiliers:5_macros/foncier/aggreger_ventes_immobiliers.sql:1",
+      "source_file": "5_macros/foncier/aggreger_ventes_immobiliers.sql",
+      "source_line": 1,
+      "description": "",
+      "logical_name": "aggreger_ventes_immobiliers",
+      "macro_args": [
+        "ventes_immobiliers_filtrees"
+      ],
+      "git_change_velocity": 0
+    },
+    {
+      "id": "macro:filtrer_ventes_immobilieres:5_macros/foncier/filtrer_ventes_immobilieres.sql:1",
+      "source_file": "5_macros/foncier/filtrer_ventes_immobilieres.sql",
+      "source_line": 1,
+      "description": "",
+      "logical_name": "filtrer_ventes_immobilieres",
+      "macro_args": [
+        "source_dvf"
+      ],
+      "git_change_velocity": 0
+    },
+    {
+      "id": "macro:calculate_geo_knn:5_macros/foncier/geo_knn.sql:4",
+      "source_file": "5_macros/foncier/geo_knn.sql",
+      "source_line": 4,
+      "description": "",
+      "logical_name": "calculate_geo_knn",
+      "macro_args": [
+        "source_table",
+        "id_column",
+        "geopoint_column",
+        "value_column",
+        "k"
+      ],
+      "git_change_velocity": 0
+    },
+    {
+      "id": "macro:preparer_dvf_biens_immobilier:5_macros/foncier/preparer_dvf_biens_immobilier.sql:1",
+      "source_file": "5_macros/foncier/preparer_dvf_biens_immobilier.sql",
+      "source_line": 1,
+      "description": "",
+      "logical_name": "preparer_dvf_biens_immobilier",
+      "macro_args": [
+        "millesime"
+      ],
+      "git_change_velocity": 0
+    },
+    {
+      "id": "macro:selectionner_bien_principal:5_macros/foncier/selectionner_bien_principal.sql:1",
+      "source_file": "5_macros/foncier/selectionner_bien_principal.sql",
+      "source_line": 1,
+      "description": "",
+      "logical_name": "selectionner_bien_principal",
+      "macro_args": [
+        "ventes_immobiliers_filtrees"
+      ],
+      "git_change_velocity": 0
+    },
+    {
+      "id": "macro:aggreger_colonnes_theme_geo:5_macros/recensement/aggreger_colonnes_theme_geo.sql:1",
+      "source_file": "5_macros/recensement/aggreger_colonnes_theme_geo.sql",
+      "source_line": 1,
+      "description": "",
+      "logical_name": "aggreger_colonnes_theme_geo",
+      "macro_args": [
+        "theme",
+        "table_renomee",
+        "champs_geo_arrivee"
+      ],
+      "git_change_velocity": 0
+    },
+    {
+      "id": "macro:aggreger_logement_par_colonne:5_macros/recensement/aggreger_logement_par_colonne.sql:1",
+      "source_file": "5_macros/recensement/aggreger_logement_par_colonne.sql",
+      "source_line": 1,
+      "description": "",
+      "logical_name": "aggreger_logement_par_colonne",
+      "macro_args": [
+        "table_renomee",
+        "colonnes_a_aggreger_liste",
+        "colonne_a_aggreger",
+        "colonnes_cles_liste",
+        "champs_geo_arrivee"
+      ],
+      "git_change_velocity": 0
+    },
+    {
+      "id": "macro:aggreger_supra_commune:5_macros/recensement/aggreger_supra_commune.sql:1",
+      "source_file": "5_macros/recensement/aggreger_supra_commune.sql",
+      "source_line": 1,
+      "description": "",
+      "logical_name": "aggreger_supra_commune",
+      "macro_args": [
+        "theme",
+        "nouveau_niveau_geo"
+      ],
+      "git_change_velocity": 0
+    },
+    {
+      "id": "macro:filtrer_unpivot_logement:5_macros/recensement/filtrer_unpivot_logement.sql:1",
+      "source_file": "5_macros/recensement/filtrer_unpivot_logement.sql",
+      "source_line": 1,
+      "description": "",
+      "logical_name": "filtrer_unpivot_logement",
+      "macro_args": [
+        "unpivoted",
+        "libelle_liste",
+        "champs_geo",
+        "champs_geo_arrivee"
+      ],
+      "git_change_velocity": 0
+    },
+    {
+      "id": "macro:lister_colonnes_par_theme:5_macros/recensement/lister_champs_par_theme.sql:1",
+      "source_file": "5_macros/recensement/lister_champs_par_theme.sql",
+      "source_line": 1,
+      "description": "",
+      "logical_name": "lister_colonnes_par_theme",
+      "macro_args": [
+        "theme"
+      ],
+      "git_change_velocity": 0
+    },
+    {
+      "id": "macro:lister_colonnes_modaliter_libelles:5_macros/recensement/lister_colonnes_codes_libelle.sql:1",
+      "source_file": "5_macros/recensement/lister_colonnes_codes_libelle.sql",
+      "source_line": 1,
+      "description": "",
+      "logical_name": "lister_colonnes_modaliter_libelles",
+      "macro_args": [
+        "theme"
+      ],
+      "git_change_velocity": 0
+    },
+    {
+      "id": "macro:lister_champs_valeurs_libelle:5_macros/recensement/lister_valeurs_un_champ.sql:1",
+      "source_file": "5_macros/recensement/lister_valeurs_un_champ.sql",
+      "source_line": 1,
+      "description": "",
+      "logical_name": "lister_champs_valeurs_libelle",
+      "macro_args": [
+        "colonne_a_aggreger"
+      ],
+      "git_change_velocity": 0
+    },
+    {
+      "id": "macro:pivoter_logement:5_macros/recensement/pivoter_logement.sql:1",
+      "source_file": "5_macros/recensement/pivoter_logement.sql",
+      "source_line": 1,
+      "description": "",
+      "logical_name": "pivoter_logement",
+      "macro_args": [
+        "unpivot_filtree",
+        "libelle_liste",
+        "champs_geo_arrivee"
+      ],
+      "git_change_velocity": 0
+    },
+    {
+      "id": "macro:renommer_colonnes_values_logement:5_macros/recensement/renommer_colonnes_valeurs_logement.sql:1",
+      "source_file": "5_macros/recensement/renommer_colonnes_valeurs_logement.sql",
+      "source_line": 1,
+      "description": "",
+      "logical_name": "renommer_colonnes_values_logement",
+      "macro_args": [
+        "logement",
+        "theme"
+      ],
+      "git_change_velocity": 0
+    },
+    {
+      "id": "macro:renommer_logement:5_macros/recensement/renommer_logement.sql:1",
+      "source_file": "5_macros/recensement/renommer_logement.sql",
+      "source_line": 1,
+      "description": "",
+      "logical_name": "renommer_logement",
+      "macro_args": [
+        "unpivot_filtree",
+        "champs_valeurs_liste",
+        "libelle_liste",
+        "champs_geo_arrivee"
+      ],
+      "git_change_velocity": 0
+    },
+    {
+      "id": "macro:unpivot_logement:5_macros/recensement/unpivot_logement.sql:1",
+      "source_file": "5_macros/recensement/unpivot_logement.sql",
+      "source_line": 1,
+      "description": "",
+      "logical_name": "unpivot_logement",
+      "macro_args": [
+        "table_renomee",
+        "colonnes_a_aggreger_liste",
+        "colonnes_cles_liste",
+        "colonne_a_aggreger"
+      ],
+      "git_change_velocity": 0
+    },
+    {
+      "id": "macro:nettoyer_modalite_revenu:5_macros/revenu/nettoyer_modalite_revenu.sql:1",
+      "source_file": "5_macros/revenu/nettoyer_modalite_revenu.sql",
+      "source_line": 1,
+      "description": "",
+      "logical_name": "nettoyer_modalite_revenu",
+      "macro_args": [
+        "nom_colonne"
+      ],
+      "git_change_velocity": 0
+    },
+    {
+      "id": "extract/source_to_storage.yml",
+      "source_file": "extract/source_to_storage.yml",
+      "source_line": null,
+      "description": "",
+      "file_type": "yaml",
+      "logical_name": "source_to_storage",
+      "ingestion_role": "extraction_config",
+      "git_change_velocity": 0
+    },
+    {
+      "id": "load/storage_to_pg.yml",
+      "source_file": "load/storage_to_pg.yml",
+      "source_line": null,
+      "description": "",
+      "file_type": "yaml",
+      "logical_name": "storage_to_pg",
+      "ingestion_role": "loading_config",
+      "git_change_velocity": 0
+    },
+    {
       "id": "extract/__init__.py",
       "source_file": "extract/__init__.py",
       "source_line": null,
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 2
+      "git_change_velocity": 0
     },
     {
       "id": "load/loaders.py",
@@ -27,7 +257,7 @@
       "description": "Python module with 8 imports, 10 data-flow edges",
       "file_type": "python",
       "logical_name": "loaders",
-      "git_change_velocity": 5
+      "git_change_velocity": 0
     },
     {
       "id": "load/__init__.py",
@@ -36,7 +266,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 1
+      "git_change_velocity": 0
     },
     {
       "id": "load/__main__.py",
@@ -45,7 +275,7 @@
       "description": "Python module with 6 imports, 1 data-flow edges",
       "file_type": "python",
       "logical_name": "__main__",
-      "git_change_velocity": 3
+      "git_change_velocity": 0
     },
     {
       "id": "tests/conftest.py",
@@ -54,7 +284,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "conftest",
-      "git_change_velocity": 1
+      "git_change_velocity": 0
     },
     {
       "id": "tests/__init__.py",
@@ -63,7 +293,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 1
+      "git_change_velocity": 0
     },
     {
       "id": "tests/fixtures/db.py",
@@ -72,7 +302,7 @@
       "description": "Python module with 3 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "db",
-      "git_change_velocity": 1
+      "git_change_velocity": 0
     },
     {
       "id": "tests/fixtures/__init__.py",
@@ -81,7 +311,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 1
+      "git_change_velocity": 0
     },
     {
       "id": "tests/load/test_loaders.py",
@@ -90,7 +320,7 @@
       "description": "Python module with 8 imports, 3 data-flow edges",
       "file_type": "python",
       "logical_name": "test_loaders",
-      "git_change_velocity": 3
+      "git_change_velocity": 0
     },
     {
       "id": "tests/load/__init__.py",
@@ -99,7 +329,7 @@
       "description": "Python module with 0 imports, 0 data-flow edges",
       "file_type": "python",
       "logical_name": "__init__",
-      "git_change_velocity": 1
+      "git_change_velocity": 0
     },
     {
       "id": "utils/generer_doc_recenssement.py",
@@ -108,7 +338,7 @@
       "description": "Python module with 1 imports, 1 data-flow edges",
       "file_type": "python",
       "logical_name": "generer_doc_recenssement",
-      "git_change_velocity": 1
+      "git_change_velocity": 0
     },
     {
       "id": "<dynamic>:execute:load/loaders.py:35",

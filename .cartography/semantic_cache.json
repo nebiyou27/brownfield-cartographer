@@ -357,5 +357,2021 @@
     "hash": "cf2bf8e2f5afcf843736cfb2da3d0e1563303e6d602c1905fe0de83e41153685",
     "purpose": "This module ensures accurate data lineage by extracting dependencies between datasets, expanding macros from multiple directories, and identifying import edges for internal modules, which enhances transparency and maintainability in the data pipeline. It verifies that macro expansions respect directory structures and that Python imports correctly reflect internal module relationships, supporting reliable data tracking and debugging.",
     "drift": null
+  },
+  "macro:aggreger_ventes_immobiliers:5_macros/foncier/aggreger_ventes_immobiliers.sql:1": {
+    "hash": "b70922a5844ddb8aea5f2286c364e382ac4bb5359f5d4f2ef79dba6c512c6936",
+    "purpose": "This module aggregates real estate sales data by property mutations, summarizing total surface area and number of principal rooms across all listed properties, enabling business stakeholders to analyze property performance and calculate aggregate metrics for reporting or decision-making.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "macro:filtrer_ventes_immobilieres:5_macros/foncier/filtrer_ventes_immobilieres.sql:1": {
+    "hash": "99dc70c44d7905240e8bfa5013a38eb93685d6a4179504683d1e56ca66d95ea2",
+    "purpose": "This module filters real estate sales data to include only transactions of apartments and houses, ensuring only relevant property types are processed. It excludes non-sale mutations (e.g., rentals, renovations) and ensures data consistency by linking each sale to its corresponding property record. The result is a curated dataset of verified real estate sales transactions for analysis or reporting purposes.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "macro:calculate_geo_knn:5_macros/foncier/geo_knn.sql:4": {
+    "hash": "2c93c6bee9ae7a648494bfb76b2e478be535c4afbf2e14b232612bcf8b1cb1a5",
+    "purpose": "This macro calculates the k nearest geographic points for each row in a dataset, computing the average of a specified value column for each neighbor, enabling spatial analysis to assess property values or other metrics in proximity-based contexts.",
+    "drift": null
+  },
+  "macro:preparer_dvf_biens_immobilier:5_macros/foncier/preparer_dvf_biens_immobilier.sql:1": {
+    "hash": "77c4a7fcb2c070b2025bd57f28182e880a7d4dacb99aba89a04edabfb3f7c247",
+    "purpose": "This module extracts and aggregates real estate sales data from a source database, calculates per-square-meter property values, and joins with geographic information to provide a structured dataset for analyzing property valuations and spatial distribution. It ensures consistent data across production and development environments while maintaining accurate geographic and financial metrics for business insights.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "macro:selectionner_bien_principal:5_macros/foncier/selectionner_bien_principal.sql:1": {
+    "hash": "022e9e21cb28c638f47001cd5056410d7ab94cd0f6088d1c07bd244e90b9ed20",
+    "purpose": "This module identifies the principal property for each real estate mutation by ranking sales based on property type (Maison first, then Appartement) and square footage, returning the highest-ranked entry. It ensures consistency in selecting the most suitable property for each transaction, supporting accurate data for listing or reporting purposes.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "macro:aggreger_colonnes_theme_geo:5_macros/recensement/aggreger_colonnes_theme_geo.sql:1": {
+    "hash": "38dfd1357997f137b691ef9189eed67872695cc41c6abe7735ed5be539709feb",
+    "purpose": "The macro aggregates geographic demographic data by theme, summarizing key metrics such as household counts, occupied logements, and occupancy statuses for different geographic areas. It combines structured data from a source table with pre-aggregated values, enabling business users to analyze population distribution, housing availability, and occupancy trends at the regional level.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "macro:aggreger_logement_par_colonne:5_macros/recensement/aggreger_logement_par_colonne.sql:1": {
+    "hash": "aa0a02001468bd72fea1e7df438c738087e38978ffd61cdf75d6f951f59c71df",
+    "purpose": "This macro aggregates housing data by specified columns to summarize the number of residences in each category, enabling business analysts to gain insights into demographic distribution and spatial patterns across different geographic areas.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "macro:aggreger_supra_commune:5_macros/recensement/aggreger_supra_commune.sql:1": {
+    "hash": "40bde12929f8813bd3c1530ace4c2be41bc1f319a430a39813cd99f96c39b666",
+    "purpose": "This macro aggregates housing data (e.g., number of occupied units, vacancies, or total residences) at a specified geographic level, summarizing key metrics from the `logement_2020_valeurs` table. It ensures accurate counts by filtering out missing geographic data and presents these aggregated values for business insights, such as demographic analysis or housing trend reporting.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "macro:filtrer_unpivot_logement:5_macros/recensement/filtrer_unpivot_logement.sql:1": {
+    "hash": "a12f525573feedd35290e0be4aeefb4240a9137d28addadff3560b4ed4a10ce6",
+    "purpose": "The module filters the unpivoted logement data to include only rows where the `valeur` matches any of the specified `libelle_liste`, enabling analysis of housing properties and their geographic distribution. It extracts key metrics like `poids_du_logement` and `valeur` for further business insights, such as evaluating logement values and spatial patterns.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "macro:lister_colonnes_par_theme:5_macros/recensement/lister_champs_par_theme.sql:1": {
+    "hash": "4dafee441f55fd1571eef70df4c2cd822288a14f6d8838a981fab0eaf08080fa",
+    "purpose": "The module retrieves and aggregates distinct code values (COD_VAR) from the logement_2020_valeurs table for a specified theme, enabling data analysts to generate thematic summaries or reports by focusing on relevant field identifiers tied to specific categories or topics.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "macro:lister_colonnes_modaliter_libelles:5_macros/recensement/lister_colonnes_codes_libelle.sql:1": {
+    "hash": "98e2ee838a2653ef4093c014938fc1c878b716b51e346b9d789dccb93722ca22",
+    "purpose": "The module retrieves and organizes distinct variable modalities and their associated labels from a specified dataset, tailored to a given theme, to facilitate structured data aggregation or reporting. It generates unique column identifiers and corresponding label pairs, enabling downstream processes to categorize and analyze data based on predefined criteria.",
+    "drift": {
+      "verdict": "DRIFT",
+      "explanation": "The docstring claims the macro returns \"Colonnes uniques\" (unique columns), but the implementation generates three lists: the first is the unique columns, while the other two are lists of modalities and their labels. The docstring does not mention the latter two lists, creating confusion about the macro's purpose."
+    }
+  },
+  "macro:lister_champs_valeurs_libelle:5_macros/recensement/lister_valeurs_un_champ.sql:1": {
+    "hash": "6e77458b535744dd3f0902783c415aeec1e7bd0afa59f1eb4bbba94aff7bb5f9",
+    "purpose": "The macro retrieves distinct aggregated values and their corresponding labels for a specified column from the logement_2020_valeurs table, enabling structured data preparation for downstream processing or display. It ensures accurate mapping of values to their respective labels, facilitating efficient data aggregation and visualization.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "macro:pivoter_logement:5_macros/recensement/pivoter_logement.sql:1": {
+    "hash": "c78236f1502693610337ba067af82833e2742c15ec76e8d7dfa5ea9c27c2f1c9",
+    "purpose": "The macro aggregates the total weight of logements (e.g., housing units) by distinct categories (e.g., types of residences) from a flattened dataset, enabling business users to analyze spatial distribution and demographic characteristics of logements across different geographic areas.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "macro:renommer_colonnes_values_logement:5_macros/recensement/renommer_colonnes_valeurs_logement.sql:1": {
+    "hash": "e23f2517ee2f343f74ff16873f64c7321228f027d064a4c934f420937efcee60",
+    "purpose": "This module standardizes geographic identifiers in the logement table by renaming columns like \"ARM\" to \"ARM\" or \"COMMUNE\" based on specific conditions, and mapping \"IRIS\" codes to combined abbreviations. It ensures consistent representation of administrative divisions, enabling accurate data interpretation for spatial analysis and reporting.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "macro:renommer_logement:5_macros/recensement/renommer_logement.sql:1": {
+    "hash": "88a00fd04920aa522f4fbb957d1e21526c1110e03858c342219d4cae93a85f5f",
+    "purpose": "The module renames logements (homes) based on their values in a list, aggregates population data, and is used to facilitate analysis or reporting by grouping and summarizing demographic information across different geographic locations.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "macro:unpivot_logement:5_macros/recensement/unpivot_logement.sql:1": {
+    "hash": "1fc5215380cbdf756be3e32b98e70f3a6662700e401b7164fb94cc4b21740164",
+    "purpose": "This macro transforms a table's long-format data into a wide format by un-pivoting specified columns, excluding predefined keys and irrelevant columns, to prepare structured data for analysis or reporting purposes.",
+    "drift": null
+  },
+  "macro:nettoyer_modalite_revenu:5_macros/revenu/nettoyer_modalite_revenu.sql:1": {
+    "hash": "bb11e1b393a85e53ed998fb0a6da89a9e3b3955e8159e87d72abfaa23951305b",
+    "purpose": "This macro formats a column name by replacing commas with dots and converting it to a numeric format, ensuring consistent data representation for financial calculations. It handles edge cases like special characters by using nullif to eliminate unwanted values, preparing the column name for proper data processing and validation.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "extract/source_to_storage.yml": {
+    "hash": "2134ab68abbf0364290ddb422b8a8ef89b75d0d0fa175d067dd0fbba1feebeaa",
+    "purpose": "The module aggregates diverse datasets from public sources such as postal codes, communes, and statistical records to provide structured geographical and demographic information for business analytics and decision-making. It combines data from various domains to support applications requiring detailed spatial and demographic data.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "load/storage_to_pg.yml": {
+    "hash": "3f444ee1c72563df11b5fb1e717ba5b2fc4691656b0960b1e44aff05d1964e00",
+    "purpose": "The module retrieves structured datasets from S3 storage, loads them into the \"sources\" database schema, and provides business-ready data for analysis, reporting, and integration with applications requiring geographic or demographic information. It ensures consistency across development and production environments by managing both full and dev versions of datasets.",
+    "drift": null
+  },
+  "bin/dbt-create-staging-models.py": {
+    "hash": "e2463b2a8098781c22f3c9dcbb7994641d777158e41c9f7e80b1d0c07f6da82a",
+    "purpose": "The module automates the generation of dbt sources and staging models for a database, organizing them by domain and schema to facilitate data integration and modeling. It leverages dbt to discover tables based on a given prefix, creates YAML files for source data, and ensures consistency across models by merging generated content with existing files.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "The implementation's docstring is missing, as the function's docstring is empty. The script's docstring is present but does not provide detailed information about the function's purpose or parameters."
+    }
+  },
+  "bin/dbt-local-dev.py": {
+    "hash": "cf11dbd023aed174a46ef74242bfbac28aefdae3fa13184aa16faded3d8edb6e",
+    "purpose": "This module enables developers to efficiently manage Iceberg tables in AWS Glue by registering them as DuckDB views for local data transformation workflows, ensuring reliable connectivity testing through dedicated commands, and providing a streamlined cleanup process to maintain consistency between development and production environments.",
+    "drift": null
+  },
+  "bin/uv-operations.py": {
+    "hash": "524bd0e19f6ba8a5feee5a18173ed439c965217930384fef9880fa5824c390c7",
+    "purpose": "The module automates the management of project dependencies across multiple code locations by executing UV commands (sync and lock) on directories containing `pyproject.toml` files. It ensures consistent dependency versions across all codebases, enabling efficient maintenance and synchronization of dependencies in a distributed project structure.",
+    "drift": null
+  },
+  "bin/utils/chunk_tracking_logs_by_day.py": {
+    "hash": "392060d9052b51daab3b2b78a6b662170fc8836b54327d06059298e540275187",
+    "purpose": "This module processes tracking logs from a source bucket to a destination bucket, organizing files by date to ensure consistent storage across different log shipping methods. It consolidates logs into daily folders, allowing for efficient management and reducing the risk of reprocessing outdated data. The module supports configurable date ranges and offers options to either copy or move files, ensuring data integrity and minimizing storage accumulation.",
+    "drift": null
+  },
+  "dg_deployments/reconcile_edxorg_partitions.py": {
+    "hash": "f7189bceabb1ad5bee0a6a16537cac3462e902e49e14b6fcb784446c241847cd",
+    "purpose": "This module addresses discrepancies in course IDs for edxorg archive assets, ensuring correct S3 paths and partition keys are used to avoid data inconsistencies and improve asset management efficiency. It identifies and fixes invalid course IDs in dynamic partitions, updates S3 copies, and removes obsolete partition keys to maintain data integrity and optimize storage.",
+    "drift": null
+  },
+  "dg_projects/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module initializes the Django project by setting up configurations, registering URLs, and organizing the project structure, enabling efficient management of settings, deployment, and scalability for the application.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/b2b_organization/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module manages organizational data, including departments, roles, and user assignments, enabling efficient structure and compliance within the business. It provides a framework for organizing and accessing critical business entities, facilitating seamless integration with other components of the system.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/b2b_organization/b2b_organization/definitions.py": {
+    "hash": "9d6619d88ec56a81714c4f14c31c767bab4d1fd700d075e34869fcd924be0c3c",
+    "purpose": "The module prepares the infrastructure for exporting B2B organization data to S3 buckets, handling environment-specific authentication via Vault and defining the necessary resources and job structure for data export. It ensures consistent access to S3 and Vault resources while supporting different environments through configurable bucket and prefix settings.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/b2b_organization/b2b_organization/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides a structured framework for managing organizational data related to business-to-business (B2B) projects, enabling the creation, retrieval, and manipulation of entities such as departments, teams, and roles, which are critical for aligning organizational structures with project goals and facilitating data-driven decision-making.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/b2b_organization/b2b_organization/assets/data_export.py": {
+    "hash": "b7eb6d1f978131d1f0bed9548f4e52fee2b57257481a2f38da7df9a1484c1e91",
+    "purpose": "This module exports structured data about organizations from a database table, enabling administrators to generate reports for specific organizations. It formats the data into a CSV file with a unique identifier, timestamp, and hash for versioning, ensuring traceability and consistency in data exports. The exported files are stored in a standardized location, facilitating easy access and integration with downstream systems.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/b2b_organization/b2b_organization/assets/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides essential utilities and data structures for managing assets in the B2B organization, enabling efficient data processing and integration across different systems. It ensures that assets are organized, accessible, and compatible with the overall architecture of the B2B platform.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/b2b_organization/b2b_organization/defs/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module defines essential data structures and utilities for managing organizational projects, enabling businesses to efficiently handle project configurations, user roles, and hierarchical structures, thereby facilitating seamless collaboration and data management in their B2B operations.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/b2b_organization/b2b_organization/partitions/b2b_organization.py": {
+    "hash": "0016b9e8fd267323becfca3f50202744fd9136af791315878bf7339cb72546ce",
+    "purpose": "The module defines dynamic partitions for data processing in the B2B organization, enabling efficient data retrieval and analysis by specifying how data is grouped and filtered. This allows the system to handle different organizational data sets efficiently, ensuring that the right data is processed at the right time.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/b2b_organization/b2b_organization/partitions/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module defines the core data partitioning logic for business operations, enabling efficient data organization and retrieval by categorizing records into structured partitions based on business criteria such as regions, product types, or time periods. It ensures scalable and performant data handling by isolating related data for targeted analysis or storage, optimizing resource utilization across distributed systems.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/b2b_organization/b2b_organization/sensors/b2b_organization.py": {
+    "hash": "fea74c796e37106037fe15cf7d11ae8cd8cb1ee8f5054a244aab7aa38b72a901",
+    "purpose": "The module implements a sensor that identifies new B2B organizational customers by querying a database and triggering data exports for newly discovered organizations, ensuring efficient and timely processing of incremental data changes. It prevents redundant runs by comparing existing partitions with new organization keys and dynamically requesting partitions and runs only for newly discovered entities.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/b2b_organization/b2b_organization/sensors/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module enables the integration and processing of data from diverse sources, facilitating real-time monitoring of organizational projects and generating actionable insights to support decision-making and operational efficiency.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/b2b_organization/b2b_organization_tests/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides test cases for the b2b_organization package, ensuring that the business logic for managing organizational structures, roles, and permissions is correctly implemented and functions as intended. This helps maintain the integrity of the organization management system by validating the functionality through automated tests.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/canvas/canvas/definitions.py": {
+    "hash": "531a55346bf5bf11e5a1366a208324094235cffbe618170e4c01c685894561f5",
+    "purpose": "This module enables the regular export of Canvas course content and metadata into structured formats, facilitating data availability for analytics, reporting, and further processing. It leverages S3 for storage, Vault for secure access, and API clients to interact with Canvas and MIT Learn, ensuring reliable and timely data retrieval across partitions.",
+    "drift": null
+  },
+  "dg_projects/canvas/canvas/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides the foundational infrastructure for managing project data and operations within the canvas system, enabling efficient data handling and integration with external systems. It ensures that projects are structured, configured, and accessible for analysis and visualization purposes.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/canvas/canvas/assets/canvas.py": {
+    "hash": "a707e083fb9582fb4cd50edbf9a67a673537c4815c3e88c5eae18491ed08ec86",
+    "purpose": "The module exports structured course data from Canvas, including files, assignments, and pages, to support downstream processing and analysis. It manages the export workflow, handles retries for incomplete exports, and ensures data is stored in a versioned format for reliable access. The purpose is to enable accurate and timely retrieval of course information for use in data-driven applications.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/canvas/canvas/assets/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides a structured framework for managing and accessing various assets required by the Canvas application, enabling the system to load, configure, and retrieve assets such as images, videos, and data files efficiently. It ensures that assets are properly initialized and organized, facilitating their use across different parts of the application while maintaining flexibility and scalability.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/canvas/canvas/defs/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module initializes the canvas-related definitions and configurations, ensuring that all necessary components are set up and available for use in the application. This allows the canvas to function correctly by providing the required structures and settings. The module ensures that the canvas environment is properly configured, enabling other parts of the system to utilize the canvas definitions effectively.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/canvas/canvas/lib/canvas.py": {
+    "hash": "05cb8fc705eeb10e0838b11fd88db5d2ba85916ae9f7bdf5ce17b6bc9f2dbe6a",
+    "purpose": "This module retrieves numeric course IDs from a Google Sheet to populate a Canvas system, ensuring accurate and consistent data for course management and querying. It validates credentials and filters data to only include valid numeric values, maintaining data integrity and preventing invalid entries.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/canvas/canvas/lib/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module organizes the project structure by defining package imports and configurations, enabling seamless integration with the broader canvas ecosystem and facilitating easy addition of new features or modules. It ensures consistency in module organization and access control, aligning with the project's scalability and maintainability goals.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/canvas/canvas/resources/api_client_factory.py": {
+    "hash": "7597f4268ed50d7b200b9b9486b446e13ec0ef0a188f42390c2f91b56e5894c7",
+    "purpose": "This module enables the system to dynamically instantiate and authenticate API clients for different services (e.g., Canvas, MIT Learn), retrieving secrets from a vault based on configuration parameters. It ensures secure access to external APIs by leveraging Vault's secret management, allowing deployment-specific customization of client types and secret locations.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/canvas/canvas/resources/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module initializes the canvas resources by configuring settings, loading templates, and managing environments, ensuring the application can properly handle different scenarios and maintain data integrity. It provides a structured framework for managing canvas-related configurations and dependencies, enabling seamless integration with the broader system.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/canvas/canvas/sensors/canvas.py": {
+    "hash": "0526feb75367de0fba1656892d151f4c94ce4ba508107a913293f51cde311a55",
+    "purpose": "This module monitors a Google Sheet to track changes in Canvas course IDs, automatically adding new partitions and removing outdated ones to ensure accurate data exports and maintain data consistency in the system.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/canvas/canvas/sensors/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module enables the canvas application to collect and process sensor data, facilitating real-time monitoring of system performance, user interactions, and critical metrics, which supports data-driven decision-making and ensures optimal system functionality.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/canvas/canvas_tests/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides test cases for the Canvas project, ensuring the correctness and robustness of its core functionalities, such as project management, data handling, and error scenarios, thereby validating the implementation against business requirements.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/data_loading/data_loading/definitions.py": {
+    "hash": "3adc33a14e750a5bb13780dbc6c15566bb9eb046ad92a480a108fea44b683798",
+    "purpose": "This module initializes the data loading definitions for Dagster by merging predefined configurations from the project's `defs` directory with a custom Dlt resource, ensuring seamless integration of data loading processes and enabling efficient data ingestion workflows.",
+    "drift": null
+  },
+  "dg_projects/data_loading/data_loading/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module initializes the data loading package, manages data ingestion from various sources, processes and structures the data, and provides a framework for integrating with other systems. It ensures that disparate data sources are efficiently connected, formatted, and made available for downstream processing or analysis.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/data_loading/data_loading/components/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module initializes and registers data sources, configurations, and dependencies required for data loading processes, enabling the system to efficiently fetch and process data from various external systems, thereby supporting the business's data-driven operations and ensuring seamless integration of disparate data sources.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/data_loading/data_loading/defs/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module provides essential data loading utilities to facilitate the ingestion and transformation of raw data into structured formats, enabling efficient processing for business operations such as analytics, reporting, and integration with downstream systems. It ensures consistency in data handling across different data sources and supports scalable data loading workflows.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/data_loading/data_loading/defs/edxorg_s3_ingest/dagster_assets.py": {
+    "hash": "1c4233d36ffda97cf6cf60182d153916ae21cc66b89ab06a63630be7d71da9f9",
+    "purpose": "This module aggregates data from all production courses into non-partitioned, consolidated tables via DLT-based incremental loading, relying on upstream partitioned assets (e.g., `edxorg_archive`) to ensure data consistency. It enables efficient data consolidation across all courses, facilitating unified analytics and reducing redundancy in downstream processing.",
+    "drift": null
+  },
+  "dg_projects/data_loading/data_loading/defs/edxorg_s3_ingest/defs.py": {
+    "hash": "3e1a8244f02a8cee8e445cf310bd74e1d6a22396bc90dff9a026b9a6e865222a",
+    "purpose": "This module exports the Dagster assets required for ingesting data from S3 into the EdX.org data pipeline, enabling efficient data processing and management. By providing the necessary definitions and assets, it facilitates the integration of S3 data into the Dagster system, supporting the overall goal of data ingestion and transformation.",
+    "drift": null
+  },
+  "dg_projects/data_loading/data_loading/defs/edxorg_s3_ingest/loads.py": {
+    "hash": "b91c9d355669e2bc565730678e54c83faecea259b5ee3ed1da1e106e33434856",
+    "purpose": "The module enables efficient ingestion of structured TSV files from S3, which are generated by edX.org course exports, into a standardized database format. It ensures data integrity by leveraging incremental loading to avoid reprocessing outdated files and supports environment-specific configurations (local, QA, production) to optimize performance and data storage.",
+    "drift": null
+  },
+  "dg_projects/data_loading/data_loading/defs/edxorg_s3_ingest/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module enables educational organizations to ingest data from S3 buckets into their systems, ensuring data integrity and proper processing. It facilitates the transformation and validation of data, allowing organizations to efficiently manage and utilize their educational data resources.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/data_loading/data_loading_tests/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module facilitates the loading and processing of project data from various sources, ensuring accurate and timely data availability for analysis and reporting. It handles data transformation and validation to meet business requirements, enabling efficient data integration and utilization across different systems.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/data_platform/data_platform/definitions.py": {
+    "hash": "47c0f5b52746651077a5caedb13aedb101a4037c2c5da54d1610278c504af1d5",
+    "purpose": "This module enables real-time Slack notifications for Dagster run failures, ensuring stakeholders are promptly informed of job issues, and provides fallback mechanisms when Vault authentication fails, maintaining operational visibility and responsiveness.",
+    "drift": {
+      "verdict": "DRIFT",
+      "explanation": "The DOCSTRING claims the code includes \"database metadata ingestion (future)\" but the implementation does not actually implement it. The code mentions it as a future feature but does not execute it, contradicting the DOCSTRING's assertion."
+    }
+  },
+  "dg_projects/data_platform/data_platform/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides the foundational infrastructure for the data platform, enabling efficient data ingestion, processing, and storage, which are critical for supporting business analytics and decision-making. It ensures that data is reliably transformed and made available for analysis, facilitating informed business decisions.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/data_platform/data_platform/assets/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module defines the initialization of assets related to data platforms, enabling access to preconfigured data sources, configurations, and metadata for downstream processes. It ensures consistency and organization across asset pipelines by centralizing asset definitions and versioning.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/data_platform/data_platform/assets/metadata/databases.py": {
+    "hash": "ef2d934954e8ec2a1eeada78120afe0533cf9fd4305962787477fe3f4453af06",
+    "purpose": "This module facilitates the ingestion of database metadata from Trino sources into a metadata workflow, enabling data governance and management by providing structured metadata insights to support data asset tracking and governance.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/data_platform/data_platform/assets/metadata/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module provides a structured framework for managing metadata related to data assets, enabling organizations to track, govern, and enforce consistency across data projects, thereby supporting data governance and compliance requirements.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/data_platform/data_platform/defs/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module defines the core data platform definitions, including data models, enums, and utility classes, enabling consistent data handling and integration across different systems and services. It provides the foundational structure for data operations, ensuring uniformity and scalability in data processing and storage workflows.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/data_platform/data_platform/lib/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module organizes and manages the data platform's components, ensuring proper integration and configuration for data processing pipelines, and facilitates access to necessary resources and services. It standardizes package structure, imports, and dependencies to enable consistent development and deployment across environments.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/data_platform/orchestration_platform_tests/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module initializes the orchestration platform test suite, configuring test environments, loading test data, and managing test cases to ensure proper execution and validation of the platform's features, enabling reliable deployment and verification of orchestration workflows.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/edxorg/edxorg/definitions.py": {
+    "hash": "09339a305d8f6a74c66a05eaa6cc716e93c553756b8104c690bdd0bbf4b44cda",
+    "purpose": "This module synchronizes and processes EdX.org data archives and tracking logs, enabling the ingestion of course exports and program credentials into the OL data lake for analysis and further processing. It leverages S3 and GCS for storage, triggers automated data replication, and ensures structured data preparation for downstream workflows.",
+    "drift": null
+  },
+  "dg_projects/edxorg/edxorg/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides a framework for managing project data, enabling the application to create, retrieve, update, and delete projects efficiently. It acts as a bridge between the application logic and the database, ensuring consistent access to project information across different components.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/edxorg/edxorg/assets/edxorg_api.py": {
+    "hash": "c4d3f6022fd580eef61383602e35b49a304386ccfac97bb2221aeb76c10de515",
+    "purpose": "The module retrieves and structures educational data from the OpenEdx API, extracting program metadata and associated course information, and stores them in organized JSON files for use in the system. It ensures consistent, standardized data formats for downstream processing, enabling accurate analytics and reporting on educational offerings.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/edxorg/edxorg/assets/edxorg_archive.py": {
+    "hash": "51b9f4ff3de4548affc2abd45b5b7be8db969a69d578cecca2c288cdce042e58",
+    "purpose": "This module processes raw data archives from edx.org to extract per-course assets, enabling structured analysis of educational data for course management and analytics. It models different asset types according to their structure, facilitating efficient data retrieval and transformation for subsequent processing steps.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/edxorg/edxorg/assets/edxorg_db_table_specs.py": {
+    "hash": "57a8d7b3774b882d8ce84b62eb9587813bb78b1cc66af98ad4000d5619ed265d",
+    "purpose": "This module defines external asset specifications for database tables in the EdX.org system, enabling downstream processes to access structured data exports from archive processing. The assets are partitioned by course and source to align with upstream data structures, and they are stored in S3 for efficient data retrieval and analysis. The module ensures proper dependency tracking and metadata configuration for seamless integration with Dagster's asset management pipeline.",
+    "drift": null
+  },
+  "dg_projects/edxorg/edxorg/assets/openedx_course_archives.py": {
+    "hash": "12ab50000f15db5f51a4fa216ce8da6d20926936c13f453e1a120802b3e3c332",
+    "purpose": "This module extracts structured metadata, video details, policy information, and certificate signatories from XML exports of course archives, enabling downstream processing for course analytics, content management, and educational data extraction. It ensures reliable storage of these data points in a structured format, facilitating downstream use cases such as course reporting and educational data analysis.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/edxorg/edxorg/assets/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module manages the initialization of configuration settings and assets required by the application, enabling modular and maintainable code by decoupling configuration management from the core logic. It ensures that critical parameters such as environment variables, database connections, or resource paths are properly loaded and accessible across different modules, facilitating scalable and flexible deployment strategies.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/edxorg/edxorg/defs/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module defines and manages project metadata and configurations, ensuring consistency and facilitating data retrieval across the application. It centralizes the definition of project identifiers, names, and other critical data points, enabling uniformity and ease of access for modules that rely on these definitions.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/edxorg/edxorg/io_managers/gcs.py": {
+    "hash": "29adddd58d9f94b48ed18da1d9c58a8722bf32380e8631046f4d7b528d16c599",
+    "purpose": "This module enables the ingestion and retrieval of data from Google Cloud Storage (GCS) for educational organization projects, allowing efficient access to assets based on asset keys or predefined bucket/prefix configurations. It ensures data is correctly downloaded to the appropriate partition directory and handles the initialization of GCS connections to facilitate seamless data operations.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/edxorg/edxorg/io_managers/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides infrastructure for managing data ingestion, processing, and export, enabling the system to efficiently handle and transform data across different stages of the pipeline. This ensures data is correctly formatted and available for analysis or further processing, supporting business objectives like data-driven decisions or integration with other systems.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/edxorg/edxorg/jobs/edx_gcs_courses.py": {
+    "hash": "f9da9258173831bed8e469f7c4199a39a999f15ec084c66ad4f660351bb361eb",
+    "purpose": "This module enables the nightly synchronization of educational data from Google Cloud Storage (GCS) to Amazon Simple Storage Service (S3), ensuring institutional research teams have access to up-to-date course information for analysis or processing. It facilitates data migration between cloud storage platforms, supporting the needs of the platform engineering team and the institutional research owner.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/edxorg/edxorg/jobs/retrieve_edx_exports.py": {
+    "hash": "5cc976347bc7e4d725c6b537a804c4512fe560447633072bbcbdf49e206db9af",
+    "purpose": "The module retrieves and processes edX.org course exports and CSV files from a Google Cloud Storage (GCS) bucket, transferring them to an Amazon S3 bucket weekly for institutional research use. This ensures timely access to structured educational data, enabling analytics and reporting for academic analysis and decision-making.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/edxorg/edxorg/jobs/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides a framework for managing job execution and scheduling within the educational organization, enabling the system to process and execute tasks efficiently, such as data processing, batch jobs, or task queues, which are critical for maintaining operational productivity and ensuring timely data delivery.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/edxorg/edxorg/lib/edxorg.py": {
+    "hash": "7cf28674d65248069c70448fd85e5a2f315159e44fa09eaadd3acba3aaca907f",
+    "purpose": "The module categorizes archive elements into business-relevant data categories (e.g., database tables, course structures, or XML exports) and generates hierarchical mapping keys to facilitate data asset management and querying. It distinguishes between different data types (e.g., SQL, JSON, XML) and handles optional suffixes in XML archives to ensure accurate data partitioning and key generation.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/edxorg/edxorg/lib/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module serves as a package for managing educational organization projects, providing utilities for data processing, project tracking, and organizational structures, enabling efficient data handling and project management within the edxorg ecosystem.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/edxorg/edxorg/ops/edx_gcs_courses.py": {
+    "hash": "bce48beddbd29e7b492e0b1328b574982cfba4f959853a72928d9d13893e817c",
+    "purpose": "The module facilitates the transfer of educational course materials between Google Cloud Storage (GCS) and Amazon S3, enabling efficient management of institutional research data. It downloads course tarballs from a designated GCS bucket, stores them locally, and uploads them to an S3 bucket for subsequent processing, ensuring seamless integration of educational resources across different storage systems.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/edxorg/edxorg/ops/object_storage.py": {
+    "hash": "cea0d2f7c64138a5abbd51616db7d1011a2caed3e099a8d1e53bf9fc1ece78a6",
+    "purpose": "This module enables data synchronization between cloud storage services, facilitating seamless migration and management of files across S3 and GCS buckets. It supports both downloading and uploading operations, ensuring data integrity and accessibility across distributed environments. The module abstracts storage-specific details, allowing consistent workflows for data transfer tasks.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "The DOCSTRING is missing because it only contains a deprecation notice, while the implementation (code) has detailed class and function descriptions that explain what the code does. The provided DOCSTRING does not accurately describe the code's functionality."
+    }
+  },
+  "dg_projects/edxorg/edxorg/ops/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module manages project configurations and operations for the EdX organization, enabling efficient management of projects across different domains, ensuring proper setup, maintenance, and lifecycle management to support the organization's operational needs.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/edxorg/edxorg/sensors/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module registers and manages sensor data events for educational platform usage, enabling analytics and monitoring to enhance user experience and system performance by tracking key interactions and metrics.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/edxorg/edxorg_tests/test_edxorg_lib.py": {
+    "hash": "09ba84b32d76be20b4774aa18776b03408d58fde3a3226151ae3b26f287b74a0",
+    "purpose": "This module categorizes archive files into distinct types (e.g., database tables, course structures, XML archives) and extracts the canonical course ID regardless of the file's extension or content type, ensuring consistent and accurate identification of educational resources for processing and analysis.",
+    "drift": null
+  },
+  "dg_projects/edxorg/edxorg_tests/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module serves as a package for testing purposes, enabling tests to import and use the modules within it, facilitating the development and maintenance of the edxorg tests suite.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/lakehouse/lakehouse/definitions.py": {
+    "hash": "22cab9d8f811384b69e62fcb7232bcddddb042de775001234d983ae402b4c0ad",
+    "purpose": "This module enables the data lakehouse to materialize data from Airbyte connections, ensuring real-time availability of source data for downstream dbt models. It creates separate jobs and schedules for each Airbyte connection, automatically materializing tables and associated staging models, while handling fallbacks and skips to maintain pipeline resilience. The module also ensures proper authentication and configuration for Airbyte connections across different environments.",
+    "drift": {
+      "verdict": "DRIFT",
+      "explanation": "The DOCSTRING inaccurately describes the code's purpose, as it merely states \"ELT assets for the data lakehouse\" without detailing the implementation steps, environment configurations, or specific functionalities tied to Airbyte, Vault, or different deployment environments."
+    }
+  },
+  "dg_projects/lakehouse/lakehouse/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module serves as the entry point for the lakehouse project, managing data storage, processing, and integration across various systems. It provides essential utilities and configurations to support data lakehouse operations, ensuring efficient data management and interoperability.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/lakehouse/lakehouse/assets/instructor_onboarding.py": {
+    "hash": "0260ded38a64ea31fa91d96dbf6df70a6d3d6688e759aa9f52eaa52e31defe91",
+    "purpose": "This module facilitates the management of instructor access by generating a structured CSV file containing unique user emails, roles, and invitation status for the access-forge GitHub repository. It ensures accurate and up-to-date user lists by merging new users with existing entries while avoiding duplicates, enabling efficient access management for the organization.",
+    "drift": null
+  },
+  "dg_projects/lakehouse/lakehouse/assets/superset.py": {
+    "hash": "b0f6a22c3965c97ae82e580043fa7a59bd8e58972a9b663b0ed95146ff62fc06",
+    "purpose": "This module automates the refresh of Superset datasets based on DBT models, ensuring real-time synchronization between the data in Superset and the underlying DBT models. It tracks changes, updates metadata, and handles errors to maintain data consistency and user accessibility.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/lakehouse/lakehouse/assets/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module organizes and manages assets within a lakehouse environment, providing a structured framework for storing, accessing, and utilizing data objects such as tables, views, and other resources. It ensures these assets are properly integrated into the data pipeline, enabling efficient data retrieval and processing across different systems and workflows.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/lakehouse/lakehouse/assets/lakehouse/dbt.py": {
+    "hash": "da3900b5313e145a9c40765e77a3a7f511c640805b220127da3bc25899de1a9a",
+    "purpose": "This module automates the execution of DBT projects by translating DBT resources into Dagster assets, managing automation conditions and group names, and handling schema-specific build parameters in development environments to streamline data pipeline operations.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/lakehouse/lakehouse/assets/lakehouse/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module imports and organizes the various submodules within the package, ensuring they are accessible and properly configured, thereby facilitating the use of different components in the codebase. It helps in maintaining a structured and manageable codebase, making it easier for developers to navigate and use the different components.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/lakehouse/lakehouse/defs/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module defines the foundational configurations and structures for the lakehouse project, ensuring that all components are properly initialized and set up, which is essential for the application to function correctly.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/lakehouse/lakehouse/lib/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module initializes critical utilities and configurations for data processing, enabling efficient ingestion, storage, and manipulation of large-scale datasets across the lakehouse architecture. It sets up essential dependencies like S3 connectivity, time zone handling, and data formatting tools, ensuring consistent and reliable operations for data pipeline tasks.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/lakehouse/lakehouse/resources/airbyte.py": {
+    "hash": "bc6a545532d71875af05f36277c028f861b512ee600dd5b66e0923ba36885da3",
+    "purpose": "This module enables data engineers to interact with Airbyte Community Edition APIs, managing workspaces and performing paginated data operations. It abstracts API calls with features like retries, timeouts, and pagination, facilitating reliable data retrieval and manipulation from Airbyte services. The module ensures consistent access to Airbyte's REST and configuration APIs, supporting workflows for data integration and management.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/lakehouse/lakehouse/resources/superset_api.py": {
+    "hash": "3effb3014f2c5717d1aab04f989a7ed6f618a01347bff49f5f08a84bc6c98936",
+    "purpose": "The module enables efficient management of datasets in a Superset environment by retrieving, creating, updating, and refreshing datasets through the Superset API. It facilitates seamless integration with data pipelines, ensuring accurate and up-to-date dataset metadata across different database schemas and tables.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/lakehouse/lakehouse/resources/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module organizes and manages data resources for the lakehouse, ensuring secure access and efficient data management across different systems. It provides a structured framework for handling resources such as databases, tables, and files, enabling seamless integration with various data processing pipelines and ensuring data integrity and availability.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/lakehouse/lakehouse_tests/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides a testing framework for the lakehouse projects, managing and executing tests to validate data processing workflows and ensure the correctness and reliability of the underlying systems. It organizes test cases for various features, enabling developers to verify functionality and ensure compliance with business requirements.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/learning_resources/learning_resources/definitions.py": {
+    "hash": "0463b5abe9a59af4aa1edf4a716cbd9c85d993c8cd3a86a0d39a0f16b7efb003",
+    "purpose": "This module extracts and manages metadata from learning platforms, enabling the discovery and processing of educational content for business use cases such as curriculum development and content aggregation. It integrates with external APIs to gather structured data, which is then organized and made available for further analysis or delivery.",
+    "drift": null
+  },
+  "dg_projects/learning_resources/learning_resources/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides a framework for managing learning resources, enabling administrators to add, retrieve, and organize materials, thereby improving the efficiency of resource management and enhancing the learning experience for users.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/learning_resources/learning_resources/assets/open_learning_library.py": {
+    "hash": "07da6129a5fe9983a79d3bbb7a23d7cf88d397d18f7a86217d393cb25984321a",
+    "purpose": "This module ensures the synchronization of MIT Open's course content with S3 by monitoring GitHub repositories hosting outdated course materials, enabling the application to maintain up-to-date resources for search functionality.",
+    "drift": null
+  },
+  "dg_projects/learning_resources/learning_resources/assets/sloan_api.py": {
+    "hash": "e5a85957f79411f2e7cbc9acb1cec982feb875fd74cfe4c31efa5a9de9b30762",
+    "purpose": "This module integrates with MIT Sloan Executive Education APIs to retrieve and store course metadata and course offerings, enabling downstream applications to access structured educational data for curriculum management, analytics, or content delivery. It ensures data integrity through versioning and centralized storage, facilitating reliable access to up-to-date academic information.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/learning_resources/learning_resources/assets/video_shorts.py": {
+    "hash": "53a1803da7ba5fe7d51cfc203a2d9f4416f919f55956605d65e06981face7954",
+    "purpose": "The module retrieves and processes video metadata from Google Sheets to manage the top 12 most recent video shorts, enabling efficient downstream processing for thumbnail generation and video downloads. It ensures consistent partition-based versioning and metadata organization, facilitating scalable video content management and retrieval.",
+    "drift": null
+  },
+  "dg_projects/learning_resources/learning_resources/assets/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module manages and provides access to learning resources, enabling the organization to deliver educational content efficiently and securely to users by organizing assets such as documents, images, and other materials relevant to the learning platform.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/learning_resources/learning_resources/defs/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module defines essential data structures and utilities for managing learning resources, enabling efficient organization and retrieval of project-related information within the learning_resources package. It provides foundational definitions that support the broader functionality of the module, ensuring consistency and ease of use across related components.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/learning_resources/learning_resources/lib/contants.py": {
+    "hash": "0ac573e9a5a8d4b75e4ce2bfa87c797646834bbc5c168f30cca89b4ea49d50d0",
+    "purpose": "The module defines constants for thumbnail dimensions used in the learning resources project, ensuring consistent sizing across the application. These dimensions are critical for maintaining uniformity in video presentations, which directly impacts user experience by ensuring proper visual scaling and layout.",
+    "drift": {
+      "verdict": "DRIFT",
+      "explanation": "The docstring lacks specific details about the constants' purpose and values, while the implementation defines them explicitly."
+    }
+  },
+  "dg_projects/learning_resources/learning_resources/lib/google_sheets.py": {
+    "hash": "b6a46e1cba97955994083fc34178398d78462d519aef37252fbd64c7c12a8570",
+    "purpose": "This module enables data retrieval and processing from Google Sheets and Dropbox URLs, facilitating the extraction of video metadata and conversion of Dropbox links to direct download URLs. It ensures accurate date parsing and handles authentication and API interactions to support content management workflows.",
+    "drift": {
+      "verdict": "DRIFT",
+      "explanation": "The DOCSTRING is too vague and does not specify what the code does, whereas the implementation details clearly describe the function's purpose of fetching video shorts metadata from a Google Sheet."
+    }
+  },
+  "dg_projects/learning_resources/learning_resources/lib/video_processing.py": {
+    "hash": "1280afdef1f5dae632edd84d0e6ff3bcf46a804aed5300dded4b3c0876ecbd5b",
+    "purpose": "The module provides thumbnail generation and video compression capabilities, enabling efficient visual representation of video content and optimization of file sizes for storage and distribution. It allows users to create quick previews for videos and reduce their size to meet specific constraints, supporting scalable media management and accessibility.",
+    "drift": null
+  },
+  "dg_projects/learning_resources/learning_resources/lib/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides utilities for managing learning resources, enabling organizations to organize, retrieve, and process educational materials efficiently. It ensures that resources are accessible and structured in a way that supports learning objectives and user needs.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/learning_resources/learning_resources/resources/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides access to learning resources, enabling users to retrieve and manage content related to projects or courses, supporting the business goal of offering comprehensive learning materials to facilitate knowledge acquisition and project development. It organizes resources in a structured manner, ensuring they are categorized and accessible for users across different projects or learning modules.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/learning_resources/learning_resources/sensors/video_shorts.py": {
+    "hash": "29ac36cbbec05bba6f2f5a9e50362d34d989b140c0e53dace16522164fe0a593",
+    "purpose": "This module manages dynamic partitions for video content from Google Sheets, automatically triggering processing runs for new videos as they are detected, ensuring efficient and timely video metadata, content, and thumbnail generation. It streamlines the workflow by linking sheet-based video discovery with automated pipeline execution.",
+    "drift": null
+  },
+  "dg_projects/learning_resources/learning_resources/sensors/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides a framework for managing sensor data acquisition, processing, and storage, enabling efficient monitoring and analysis to support operational decisions and system optimization.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/learning_resources/learning_resources_tests/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module provides test cases for the learning resources functionality, ensuring that the features are correctly implemented and validated for reliability and accuracy in the business context. It serves as a critical validation mechanism to confirm that the learning resources system operates as intended, supporting data integrity and functionality across different use cases.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/legacy_openedx/legacy_openedx/definitions.py": {
+    "hash": "63de657a44edfd16b4aefb534e1516cc2df2c842e127981a366261350a60bb95",
+    "purpose": "This module configures the necessary resources for exporting course data from IRx across three deployments (mitx, mitxonline, xpro), securely retrieving MongoDB credentials, EDX OAuth client details, and database connection parameters via Vault authentication. It ensures seamless data extraction and processing for educational platforms by initializing environment-specific configurations and leveraging resilient loading mechanisms.",
+    "drift": null
+  },
+  "dg_projects/legacy_openedx/legacy_openedx/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module acts as a package initialization file for the legacy Open edX project, registering necessary modules and configurations, but does not perform any business-related operations. It ensures the proper setup of the project's dependencies and structures, facilitating integration with existing systems.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/legacy_openedx/legacy_openedx/jobs/open_edx.py": {
+    "hash": "7e5b020d4f3ca6def9193c02893a8b8f4b7372776f2a4ce1b99c5bc6e5da4e71",
+    "purpose": "This module extracts and processes course data from Open edX to support institutional research, generating structured datasets for analysis and integration with external systems. It ensures compliance with data governance requirements by transferring processed information to S3 for use in tracking logs and analytics, enabling informed decision-making across educational initiatives.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/legacy_openedx/legacy_openedx/jobs/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides a framework for managing job processing in the legacy Open edX system, enabling tasks to be queued, scheduled, and monitored. It supports the execution of custom job workflows, ensuring reliable and scalable processing of educational data workflows. The module is critical for maintaining the system's ability to handle complex data processing tasks across different stages of the educational pipeline.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/legacy_openedx/legacy_openedx/lib/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module facilitates the integration and processing of legacy Open edX data, ensuring compatibility with modern systems while preserving historical data structures and workflows, thereby supporting the transition from outdated infrastructure to scalable, efficient solutions.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/legacy_openedx/legacy_openedx/ops/open_edx.py": {
+    "hash": "90ae2c20b21ada90cc5fad6e4c0427ed44699cfe5cfb0ff256318f57bc84c096",
+    "purpose": "The module retrieves course IDs from an edX instance to facilitate data extraction, ensuring that each course's structure is available for subsequent processing steps. It uses API calls to gather course information, which is essential for preparing data for further operations like exporting or analyzing course content.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/legacy_openedx/legacy_openedx/ops/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module provides the foundational infrastructure for managing project-related operations in a legacy Open edX environment, enabling data processing, configuration management, and integration with external systems to support the platform's operational requirements.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/legacy_openedx/legacy_openedx/repositories/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides a framework for managing repositories in the OpenEdX legacy system, enabling efficient storage, retrieval, and manipulation of educational data. It ensures that different parts of the application can access and interact with repositories in a consistent and scalable manner.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/legacy_openedx/legacy_openedx/resources/healthchecks.py": {
+    "hash": "708a9038e4de07449f44d529f26f4fa4745cd5c9f547daaed05aa6c4eba2a33b",
+    "purpose": "This module enables the initiation of health checks by sending start or fail events to an external ping host, facilitating monitoring of resource status and service availability. It ensures proactive tracking of system health through automated event logging, supporting operational visibility and reliability in legacy educational infrastructure.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/legacy_openedx/legacy_openedx/resources/mysql_db.py": {
+    "hash": "dfbbaf894707ff196b6919f84da1095b504e65e3d761e6f6e80fc0547963c6be",
+    "purpose": "This module provides a persistent connection to a MySQL database, enabling efficient data querying and retrieval for applications that require access to structured database records. It ensures secure and reliable communication with the database by configuring host, port, username, password, and database parameters, and manages connection lifecycle through a Dagster resource. The module facilitates business operations by enabling data-driven decision-making through structured query execution.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/legacy_openedx/legacy_openedx/resources/sqlite_db.py": {
+    "hash": "28f216a592a458c5996ec7461405f9bb25fda7c5356e44603b37db27c57a6fd3",
+    "purpose": "This module provides a Dagster resource for connecting to a local SQLite database, enabling developers to execute SQL queries and retrieve data in a lightweight, in-process environment. It facilitates development and testing by offering a simple, efficient alternative to full relational databases, allowing for rapid prototyping and debugging. The resource ensures seamless integration with Dagster's workflow, enabling solids to interact with SQLite databases directly during execution.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/legacy_openedx/legacy_openedx/resources/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module provides a framework for managing resources related to the legacy OpenEdX platform, enabling efficient storage, retrieval, and processing of course data. It supports the operational needs of educational institutions by facilitating the integration and management of course materials and configurations, ensuring compatibility with legacy systems while meeting modern data requirements.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/legacy_openedx/legacy_openedx/schedules/open_edx.py": {
+    "hash": "106073491f36f1b248bb11230313449fb921d7d17fc0b7f4917e5cfc15c1bd0e",
+    "purpose": "This module schedules daily job runs for three distinct educational programs—residential_edx_course_pipeline, xpro_edx_course_pipeline, and mitxonline_edx_course_pipeline—each associated with a specific business unit. It ensures automated execution of pipeline workflows for these programs, facilitating consistent data processing and storage across different educational initiatives.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/legacy_openedx/legacy_openedx/schedules/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides a framework for managing scheduling data, enabling the system to track and display course schedules, events, and timelines, which is crucial for educational content management and user interaction.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/legacy_openedx/legacy_openedx/sensors/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module processes sensor data to monitor system performance, integrating with legacy systems to ensure data accuracy and optimize resource allocation. It enables the business to track operational efficiency and make data-driven decisions based on real-time sensor insights.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/legacy_openedx/legacy_openedx_tests/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module serves as the entry point for testing the legacy OpenEdX system, enabling developers and testers to systematically validate core functionalities, ensure compatibility with historical data formats, and maintain the integrity of the codebase across different environments. It facilitates comprehensive testing scenarios, supports regression validation, and ensures that legacy components remain functional and maintainable during ongoing development and maintenance.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/openedx/openedx/definitions.py": {
+    "hash": "439ea428caf53516cc3b28bedc51d252c75d8938de1e8933b171d56146e73ffd",
+    "purpose": "The module configures daily tracking log jobs for OpenEdX deployments, managing S3 and DuckDB resources to normalize and store log data across environments like dev, ci, qa, and production. It ensures consistent data extraction, transformation, and loading workflows by leveraging environment-specific configurations and shared resources.",
+    "drift": null
+  },
+  "dg_projects/openedx/openedx/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module initializes the OpenEdX package by importing necessary modules, setting up configurations, and ensuring proper structure for the platform. It enables other components to function correctly by providing a consistent and organized environment, facilitating seamless integration with the OpenEdX ecosystem. This setup is crucial for the package to operate efficiently and maintain stability across different deployment scenarios.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/openedx/openedx/assets/openedx.py": {
+    "hash": "9de8257ff8049ab6c3c7970c85211a878a2495167815a19881d0953feac3091f",
+    "purpose": "This module retrieves and processes course data from the Open edX API to generate structured representations of course structures and blocks, enabling efficient data management and retrieval for educational content delivery. It ensures versioned data storage and leverages automation policies to trigger updates based on code changes, facilitating consistent and reliable access to course information across different environments.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/openedx/openedx/assets/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module manages assets for the OpenEdX platform, ensuring efficient storage, retrieval, and configuration of static resources, supporting seamless operation and scalability in educational technology environments.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/openedx/openedx/components/openedx_deployment.py": {
+    "hash": "64bfcb7e88bc641951c17c27e9bc80d2d241c99ca7f817de05d691e26965aae7",
+    "purpose": "This module facilitates the creation of structured Dagster assets, sensors, and resources for OpenEdX deployments, enabling efficient management of course data, version tracking, and automated monitoring across different deployment environments. It supports partitioning and asset binding to ensure scalable and consistent data processing, while providing configuration resources for API client interactions.",
+    "drift": null
+  },
+  "dg_projects/openedx/openedx/components/__init__.py": {
+    "hash": "cc2c68d7d8c13b8ae463eaa739982988f4fb2567f36175e11ef31e1d66dcf1fb",
+    "purpose": "This module defines the `OpenEdxDeploymentComponent` class, which enables management of deployment configurations for OpenEdX environments, allowing separate configuration management across development, testing, and production setups. It supports the business need for scalable, environment-specific configuration management in educational platforms.",
+    "drift": null
+  },
+  "dg_projects/openedx/openedx/jobs/normalize_logs.py": {
+    "hash": "de2bd914c4282a680c663934725151a66804e1a7ffaf5dd7c34553707dd6192a",
+    "purpose": "This module normalizes historical tracking log data by loading files from S3, transforming them into a consistent format, and uploading them to designated paths in the same S3 bucket, ensuring accurate data availability for analysis and system operations.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/openedx/openedx/jobs/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides infrastructure for managing job-related operations in the OpenEdX platform, enabling the system to handle the creation, configuration, and lifecycle of job listings, which is critical for facilitating hiring processes and supporting educational institutions in their recruitment efforts.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/openedx/openedx/lib/assets_helper.py": {
+    "hash": "11cd0e7297f387645bbe667b482f2ce9925db6aed606f2c30c74bb754672abe9",
+    "purpose": "This module manages asset specifications and keys to ensure they incorporate partition definitions or a common prefix, enabling consistent and organized data asset management across different environments. It allows for dynamic configuration of assets based on partitioning requirements and ensures uniform key naming conventions for scalability and maintainability.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/openedx/openedx/lib/magic_numbers.py": {
+    "hash": "fc3ee75fe79c29097e6f9386573be6c5d0fc3da2a176e33b019614dcbfe549b6",
+    "purpose": "The module defines a constant `HTTP_NOT_FOUND` with the value 404, serving as a standardized reference for identifying unsuccessful HTTP requests in web applications. It ensures consistency across different services, enabling developers to reliably detect and handle resource not found scenarios in API endpoints or web infrastructure. This constant is crucial for maintaining clear error handling and user experience in applications that rely on HTTP status codes.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/openedx/openedx/lib/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides a framework for managing and configuring projects within the OpenEdX platform, enabling efficient organization and integration of project-related data and settings. It supports the business by standardizing project structures, facilitating data management, and ensuring consistency across different components of the platform.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/openedx/openedx/ops/normalize_logs.py": {
+    "hash": "0ad4c8b90e3f0ed344e7348d708f9e3d6369cafd450f7ee82e92eba074e63f42",
+    "purpose": "The module orchestrates the ingestion of log data from S3 into a DuckDB database, transforming it into a structured format for analysis. It ensures consistency by normalizing data types, extracting JSON fields, and converting timestamps to ISO8601, enabling reliable downstream processing and reporting.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/openedx/openedx/ops/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module initializes the OpenEdX operations environment, ensuring proper configuration and dependency management to support the platform's functionality and maintain system integrity. It enables the platform to operate reliably by setting up necessary components and ensuring compatibility across different environments.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/openedx/openedx/partitions/openedx.py": {
+    "hash": "1fd494d1067827c65d802888577bf1ac546248209a26b60b35e684f0ac81ca78",
+    "purpose": "This module defines partitions for managing OpenEdX deployments and course runs, enabling organized data processing and scheduling across different deployment environments. It supports static partitioning for predefined deployments and dynamic partitioning for flexible course run configurations, facilitating efficient resource allocation and task execution in the OpenEdX infrastructure.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/openedx/openedx/partitions/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module enables efficient data processing by partitioning datasets into manageable chunks, allowing for parallel processing and improved performance in data-intensive tasks. It facilitates the distribution of large datasets across computational resources, optimizing scalability and reducing processing time.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/openedx/openedx/schedules/open_edx.py": {
+    "hash": "106073491f36f1b248bb11230313449fb921d7d17fc0b7f4917e5cfc15c1bd0e",
+    "purpose": "The module schedules daily job executions for three distinct educational platforms (residential, MITXPro, and MITXOnline), each with its own RunRequest identifier and business-unit tags, to ensure consistent and targeted pipeline operations across different educational offerings.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/openedx/openedx/schedules/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module defines the directory structure and imports necessary modules for the scheduling system, enabling organized management of scheduled events and resources within the OpenEdX platform. It ensures proper initialization of schedules, facilitating data consistency and accessibility for application logic.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/openedx/openedx/sensors/openedx.py": {
+    "hash": "a2c480f3282bc4402870397d5898f025f37292254a66bd397a9c4f00717304b2",
+    "purpose": "This module schedules asset materializations for course content, ensuring only new or updated course runs are processed, and triggers pipeline runs when course versions change, enabling timely updates to the system's data pipeline.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/openedx/openedx/sensors/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides a framework for collecting and processing sensor data, enabling the system to monitor user behavior and system performance, which is critical for improving user experience and optimizing system efficiency.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/openedx/openedx_tests/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module serves as a test suite manager for Open edX projects, organizing and executing tests to ensure the correctness and reliability of different components. It enables systematic verification of project functionality across various modules, supporting continuous integration and quality assurance processes. By centralizing test execution and management, it facilitates efficient testing and validation of code changes, aligning with organizational standards for robust software development.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/student_risk_probability/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module calculates risk probabilities for students based on academic performance, behavior, and other factors, enabling organizations to make informed decisions about intervention strategies and resource allocation.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/student_risk_probability/student_risk_probability/definitions.py": {
+    "hash": "423f0252f3079c143ed20aad8713386ca821773e14c75280ca8d75c4e9414665",
+    "purpose": "This module defines the Dagster infrastructure for the student risk probability calculation job, ensuring data is processed and stored using the configured S3, Vault, and GlueIOManager resources. It enables the pipeline to securely retrieve and transform student data, facilitating risk assessment and reporting within the production environment.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/student_risk_probability/student_risk_probability/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module calculates student risk probabilities based on academic performance, behavioral data, and demographic factors, enabling institutions to identify at-risk students and implement targeted interventions. It provides actionable insights for risk management and student support strategies, facilitating proactive decision-making in educational settings.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/student_risk_probability/student_risk_probability/assets/risk_probability.py": {
+    "hash": "6e1233dd429c08741b5f475e1607a93fd7f06ced7c780327f18d93f98da60582",
+    "purpose": "The module calculates risk probabilities for students based on cheating detection data, scaling numeric features and applying logistic regression weights to predict likelihood of cheating. It enables targeted interventions and reporting by identifying at-risk students, supporting academic integrity efforts and decision-making in educational settings.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/student_risk_probability/student_risk_probability/assets/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module provides a framework for calculating student risk probabilities, enabling institutions to assess academic and financial risks and make data-driven decisions regarding student support and interventions.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/student_risk_probability/student_risk_probability/lib/helper.py": {
+    "hash": "514a2cc73367f1eac1d58e56464caa90e3d14fbbef678146a1a20efcb090a396",
+    "purpose": "This module prepares scaled feature data for logistic regression modeling by applying RobustScaler to specified columns and combines them with non-feature columns, enabling the calculation of student risk probabilities to support educational decision-making.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/student_risk_probability/student_risk_probability/lib/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module calculates risk probabilities for students to help educators identify those at risk of academic or behavioral issues, enabling proactive interventions. It uses data to assess factors like performance, attendance, and behavior to predict likelihood of risk, aiding in resource allocation and support strategies.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dg_projects/student_risk_probability/student_risk_probability/resources/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module calculates student risk probabilities to assist educators in identifying and addressing academic or behavioral risks, enabling proactive interventions and better decision-making for student support.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/__init__.py": {
+    "hash": "4cadca12c0c4d8363efbe9c596e1f198ddcd5e0f69426085b39de351cb7ae546",
+    "purpose": "This module provides essential utilities for orchestrating Dagster workflows in the MIT Open Learning platform, enabling efficient management and execution of complex workflows across different components. It serves as a critical infrastructure layer, facilitating coordination between various workflows and processes to ensure seamless integration and scalability.",
+    "drift": null
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/assets/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module provides access to various assets such as images, icons, and other graphical elements required for the application's user interface, ensuring consistent and efficient resource management. It enables the system to retrieve and render these assets dynamically, supporting the application's functionality and user experience. The module also handles the caching and retrieval of assets, optimizing performance by minimizing redundant loading and ensuring timely availability.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/io_managers/filepath.py": {
+    "hash": "6fdc00e7a11c066c26588fd150b14a642d27984ea677f0ef201cd5b100b9a5c3",
+    "purpose": "This module enables applications to manage file data across diverse storage systems (e.g., S3, GCS, local filesystems) by abstracting underlying filesystem configurations, allowing seamless integration with cloud storage or local environments. It provides configurable options for handling file paths, credentials, and metadata, supporting flexible deployment scenarios while ensuring consistent behavior across different storage backends.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/io_managers/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module provides a framework for managing input/output operations for data processing tasks, enabling the orchestrate library to handle diverse data formats and sources, thereby facilitating seamless integration with various systems and protocols.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/jobs/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides the infrastructure for orchestrating job executions, managing job dependencies, and ensuring jobs are executed in the correct order to achieve business goals. It enables the system to handle complex job workflows efficiently by defining job templates, managing execution timelines, and enforcing dependencies between tasks.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/lib/arrow_helper.py": {
+    "hash": "4db5fbeb8a1b95a7a0c6735a27760a401597f0eff88959d1d1aca4a0be6fdb61",
+    "purpose": "This module enables the conversion of arrow tables into parquet files for efficient data storage and retrieval, facilitating data integration and analysis. It also provides a way to stream multiple arrow tables into a single parquet file, simplifying the processing of large datasets in workflows.",
+    "drift": null
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/lib/automation_policies.py": {
+    "hash": "736d6da3bb0c0d6960d8f5505391ff91eecdc72cf5d1a981e44902c41ba72610",
+    "purpose": "This module evaluates whether a process can proceed based on upstream dependencies and code changes, ensuring that all required dependencies are resolved and no ongoing processes are interfering. It combines conditions to determine if the current state allows the process to proceed safely, considering both code versioning and dependency status.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/lib/constants.py": {
+    "hash": "91fea86f16c906569059ee4a6d6c1cce7dea4f40f0e091d8bc12bf734e228e1e",
+    "purpose": "The module configures environment variables and constants to determine the application's behavior across different deployment environments (dev, ci, qa, production), specifying vault addresses and identifying which database tables are materialized for each environment. It ensures consistent configuration and operational context across various deployment scenarios.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/lib/dagster_helpers.py": {
+    "hash": "bc5927402e6a406b20815a07b51833e5ef64813b9b0c6e17d605f7a536c03a00",
+    "purpose": "This module provides default IO managers for Dagster workflows, enabling seamless data access in different environments (e.g., development, production) by selecting appropriate IO managers (e.g., local filesystem or S3) based on the deployment context. It ensures consistent data handling and access control, facilitating efficient workflow orchestration and data storage management across environments.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/lib/file_rendering.py": {
+    "hash": "86a64bf88b5bb188a9d5662221d483308c871a32a77ca08d618f6e2fa8c2a8f6",
+    "purpose": "The module writes table data in CSV format to a destination file, facilitating structured data storage for downstream processing or reporting. It appends to the existing file, ensuring cumulative data accumulation, and supports integration with systems requiring standardized data formats.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/lib/glue_helper.py": {
+    "hash": "ae6d6476b0ebb0a24a332fad67da1deb33363239785c2556aa760d9de92972dc",
+    "purpose": "This module enables the conversion of Arrow schema data into Glue-compatible formats, facilitating the integration of data from S3 into AWS Glue tables. It allows for the creation or updating of Glue tables by mapping and transforming data schemas, ensuring proper data alignment between source systems and target tables. The module also supports retrieving DBT models as Polars DataFrames, enabling efficient data loading and analysis within the data warehouse.",
+    "drift": null
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/lib/hooks.py": {
+    "hash": "3b36ce7cb38681ff70161ee7f99070cb4f76083941a5798c8eb290d5ff525dfa",
+    "purpose": "The module enables the health checks system to receive real-time updates about the success or failure of operations, facilitating monitoring and alerting for system health. It propagates status information to the health checks resource, allowing the system to track and respond to operational outcomes.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/lib/openedx.py": {
+    "hash": "ca6471a51c1e9d86cc9328762bd8e9ae26b5b30b21d270a31b65fcb3906a0169",
+    "purpose": "The module processes and organizes course structure data, generating block indexes for sequential traversal and extracting video and policy information from archives. It ensures structured data preparation for course content management, enabling efficient retrieval and manipulation of educational resources.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/lib/utils.py": {
+    "hash": "7ed321df34887c6024fc1072f98097ab1af46c983201de5431cbbaf147cb9f51",
+    "purpose": "The module provides functions to authenticate with a Vault server based on the Dagster environment and authentication method, configure S3 bucket settings for different environments, and compute SHA-256 hashes of ZIP file contents to ensure data integrity.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/lib/yaml_config_helper.py": {
+    "hash": "ae0c83a35a9ae7c373b439d6d22b9f38aeab04c178e45fa11efa08cd6713326a",
+    "purpose": "This module enables applications to retrieve YAML configuration files from disk, allowing them to access environment-specific settings, default configurations, or custom parameters required for operation. It ensures consistent configuration management by validating the existence of config files and returning empty dictionaries when necessary, facilitating seamless integration with deployment pipelines and application initialization processes.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/lib/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module organizes and provides access to critical components (config, data, exceptions, models, services, and utils) required by other parts of the codebase, ensuring structured reusability and maintainability. It serves as a foundational package that enables other modules to leverage shared utilities, data structures, and service logic, facilitating consistent implementation across the orchestration library.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/lib/dagster_types/files.py": {
+    "hash": "98ae42dd097d95e0629dc46ea1db95bb358f0c4085192eeaae60a770f7e5d94a",
+    "purpose": "This module provides a custom path type, `DagsterPath`, which extends `PosixPath` and is designed to seamlessly integrate with Dagster's infrastructure, enabling efficient handling of file paths in workflows and pipelines. It ensures compatibility with Dagster's system components while allowing developers to work with file paths in a manner consistent with Dagster's data modeling and execution paradigms.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/lib/dagster_types/google.py": {
+    "hash": "7ebf46af631a9c52e3d81d92e8222c009915869470bce2e78ad33eca7f2d4790",
+    "purpose": "This module provides a Dagster type for working with Google Cloud BigQuery datasets, enabling developers to integrate BigQuery data into Dagster pipelines for querying, managing, or transforming datasets within the framework. It facilitates seamless interaction between Dagster's data pipeline system and Google Cloud BigQuery, allowing for structured data handling and orchestration in data engineering workflows.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/lib/dagster_types/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module enables the definition and management of custom data types for use in DAGster workflows, allowing users to create and validate structured data representations specific to their orchestration needs. It ensures consistency and correctness in data handling within the pipeline by providing a flexible mechanism for defining type-specific metadata and validation rules.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/lib/postgres/event_log.py": {
+    "hash": "57be5164982061020dc576116457a60d033c406e5e15ca74bbf5ef705c4536be",
+    "purpose": "This module provides a scalable, connection-pooled implementation for storing event logs in a PostgreSQL database, ensuring efficient handling of multiple concurrent Dagster jobs. It replaces the default storage mechanism with a robust pooling strategy to prevent connection exhaustion, while configuring options like pool size and timeout to balance performance and reliability. The module ensures proper cleanup of connections when returned to the pool, maintaining database integrity and preventing idle state issues.",
+    "drift": null
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/lib/postgres/run_storage.py": {
+    "hash": "e4335cdb0749287122e76be81dd08ee0736292b4e9b8c43d4ff48967b137dc25",
+    "purpose": "The module provides a scalable, connection-pooled PostgreSQL run storage solution, ensuring efficient handling of multiple Dagster jobs by managing database connections, automatically creating necessary tables, and configuring pool parameters to optimize performance based on the workload. It integrates with Dagster's configuration system to dynamically adjust pool settings like size, overflow, and recycle intervals, preventing connection exhaustion and ensuring reliable data storage.",
+    "drift": null
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/lib/postgres/schedule_storage.py": {
+    "hash": "f9f73d8175b2fed3697e90da6ccc042e6027fe03944772ac0de2132afde5cb66",
+    "purpose": "This module provides a PostgreSQL-backed schedule storage solution with connection pooling, ensuring efficient database connection management for Dagster jobs. It acts as a drop-in replacement for the standard storage implementation, optimizing resource usage through QueuePool and configurable pool parameters like pool_size, max_overflow, and pool_recycle. The module enables reliable scheduling operations by preventing connection exhaustion and maintaining performance during high-volume processing.",
+    "drift": null
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/lib/postgres/__init__.py": {
+    "hash": "e4118c43686cf1e0d0d462553d2dc3eb0d20ef08961188f710181083ba683493",
+    "purpose": "This module provides pooled PostgreSQL storage implementations for Dagster's event log, run, and schedule storage systems, ensuring efficient connection management to prevent database connection exhaustion. By replacing the default NullPool with QueuePool, it enables scalable deployment of Dagster workflows while allowing independent or combined configuration of storage resources via the `dagster.yaml` file.",
+    "drift": null
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/ops/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module initializes the package by importing essential modules, registering operation classes, and configuring settings required for orchestration workflows, enabling the system to manage and execute complex operations efficiently.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/partitions/edxorg.py": {
+    "hash": "4014be10a6cdfe639e714658a79ef3d9867211841289678793b9c96ba5e010f0",
+    "purpose": "The module defines dynamic partitions for course and source data, enabling efficient data processing and management by organizing large datasets into manageable chunks. This allows for parallel execution of workflows, improving performance and scalability in handling educational content from various sources.",
+    "drift": null
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/partitions/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module manages data partitions, enabling efficient distribution and processing of large datasets across distributed systems, thereby optimizing performance and scalability for data-intensive applications.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/resources/api_client.py": {
+    "hash": "c37029c5cfa05e041f52c11d560e67aeb5ab5b716c5cbf38e1079e299827d7c6",
+    "purpose": "This module enables authenticated HTTP requests to an API, ensuring secure and reliable communication with the orchestrate service. It manages client connections with timeout settings and handles authentication via token types, facilitating seamless integration and data retrieval.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/resources/api_client_factory.py": {
+    "hash": "21c5fa1ca81b98298657d53fcbcec923425ae1c4b3fe925a6fb898b5a5fd37b0",
+    "purpose": "This module enables the application to dynamically create secure API clients (e.g., CanvasApiClient or MITLearnApiClient) by fetching credentials from a vault, ensuring proper authentication and isolation of sensitive data across different deployment environments. It provides a configurable interface for managing client-specific secrets, allowing seamless integration with various services while maintaining compliance with vault access controls.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/resources/athena_db.py": {
+    "hash": "aeb3f0fa94ce1f1c56f9cc2869b159a9695fa43ebe809b6273d3d4d707cfb0d9",
+    "purpose": "This module provides a reusable resource for connecting to AWS Athena databases, enabling efficient data retrieval and querying within the orchestration pipeline. It allows developers to securely access and analyze structured data stored in Athena, supporting data integration and transformation tasks in pipeline workflows.",
+    "drift": {
+      "verdict": "DRIFT",
+      "explanation": "The DOCSTRING (\"Resource for connection to athena.\") does not accurately describe the code's purpose. The implementation's resource function explicitly states \"Create a connection to athena.\" while the DOCSTRING is too vague and general, failing to convey the specific functionality and parameters of the resource."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/resources/bigquery_db.py": {
+    "hash": "c5ef86004d70f52e6e8107d5fc0681d6661ddcf5a7f456337a0de952230b4a05",
+    "purpose": "This module enables secure connection to Google Cloud BigQuery via service account credentials, allowing data integration and querying across cloud environments. It facilitates seamless data movement between pipelines and BigQuery, supporting analytics and operational data processing workflows. The resource ensures proper authentication and configuration management for reliable BigQuery interactions.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "The docstring is missing, as it only states the purpose of the resource without detailing the implementation steps or parameters."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/resources/canvas_api.py": {
+    "hash": "3be28dd4e32d8615ff16b8267cadf598317f708308456ac11b4def6ee9a12ad4",
+    "purpose": "This module enables the system to retrieve and manage course-related data from the Canvas API, including fetching course details, exporting course content, and handling pagination for various course elements like files, assignments, and pages. It supports educational institutions and learning platforms in efficiently accessing and exporting structured data from Canvas courses, facilitating content management and integration.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/resources/gcp_gcs.py": {
+    "hash": "98e29fd4f08dbd32d9be5c727e14923459ce9dbfb86afbf46240ee293265ae4c",
+    "purpose": "The module provides a configurable resource for connecting to Google Cloud Storage (GCS) using service account credentials, enabling the system to securely interact with GCS resources for data storage and retrieval. It initializes a GCS client with the specified project ID and credentials, allowing operations like uploading, downloading, and managing data in GCS. This ensures secure and reliable access to GCS resources within the orchestration framework.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "The docstring is entirely vague, merely stating \"Resource for connecting to a gcs.\" It lacks any specific details about the class's functionality, fields, or methods, which contrasts with the implementation that provides concrete code and purpose."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/resources/github.py": {
+    "hash": "4ab2237435870a8159f8d29ef47c11191acda2b78abb2c7c8055c61c05d7147a",
+    "purpose": "This module enables secure access to GitHub APIs by retrieving credentials from Vault, allowing the system to interact with GitHub services for pipeline management and other operations. It ensures authenticated client creation via Vault-secured secrets, facilitating reliable integration with GitHub's API for workflow orchestration.",
+    "drift": null
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/resources/learn_api.py": {
+    "hash": "87245348d3c30f1ed18beff8ba326f1163deb64dca356d1f564e42327e198db9",
+    "purpose": "This module enables the application to send authenticated webhook notifications to MITLearn's API for triggering course exports and video shorts processing. It securely signs requests using a secret key for HMAC authentication, ensuring data integrity and authorization during communication with the platform's endpoints.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/resources/oauth.py": {
+    "hash": "f84a023ea43cc462281caa8134ab858ceaf3f5a15754c6ab7907a9901a7e8549",
+    "purpose": "The module enables secure, authenticated access to external OAuth2 APIs by managing token acquisition and request authentication, ensuring compliance with rate limits and security protocols. It leverages vault-based secrets to dynamically retrieve client credentials, facilitating seamless integration with external services while maintaining robust error handling and retry mechanisms.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/resources/openedx.py": {
+    "hash": "26df9cd98db2a3101f791ab3a2ee781dff3bbd31a10447084690e662697c26c6",
+    "purpose": "The module provides a secure, configurable client interface for interacting with edX APIs, enabling data retrieval and management tasks critical for educational content orchestration. It supports pagination, authentication, and bulk operations to retrieve course metadata, export data to S3, and monitor export statuses, facilitating seamless integration with educational platforms.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/resources/outputs.py": {
+    "hash": "0c3025a25f154784bcee8a9861500db627323ff83b89bd4a3a3cd9269098f6f3",
+    "purpose": "This module provides a flexible framework for managing output directories in a Dagster workflow, enabling the creation and cleanup of structured directories for storing pipeline artifacts. It ensures consistent directory organization across different pipeline executions, reducing conflicts and improving maintainability by allowing customizable configurations such as date-based naming or fixed directory paths. The module supports parallel execution by nesting directories, which is critical for avoiding race conditions in distributed environments.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/resources/postgres_db.py": {
+    "hash": "b3f586d689540376dc603f99352a26320d0e4884829c7c5da92ac0982319094f",
+    "purpose": "This module provides a connection to a PostgreSQL database, enabling execution of queries and data manipulation tasks. It offers a reusable PostgresClient instance through a resource, facilitating efficient data processing and integration with pipeline workflows. The resource ensures consistent access to a database connection, supporting both read and write operations across pipeline execution contexts.",
+    "drift": {
+      "verdict": "DRIFT",
+      "explanation": "The docstring merely states \"Resource for connection to a postgres db.\" It does not accurately describe the resource's functionality, configuration, or methods (e.g., `run_chunked_query`, `run_write_query`). The implementation provides detailed information about the resource's structure and behavior, which the docstring fails to capture."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/resources/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides a framework for managing resources in the orchestration system, enabling different services to register and retrieve resources efficiently. It ensures that resources are properly initialized and configured, supporting the orchestration of various components and services. This allows the system to dynamically handle diverse resource types, enhancing flexibility and scalability in the orchestration process.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/resources/secrets/vault.py": {
+    "hash": "eb23e7967448f1a5c9727fd7605c55957de110e1b7f4fc38969b63817715f429",
+    "purpose": "This module enables the application to securely authenticate with various vault services (e.g., AWS-IAM, GitHub, Kubernetes, OIDC, JWT) by managing token caching and client initialization, ensuring sensitive data access is restricted to authorized entities. It provides a unified interface for handling authentication across different vault types, facilitating secure secret retrieval and configuration management.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/resources/secrets/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module manages secrets for different environments, ensuring secure access and retrieval from various sources like environment variables, configuration files, or external services. It facilitates the orchestration of sensitive data across workflows, enabling controlled exposure and compliance with security requirements.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/schedules/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides a framework for scheduling tasks, enabling developers to define and manage execution timelines within a workflow system, ensuring that tasks are executed at the appropriate times to maintain workflow efficiency and correctness.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/sensors/object_storage.py": {
+    "hash": "e78728712fea6affd8e43290f5571e10f8f5afb0705b0e6b0f5190fa2d576f1f",
+    "purpose": "This module implements sensors to monitor cloud storage buckets (GCS or S3) for new files, filter them using optional criteria, and trigger Dagster run requests to process the files, enabling automated workflow execution based on storage changes.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "packages/ol-orchestrate-lib/src/ol_orchestrate/sensors/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "This module enables the orchestration system to collect and monitor real-time sensor data, providing insights into critical system metrics and event triggers to ensure reliability and enable proactive maintenance. It facilitates the detection of anomalies or performance issues, allowing for timely interventions to optimize resource allocation and improve overall system efficiency.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "src/ol_orchestrate/__init__.py": {
+    "hash": "c991bd574e157cab93d8940459f8f70471b1ceac2244cf8d12ac982587e7f97b",
+    "purpose": "This module was deprecated and migrated to the new dg CLI structure, transitioning from its previous location to a more organized framework. It previously handled data orchestration tasks, such as extracting and processing data from educational platforms, now integrated into the new architecture to ensure scalability and maintainability.",
+    "drift": null
+  },
+  "src/ol_superset/ol_superset/cli.py": {
+    "hash": "c2018057e888780e0345cbd6f26ffad447e22d596f255f2a6857302a47fe70ca",
+    "purpose": "This module enables organizations to manage and govern Apache Superset dashboards, charts, and datasets across QA and production environments, ensuring data integrity, compliance, and efficient asset migration with built-in safety checks. It provides commands for exporting, promoting, syncing, validating, deduplicating, locking, refreshing, and applying RLS policies to maintain governance and operational consistency across environments.",
+    "drift": null
+  },
+  "src/ol_superset/ol_superset/__init__.py": {
+    "hash": "3d4cc2c9b257e4b5633639307dbd8cbec1caafa8c9b8d2204f9b2aab319a2789",
+    "purpose": "This module provides a command-line interface for managing assets in the OpenShift Superset platform, enabling users to efficiently deploy, configure, and maintain assets across different environments. It ensures version consistency and integrates seamlessly with Superset's infrastructure to support scalable asset management workflows.",
+    "drift": null
+  },
+  "src/ol_superset/ol_superset/commands/apply_rls.py": {
+    "hash": "99bbf7331c892b1a14094e0220573bb46b9960ec8478787c261f01cbc17a8afc",
+    "purpose": "This module applies row-level security (RLS) policies to a Superset instance to enforce data access controls, ensuring that users can only view data based on their roles and permissions. It uses OAuth authentication to securely obtain credentials without requiring shared admin passwords, and it manages roles, datasets, and existing filters to customize data visibility according to governance policies. The module also provides options to preview changes or skip confirmation prompts for production environments.",
+    "drift": null
+  },
+  "src/ol_superset/ol_superset/commands/dedupe.py": {
+    "hash": "1b69ed1678b975d6c1924cb106d8508b83e4c07b2915d09c21153a757bc01faa",
+    "purpose": "This module addresses the issue of duplicate assets created in different environments (e.g., QA vs. Prod) by deduplicating YAML files and renaming them using UUID-based naming. It ensures consistent identification and storage of assets, preventing conflicts and maintaining data integrity across environments.",
+    "drift": null
+  },
+  "src/ol_superset/ol_superset/commands/export.py": {
+    "hash": "3ec17bd537e3451c2d86540c6b8deb2a4cc52ed7b20704c5fe34ca0a849d071a",
+    "purpose": "The module enables the export of Superset assets (datasets, charts, dashboards, and database configurations) from specified instances, ensuring consistency across environments through automatic pagination and deduplication. It prevents duplicate files by renaming assets to UUID-based names and provides a summary of exported assets, facilitating data management and migration across different instances.",
+    "drift": null
+  },
+  "src/ol_superset/ol_superset/commands/lock.py": {
+    "hash": "e846bdac9371a8b44029b0723b70628ac7f93bfba088b8adf378e8019976dbdd",
+    "purpose": "The module manages the external management flag for Superset assets, enabling workflows to enforce \"managed as code\" by locking production dashboards or allow manual editing in QA environments. It ensures consistent access control across instances, balancing automation with flexibility for different deployment stages.",
+    "drift": null
+  },
+  "src/ol_superset/ol_superset/commands/promote.py": {
+    "hash": "f96328fd393a21e68305dc3f4923a13dba7a1fd0f51eff1bba168f1eedb946f1",
+    "purpose": "This module ensures safe and controlled promotion of Superset assets from the QA environment to production, with rigorous validation, confirmation prompts, and database mapping to prevent accidental deployments. It validates assets, checks for uncommitted changes, and requires explicit confirmation before proceeding, ensuring data integrity and preventing production errors.",
+    "drift": null
+  },
+  "src/ol_superset/ol_superset/commands/refresh.py": {
+    "hash": "5fe628a33e5c4bd6eaf115c8c643578aa329e90113f23bf4cc6ccd5abd24b673",
+    "purpose": "This module enables administrators to refresh physical dataset schemas in Superset to reflect changes in underlying database tables, ensuring that visualizations and dashboards accurately reflect the latest data structures. It allows targeted refreshes of specific datasets, all datasets in an instance, or datasets from the local assets directory, providing flexibility for different deployment scenarios. The command also includes a dry-run mode to preview changes without actual execution, aiding in workflow validation.",
+    "drift": null
+  },
+  "src/ol_superset/ol_superset/commands/roles.py": {
+    "hash": "70dae1ecb4c297be7593b7d0d5855b2e58a316014bfd6ff16e8965c77053ab51",
+    "purpose": "This module enables administrators to manage dataset access permissions for governance roles, ensuring compliance with organizational policies by listing accessible datasets and verifying that all local datasets are covered by at least one role. It provides a streamlined way to audit and enforce governance rules across local assets, supporting data governance and security requirements.",
+    "drift": null
+  },
+  "src/ol_superset/ol_superset/commands/sync.py": {
+    "hash": "e627795697c6c12eb0756664622210472cf0d26fbc2d5b300e5a93b2dd836940",
+    "purpose": "This module enables the synchronization of Superset assets between different instances, ensuring consistent data across environments by mapping database UUIDs and pushing datasets, charts, and dashboards to the target instance. It supports automated migration workflows while providing safeguards against accidental data overwrites through confirmation prompts and dry-run modes.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "The docstring is missing because it only states the purpose of the sync command without detailing the implementation parameters, steps, or functionality described in the code."
+    }
+  },
+  "src/ol_superset/ol_superset/commands/validate.py": {
+    "hash": "f860cbf9347c054a3eb00d04f3f6d954e99fd0afdff3d476eb3bb0b833333de4",
+    "purpose": "This module validates Superset asset files to ensure they are syntactically correct, secure, and compliant with governance rules. It checks YAML syntax, detects embedded passwords in database configurations, and verifies that critical dataset schemas are covered by approved governance roles, supporting reliable deployment and compliance.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "The docstring is extremely brief and does not describe what the code does in detail. It only states the purpose of the command but lacks any specific details about the functionality, steps, or features of the implementation."
+    }
+  },
+  "src/ol_superset/ol_superset/commands/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module provides commands for data retrieval, processing, exporting, and importing, enabling efficient data management and integration within the application. It allows users to fetch data from a database, transform it, export it to external systems, and import data from files or other sources, supporting critical business operations such as analytics, reporting, and data pipeline workflows.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "src/ol_superset/ol_superset/lib/database_mapping.py": {
+    "hash": "d5b4714f247f058c6242de8fcf7ced851ba524f6bd4309a4c5b1eb33dcd14084",
+    "purpose": "The module synchronizes database UUIDs between source assets and a target instance by fetching target databases using the `sup` CLI tool, mapping source UUIDs to target UUIDs based on database names, and updating all asset files (YAML files) to reflect the new UUIDs. This ensures consistent database references across environments, preventing conflicts when deploying or migrating assets.",
+    "drift": null
+  },
+  "src/ol_superset/ol_superset/lib/role_management.py": {
+    "hash": "6fcff0dcc9da8565679df5cdeeadbd8f90d670ff825a7fed5c2fc0193c17659c",
+    "purpose": "This module synchronizes dataset access permissions between governance policies and the Superset platform, ensuring that roles defined in governance are reflected in the Superset system. It fetches dataset metadata from both local YAML files and the Superset API, maintaining consistency between predefined policies and real-time access controls. The module also retrieves role-specific dataset permissions to enforce governance constraints at the data level.",
+    "drift": {
+      "verdict": "DRIFT",
+      "explanation": "The docstring claims the function is for \"role management\" but the implementation focuses on fetching datasets from a Superset API. The code's purpose is unrelated to role management, making the docstring inaccurate."
+    }
+  },
+  "src/ol_superset/ol_superset/lib/superset_api.py": {
+    "hash": "1e48b9260352dd1a35a293682022ad258c602104a99283c0e6aadfc2ab5ba444",
+    "purpose": "This module enables secure authentication for Superset API interactions by generating OAuth tokens using the PKCE flow, allowing applications to access the Superset instance with verified credentials. It handles the entire OAuth authorization process, from redirecting users to the authorization URL to exchanging authorization codes for access tokens, ensuring robust security for API requests.",
+    "drift": null
+  },
+  "src/ol_superset/ol_superset/lib/utils.py": {
+    "hash": "f1c6246762a9ea680503b0fbc45741b371f94aa0e82db05436e896d9f46b2e2a",
+    "purpose": "This module manages asset directories for the Superset CLI, enabling tracking of dashboards, charts, and datasets, while providing tools to validate repository states, execute commands, and monitor instance configurations. It ensures consistent asset management and status checks across the Superset environment.",
+    "drift": null
+  },
+  "src/ol_superset/ol_superset/lib/__init__.py": {
+    "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "purpose": "The module serves as a foundational package for OL Superset, providing essential utilities and services that support the platform's data processing, integration, and API functionalities. It ensures that the codebase is organized and maintainable, enabling developers to focus on building features rather than managing the infrastructure.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "\n            INSERT OR REPLACE INTO _glue_source_registry\n            (view_name, glue_database, glue_table, metadata_location, registered_at)\n            VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)\n        ": {
+    "hash": "cf11dbd023aed174a46ef74242bfbac28aefdae3fa13184aa16faded3d8edb6e",
+    "purpose": "The module registers AWS Glue Iceberg tables as DuckDB views, enabling efficient data exploration and analysis by leveraging DuckDB's performance. This allows developers to work with real-time data from Glue without needing full ETL processes, speeding up development and improving data accessibility. The registration ensures that each table is properly linked to its metadata location, facilitating accurate data retrieval and validation.",
+    "drift": null
+  },
+  "\n            CREATE TABLE IF NOT EXISTS _glue_source_registry (\n                view_name VARCHAR PRIMARY KEY,\n                glue_database VARCHAR,\n                glue_table VARCHAR,\n                metadata_location VARCHAR,\n                registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n            )\n        ": {
+    "hash": "cf11dbd023aed174a46ef74242bfbac28aefdae3fa13184aa16faded3d8edb6e",
+    "purpose": "This module enables the registration of AWS Glue Iceberg tables as DuckDB views, facilitating efficient data retrieval and testing for development and production environments. It ensures proper metadata management and connectivity verification, supporting streamlined data pipeline operations and maintenance.",
+    "drift": null
+  },
+  "\n                    SELECT view_name, metadata_location\n                    FROM _glue_source_registry\n                    WHERE glue_database = ?\n                ": {
+    "hash": "cf11dbd023aed174a46ef74242bfbac28aefdae3fa13184aa16faded3d8edb6e",
+    "purpose": "The module registers AWS Glue Iceberg tables as DuckDB views, enabling efficient data exploration and analysis by providing a unified interface to access structured data across different environments. It ensures proper metadata management and allows for easy testing and cleanup of Trino development schemas.",
+    "drift": null
+  },
+  "\n            SELECT\n                view_name,\n                glue_database,\n                glue_table,\n                registered_at\n            FROM _glue_source_registry\n            ORDER BY registered_at DESC\n        ": {
+    "hash": "cf11dbd023aed174a46ef74242bfbac28aefdae3fa13184aa16faded3d8edb6e",
+    "purpose": "The module registers AWS Glue Iceberg tables as DuckDB views for local dbt development, enabling efficient data exploration and testing of connectivity to production data lakes. It ensures consistency by maintaining a registry of registered tables and supports cleanup of Trino development schemas, facilitating seamless integration between staging, production, and testing environments.",
+    "drift": null
+  },
+  "\n            SELECT\n                glue_database,\n                COUNT(*) as table_count\n            FROM _glue_source_registry\n            GROUP BY glue_database\n            ORDER BY glue_database\n        ": {
+    "hash": "cf11dbd023aed174a46ef74242bfbac28aefdae3fa13184aa16faded3d8edb6e",
+    "purpose": "The module enables the registration of AWS Glue Iceberg tables as DuckDB views, facilitating efficient data exploration and analysis by providing quick access to structured data. This supports seamless integration between Glue, Iceberg, and DuckDB, enabling robust data processing and querying for business intelligence and analytics workflows.",
+    "drift": null
+  },
+  "export_b2b_organization_data": {
+    "hash": "b7eb6d1f978131d1f0bed9548f4e52fee2b57257481a2f38da7df9a1484c1e91",
+    "purpose": "The module exports structured organization administration data from a database table, formatting it into CSV files with versioning and secure storage, ensuring consistency and traceability for downstream processes. It ensures data integrity through hashing and logging export details for audit and tracking purposes.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "course_content_metadata": {
+    "hash": "a707e083fb9582fb4cd50edbf9a67a673537c4815c3e88c5eae18491ed08ec86",
+    "purpose": "This module enables the extraction and organization of course content and metadata from Canvas courses, facilitating data integration for applications that require structured access to educational data. It handles export operations, downloads files with versioning, and structures data into predefined paths for efficient storage and retrieval. The module supports exporting common cartridge data while providing flexibility for future expansion to include other export types.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "UPDATE tracking_logs\n            SET time = to_timestamp(CAST(time AS BIGINT))\n            WHERE TRY_CAST(time AS BIGINT) IS NOT NULL\n            ": {
+    "hash": "0ad4c8b90e3f0ed344e7348d708f9e3d6369cafd450f7ee82e92eba074e63f42",
+    "purpose": "The module enables the ingestion of tracking logs from S3 into a DuckDB table, transforming them into a consistent format for analysis. It extracts log data, converts timestamps to ISO8601, and normalizes fields to ensure uniformity, facilitating efficient data processing and querying.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "\n            UPDATE tracking_logs\n            SET time = strftime(TRY_CAST(time AS TIMESTAMP), '%Y-%m-%d %H:%M:%S.%f')\n            ": {
+    "hash": "0ad4c8b90e3f0ed344e7348d708f9e3d6369cafd450f7ee82e92eba074e63f42",
+    "purpose": "The module enables efficient processing of log data stored in S3 buckets, transforming it into a structured format for analysis by loading files into a DuckDB table and normalizing data fields. It ensures consistent data representation through column type conversion, JSON extraction, and timestamp standardization, facilitating reliable querying and downstream processing.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "edxorg_raw_data_archive": {
+    "hash": "51b9f4ff3de4548affc2abd45b5b7be8db969a69d578cecca2c288cdce042e58",
+    "purpose": "The module processes raw educational data archives from GCP storage, extracting per-course assets and modeling them according to their type to enable structured data usage in the system. It ensures efficient data extraction and classification, supporting the business goal of leveraging educational data for analysis and integration.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "process_edxorg_archive_bundle": {
+    "hash": "51b9f4ff3de4548affc2abd45b5b7be8db969a69d578cecca2c288cdce042e58",
+    "purpose": "The module processes raw educational data from EDX.org archives, extracting per-course assets and modeling them into structured formats for use in educational analytics and course management systems. It handles data extraction, parsing, and transformation to enable efficient data retrieval and integration across different application domains.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dummy_edxorg_course_structure": {
+    "hash": "51b9f4ff3de4548affc2abd45b5b7be8db969a69d578cecca2c288cdce042e58",
+    "purpose": "The module processes raw educational data archives from edx.org, extracting and structuring per-course assets to support educational analytics and data-driven decision-making. It transforms raw files into standardized asset objects, enabling efficient data integration and utilization for course-level insights.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "edxorg_raw_tracking_logs": {
+    "hash": "51b9f4ff3de4548affc2abd45b5b7be8db969a69d578cecca2c288cdce042e58",
+    "purpose": "The module processes raw data archives from edx.org to extract structured asset objects, enabling downstream analysis of course-related data such as course materials, forum interactions, and assessments. It models these assets according to their type, facilitating data-driven insights into educational content and learner behavior. The module ensures efficient extraction and transformation of raw logs into usable formats for analytics and reporting.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "normalize_edxorg_tracking_log": {
+    "hash": "51b9f4ff3de4548affc2abd45b5b7be8db969a69d578cecca2c288cdce042e58",
+    "purpose": "The module processes raw EdX.org archive data to extract structured course assets, enabling the system to generate actionable insights about course activities and learner engagement. It transforms raw data into standardized formats, facilitating integration with analytics tools and supporting data-driven decision-making. By extracting and categorizing educational resources from EdX.org archives, the module ensures consistency and reliability in the data used for tracking and analyzing course performance.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "dummy_edxorg_course_xml": {
+    "hash": "12ab50000f15db5f51a4fa216ce8da6d20926936c13f453e1a120802b3e3c332",
+    "purpose": "This module extracts and structures metadata, video details, policy information, and certificate signatories from EdX.org course XML exports, enabling downstream use cases such as analytics, reporting, or further processing of educational data. It leverages automation conditions to trigger processing when code changes occur, ensuring alignment with organizational workflows.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "edxorg_course_content_webhook": {
+    "hash": "12ab50000f15db5f51a4fa216ce8da6d20926936c13f453e1a120802b3e3c332",
+    "purpose": "This module extracts and processes XML data from course archives, generating structured metadata and files for educational content orchestration. It prepares detailed information about courses, videos, policies, and certificate signatories, which are essential for downstream systems to retrieve and utilize educational data efficiently.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "download_edx_gcs_course_data": {
+    "hash": "bce48beddbd29e7b492e0b1328b574982cfba4f959853a72928d9d13893e817c",
+    "purpose": "The module facilitates the transfer of course tarballs from Google Cloud Storage (GCS) to Amazon Simple Storage Service (S3), enabling data availability for subsequent processing or analysis. It ensures seamless integration between institutional research data and cloud storage systems, supporting the workflow of exporting and distributing educational content.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "upload_edx_gcs_course_data_to_s3": {
+    "hash": "bce48beddbd29e7b492e0b1328b574982cfba4f959853a72928d9d13893e817c",
+    "purpose": "The module facilitates the transfer of educational course tarballs from Google Cloud Storage (GCS) to Amazon Simple Storage Service (S3), enabling the edX pipeline to access and process institutional research data efficiently. It ensures data integrity by downloading files from GCS, organizing them into a directory, and uploading them to the designated S3 bucket for subsequent processing.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "sync_files_to_s3": {
+    "hash": "cea0d2f7c64138a5abbd51616db7d1011a2caed3e099a8d1e53bf9fc1ece78a6",
+    "purpose": "The module synchronizes files between two S3 buckets by copying specified objects, enabling data migration or replication workflows. It allows targeted synchronization of individual files or directories, providing flexibility for moving data between storage environments. The deprecated implementation supports controlled data movement between S3 buckets, ensuring accurate and efficient transfer of files for business needs.",
+    "drift": {
+      "verdict": "DRIFT",
+      "explanation": "The DOCSTRING is a deprecation notice explaining that the code is outdated and should be replaced by the IO Manager interface. It does not accurately describe the code's functionality, which is about syncing files between S3 buckets. The implementation's code explicitly describes the syncing logic, while the DOCSTRING merely informs users of the deprecation."
+    }
+  },
+  "download_files_from_s3": {
+    "hash": "cea0d2f7c64138a5abbd51616db7d1011a2caed3e099a8d1e53bf9fc1ece78a6",
+    "purpose": "The module facilitates the retrieval of files from an S3 bucket to a specified destination directory, ensuring the necessary directory structure is created and returning the path to the downloaded files. It enables data migration and storage by synchronizing files from a source bucket to a destination path, supporting scalable and efficient file management workflows.",
+    "drift": {
+      "verdict": "DRIFT",
+      "explanation": "The DOCSTRING is a deprecation notice that does not describe what the code does. It merely warns about a deprecated feature, whereas the implementation's code includes docstrings that explain the functionality of the functions and classes."
+    }
+  },
+  "upload_files_to_s3": {
+    "hash": "cea0d2f7c64138a5abbd51616db7d1011a2caed3e099a8d1e53bf9fc1ece78a6",
+    "purpose": "The module enables the systematic upload of local files to an S3 bucket, allowing businesses to securely store and manage data in the cloud. It supports customizable prefixes and destination buckets, facilitating organized data archiving and retrieval. The module ensures efficient file transfer by leveraging S3's object-level capabilities, enabling scalable storage solutions for data-intensive workflows.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "The DOCSTRING is a deprecation notice informing users that the code is outdated, but it does not describe the functionality of the implementation, which includes the actual code for syncing files between S3 buckets."
+    }
+  },
+  "download_file_from_gcs": {
+    "hash": "cea0d2f7c64138a5abbd51616db7d1011a2caed3e099a8d1e53bf9fc1ece78a6",
+    "purpose": "The module enables data retrieval from Google Cloud Storage (GCS) by downloading files to a specified destination path, facilitating data integration and availability for subsequent processing. It ensures proper directory structure and handles file operations efficiently, supporting business needs for accessing and managing distributed data sources.",
+    "drift": {
+      "verdict": "DRIFT",
+      "explanation": "The DOCSTRING is a deprecation notice warning about the module being outdated, but it does not describe the actual functionality of the code, which is to synchronize files between S3 buckets. The implementation (code) clearly outlines the purpose and functionality, but the DOCSTRING here misrepresents the code's purpose by focusing on a deprecated warning rather than describing the implementation."
+    }
+  },
+  "upload_file_to_s3": {
+    "hash": "cea0d2f7c64138a5abbd51616db7d1011a2caed3e099a8d1e53bf9fc1ece78a6",
+    "purpose": "The module enables the synchronization of files between S3 buckets, allowing data to be moved from a source bucket to a destination bucket, whether as individual files or entire directories. It ensures proper directory structure creation and handles both bulk directory uploads and single-file transfers, supporting data migration and storage management across different storage systems.",
+    "drift": {
+      "verdict": "DRIFT",
+      "explanation": "The docstring is a deprecation notice indicating the module is outdated, but the implementation shows it's meant to synchronize files between S3 buckets. The docstring does not accurately describe the code's functionality beyond the deprecation warning."
+    }
+  },
+  "generate_instructor_onboarding_user_list": {
+    "hash": "0260ded38a64ea31fa91d96dbf6df70a6d3d6688e759aa9f52eaa52e31defe91",
+    "purpose": "This module ensures accurate and up-to-date instructor access lists by pulling user email addresses from a database, filtering and preparing them for GitHub upload, and merging new users with existing entries to avoid duplicates. It supports efficient management of instructor access permissions across the access-forge repository.",
+    "drift": null
+  },
+  "update_access_forge_repo": {
+    "hash": "0260ded38a64ea31fa91d96dbf6df70a6d3d6688e759aa9f52eaa52e31defe91",
+    "purpose": "The module ensures the access-forge GitHub repository maintains an accurate and up-to-date list of instructor users by integrating new data from a generated CSV file, merging it with existing entries, and avoiding duplicates while preserving previously registered users. It facilitates seamless integration of instructor user data into the repository's access management system.",
+    "drift": null
+  },
+  "_superset_dataset": {
+    "hash": "b0f6a22c3965c97ae82e580043fa7a59bd8e58972a9b663b0ed95146ff62fc06",
+    "purpose": "This module automates the refresh of Superset datasets based on DBT models, ensuring real-time data consistency and enabling timely data access for business analytics. It handles dataset creation, refresh operations, and metadata updates, with error handling to manage failures and skipped cases, supporting efficient data pipeline operations.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "google_sheets_api": {
+    "hash": "53a1803da7ba5fe7d51cfc203a2d9f4416f919f55956605d65e06981face7954",
+    "purpose": "The module retrieves video metadata from Google Sheets, processes the top 12 most recent videos, and prepares versioned data for downstream use in video download and thumbnail generation. It ensures consistent and accurate metadata across partitions, enabling efficient content management and delivery.",
+    "drift": null
+  },
+  "video_short_metadata": {
+    "hash": "53a1803da7ba5fe7d51cfc203a2d9f4416f919f55956605d65e06981face7954",
+    "purpose": "This module retrieves and processes metadata from Google Sheets for video shorts, enabling downstream operations like video download and thumbnail generation. It ensures accurate and timely metadata is available for content management, supporting efficient video processing and delivery. By partitioning metadata versioned by video IDs, it facilitates organized retrieval and scaling of video data across different partitions.",
+    "drift": {
+      "verdict": "DRIFT",
+      "explanation": "The DOCSTRING is too vague and does not accurately describe the code's functionality. It only states that the code processes Video Shorts from Google Sheets, but the implementation includes fetching data, processing it, and returning a result, which is not reflected in the DOCSTRING."
+    }
+  },
+  "video_short_content": {
+    "hash": "53a1803da7ba5fe7d51cfc203a2d9f4416f919f55956605d65e06981face7954",
+    "purpose": "This module processes video metadata from Google Sheets to generate structured data for downstream video processing, enabling efficient management of video content and facilitating automated thumbnail generation and video downloads. It ensures consistent versioning and partitioning of video data, supporting scalable and reliable video content handling workflows.",
+    "drift": null
+  },
+  "video_short_thumbnail_small": {
+    "hash": "53a1803da7ba5fe7d51cfc203a2d9f4416f919f55956605d65e06981face7954",
+    "purpose": "This module processes video metadata from Google Sheets to generate partition-based video metadata, enabling downstream video download and thumbnail generation. It ensures efficient retrieval of video data by leveraging dynamic partitions and versioning, supporting the business need for scalable video processing and asset management.",
+    "drift": null
+  },
+  "video_short_thumbnail_large": {
+    "hash": "53a1803da7ba5fe7d51cfc203a2d9f4416f919f55956605d65e06981face7954",
+    "purpose": "This module processes video metadata from Google Sheets to generate partition-based versions for downstream video download and thumbnail generation, ensuring efficient management of video content across different partitions. It extracts key fields like publication date, video name, and Dropbox links, and creates data versions to track changes, while preparing metadata for use in generating thumbnails and videos.",
+    "drift": null
+  },
+  "video_short_webhook": {
+    "hash": "53a1803da7ba5fe7d51cfc203a2d9f4416f919f55956605d65e06981face7954",
+    "purpose": "This module processes video metadata from Google Sheets to generate necessary data for downstream video download and thumbnail generation, ensuring efficient management of video content across the pipeline. It focuses on extracting and organizing metadata for the top 12 most recent videos, enabling automated processing and delivery of video assets. The module supports dynamic partitioning and versioning to maintain consistency and traceability in video metadata management.",
+    "drift": null
+  },
+  "list_courses": {
+    "hash": "90ae2c20b21ada90cc5fad6e4c0427ed44699cfe5cfb0ff256318f57bc84c096",
+    "purpose": "The module retrieves the list of active course IDs from an edX instance to facilitate subsequent data extraction operations, ensuring accurate and efficient access to course information for downstream processing. It leverages API calls with pagination to handle large datasets, maintaining reliability and scalability in the data retrieval workflow.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "fetch_edx_course_structure_from_api": {
+    "hash": "90ae2c20b21ada90cc5fad6e4c0427ed44699cfe5cfb0ff256318f57bc84c096",
+    "purpose": "The module retrieves course structures from the Open edX API to support data extraction for subsequent processing, ensuring structured access to course metadata and content. It ensures consistency in data representation by flattening nested dictionaries using a specified delimiter, facilitating integration with downstream workflows.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "enrolled_users": {
+    "hash": "90ae2c20b21ada90cc5fad6e4c0427ed44699cfe5cfb0ff256318f57bc84c096",
+    "purpose": "The module retrieves course IDs from an edX instance to facilitate data extraction and analysis, enabling subsequent steps to pull structured course data for processing. It leverages API calls to gather course structures, which are then used to generate flattened JSON documents for further processing.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "student_submissions": {
+    "hash": "90ae2c20b21ada90cc5fad6e4c0427ed44699cfe5cfb0ff256318f57bc84c096",
+    "purpose": "This module retrieves the list of active course IDs from an edX instance to facilitate subsequent data extraction tasks, ensuring accurate and efficient processing of course-specific data. It also captures the structural information of each course via REST API, enabling comprehensive data retrieval and transformation for downstream processing pipelines.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "course_enrollments": {
+    "hash": "90ae2c20b21ada90cc5fad6e4c0427ed44699cfe5cfb0ff256318f57bc84c096",
+    "purpose": "The module retrieves and validates course IDs from an edX instance to facilitate subsequent data extraction per course, ensuring the list is not empty. It also generates structured data files (e.g., course structures and blocks) to support further processing of educational data.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "course_roles": {
+    "hash": "90ae2c20b21ada90cc5fad6e4c0427ed44699cfe5cfb0ff256318f57bc84c096",
+    "purpose": "The module retrieves course IDs from an edX instance to facilitate subsequent data extraction processes, ensuring accurate targeting of course-specific data. It then fetches the structural details of these courses via REST API, providing foundational metadata for downstream data processing tasks.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "user_roles": {
+    "hash": "90ae2c20b21ada90cc5fad6e4c0427ed44699cfe5cfb0ff256318f57bc84c096",
+    "purpose": "The module retrieves the list of active course IDs from an edX instance to facilitate subsequent data extraction steps, ensuring accurate and efficient retrieval of course-specific information for further processing. It uses a configurable page size to manage rate limiting and leverages the edX API to populate the course ID list, which is critical for downstream data processing tasks.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "export_edx_forum_database": {
+    "hash": "90ae2c20b21ada90cc5fad6e4c0427ed44699cfe5cfb0ff256318f57bc84c096",
+    "purpose": "The module retrieves and prepares course data from an edX instance to facilitate subsequent data extraction and processing, ensuring accurate and structured access to course information for analysis or export tasks. It systematically obtains course IDs and their corresponding structural data to enable efficient data retrieval and transformation.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "export_edx_courses": {
+    "hash": "90ae2c20b21ada90cc5fad6e4c0427ed44699cfe5cfb0ff256318f57bc84c096",
+    "purpose": "The module retrieves the list of active course IDs from an edX instance to facilitate subsequent data extraction operations, ensuring accurate and efficient access to course information for downstream processing. It leverages REST API calls to fetch course structures, which are critical for organizing and retrieving educational data in a structured format.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "write_course_list_csv": {
+    "hash": "90ae2c20b21ada90cc5fad6e4c0427ed44699cfe5cfb0ff256318f57bc84c096",
+    "purpose": "This module retrieves the list of active course IDs from an edX instance to facilitate subsequent data extraction operations, ensuring accurate and efficient processing of course-related information. It leverages the Open edX API to gather course metadata, which is critical for downstream workflows involving data retrieval and structure analysis. The module ensures data integrity by validating the number of course IDs and logging retrieval progress.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "upload_extracted_data": {
+    "hash": "90ae2c20b21ada90cc5fad6e4c0427ed44699cfe5cfb0ff256318f57bc84c096",
+    "purpose": "The module retrieves course IDs and their corresponding structure data from an edX instance to facilitate subsequent data extraction processes, enabling efficient and targeted data retrieval for educational analytics. It ensures accurate mapping of course structures, which is critical for downstream data processing workflows. By leveraging the edX API, the module supports scalable data extraction capabilities for large-scale educational datasets.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "openedx_live_courseware": {
+    "hash": "9de8257ff8049ab6c3c7970c85211a878a2495167815a19881d0953feac3091f",
+    "purpose": "This module retrieves course data from the Open edX API, models different asset objects based on their type, and provides structured representations for course structure and blocks to support course management and analysis.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "course_xml": {
+    "hash": "9de8257ff8049ab6c3c7970c85211a878a2495167815a19881d0953feac3091f",
+    "purpose": "This module retrieves course data from the Open edX API, processes it into structured formats (course blocks and structure information), and stores them for use in downstream data processing and analysis, ensuring consistency and correctness in educational data representation.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "openedx_course_content_webhook": {
+    "hash": "9de8257ff8049ab6c3c7970c85211a878a2495167815a19881d0953feac3091f",
+    "purpose": "This module retrieves and processes course data from the Open edX API to model asset objects representing course structures and blocks, enabling efficient data integration for course management and analytics. It ensures accurate data representation through versioning and proper handling of different course statuses, supporting seamless data flow between systems.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "load_files_to_table": {
+    "hash": "0ad4c8b90e3f0ed344e7348d708f9e3d6369cafd450f7ee82e92eba074e63f42",
+    "purpose": "The module enables the automated ingestion of log files from an S3 bucket into a structured DuckDB table, facilitating efficient data analysis and transformation. It ensures all log files for a specific date are loaded into a tracking_logs table, which serves as a centralized repository for subsequent data processing and querying.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "transform_log_data": {
+    "hash": "0ad4c8b90e3f0ed344e7348d708f9e3d6369cafd450f7ee82e92eba074e63f42",
+    "purpose": "The module transforms log data from S3 into a standardized format for analysis, converting raw JSON fields to strings, normalizing integer timestamps to ISO8601, and ensuring consistent data structure. It processes tracking logs from specified S3 buckets, applying transformations to prepare data for downstream use cases like reporting or further analysis.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "jsonify_log_data": {
+    "hash": "0ad4c8b90e3f0ed344e7348d708f9e3d6369cafd450f7ee82e92eba074e63f42",
+    "purpose": "The `jsonify_log_data` module transforms data in the DuckDB tracking_logs table by converting VARCHAR columns back to JSON format, ensuring consistency with systems that require structured data. It normalizes existing data, extracts JSON fields from structured rows, and converts integer timestamps to ISO8601 format, enabling seamless integration with applications that expect JSON-compatible data structures.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "write_file_to_s3": {
+    "hash": "0ad4c8b90e3f0ed344e7348d708f9e3d6369cafd450f7ee82e92eba074e63f42",
+    "purpose": "The module loads log files from S3 into a DuckDB table, transforming them for analysis by structuring data and preparing it for further processing. It ensures data is stored in a structured format and prepares it for use in downstream analytics workflows.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "student_risk_probability": {
+    "hash": "6e1233dd429c08741b5f475e1607a93fd7f06ced7c780327f18d93f98da60582",
+    "purpose": "The module calculates risk probabilities for students based on their exam performance and other metrics from the cheating detection report, enabling educators to identify potential cheating risks and inform targeted interventions. It scales numeric features using robust statistical methods and applies logistic regression weights to predict likelihoods, providing actionable insights for academic risk management.",
+    "drift": {
+      "verdict": "MISSING",
+      "explanation": "No docstring found."
+    }
+  },
+  "/n": {
+    "hash": "f96328fd393a21e68305dc3f4923a13dba7a1fd0f51eff1bba168f1eedb946f1",
+    "purpose": "The module facilitates the secure and controlled promotion of Superset assets from the QA environment to production, ensuring compliance with safety checks, validation processes, and user confirmation to prevent accidental deployments. It handles critical tasks like database mapping, instance configuration, and asset validation to maintain data integrity and prevent unintended changes.",
+    "drift": null
+  },
+  "# Superset Assets Promotion Manifest/n": {
+    "hash": "f96328fd393a21e68305dc3f4923a13dba7a1fd0f51eff1bba168f1eedb946f1",
+    "purpose": "This module safely promotes Superset assets from the QA environment to production, ensuring validation, compliance checks, and proper configuration to prevent accidental deployments. It handles critical steps like database UUID mapping, instance setup, and confirmation processes to maintain data integrity and prevent accidental overwrites.",
+    "drift": null
+  },
+  "# Source: QA (bi-qa.ol.mit.edu)/n": {
+    "hash": "f96328fd393a21e68305dc3f4923a13dba7a1fd0f51eff1bba168f1eedb946f1",
+    "purpose": "This module securely promotes Superset assets from the QA environment to production, ensuring validation, git status checks, and user confirmation to prevent accidental deployments. It safeguards critical data by enforcing rigorous safety checks and providing detailed summaries of what will be deployed, aligning with best practices for production deployment.",
+    "drift": null
+  },
+  "# Target: Production (bi.ol.mit.edu)/n": {
+    "hash": "f96328fd393a21e68305dc3f4923a13dba7a1fd0f51eff1bba168f1eedb946f1",
+    "purpose": "This module facilitates the secure promotion of Superset assets from the QA environment to production, ensuring data integrity through validation, git status checks, and user confirmation. It prevents accidental deployments by requiring explicit approval and validating assets before promotion, thereby safeguarding production environments from unintended changes.",
+    "drift": null
+  },
+  "## Published Dashboards Promoted/n": {
+    "hash": "f96328fd393a21e68305dc3f4923a13dba7a1fd0f51eff1bba168f1eedb946f1",
+    "purpose": "This module enables the safe promotion of Superset assets from the QA environment to production, ensuring validation, confirmation, and compliance with safety checks to prevent accidental deployments. It verifies asset integrity, checks for uncommitted changes, and requires explicit confirmation before proceeding, safeguarding production data and preventing unintended changes.",
+    "drift": null
   }
 }

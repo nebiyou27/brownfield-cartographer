@@ -21,15 +21,26 @@ def test_git_analyzer_success_and_walk(monkeypatch, tmp_path):
     seen_commands = []
 
     class Result:
-        stdout = "c1\nc2\nc3\n"
+        def __init__(self, stdout):
+            self.stdout = stdout
 
     def _run(*args, **kwargs):
         seen_commands.append(args[0])
-        return Result()
+        command = args[0]
+        if "rev-parse" in command:
+            return Result(str(tmp_path) + "\n")
+        return Result("c1\nc2\nc3\n")
 
     monkeypatch.setattr(git_analyzer.subprocess, "run", _run)
     assert git_analyzer.get_git_change_velocity(str(tmp_path), "file.py") == 3
-    assert seen_commands[0][:4] == ["git", "log", "--since=90.days", "--pretty=format:%H"]
+    assert seen_commands[1][:6] == [
+        "git",
+        "-C",
+        str(tmp_path),
+        "log",
+        "--since=90.days",
+        "--pretty=format:%H",
+    ]
 
     monkeypatch.setattr(git_analyzer, "get_git_change_velocity", lambda repo, rel: len(rel))
     (tmp_path / ".git").mkdir()
@@ -48,15 +59,19 @@ def test_git_analyzer_honors_custom_days_window(monkeypatch, tmp_path):
     seen_commands = []
 
     class Result:
-        stdout = ""
+        def __init__(self, stdout):
+            self.stdout = stdout
 
     def _run(*args, **kwargs):
         seen_commands.append(args[0])
-        return Result()
+        command = args[0]
+        if "rev-parse" in command:
+            return Result(str(tmp_path) + "\n")
+        return Result("")
 
     monkeypatch.setattr(git_analyzer.subprocess, "run", _run)
     assert git_analyzer.get_git_change_velocity(str(tmp_path), "README.md", days=14) == 0
-    assert "--since=14.days" in seen_commands[0]
+    assert "--since=14.days" in seen_commands[1]
 
 
 def test_hydrologist_trace_lineage_adds_nodes_and_edges(monkeypatch, tmp_path):
@@ -313,6 +328,63 @@ def test_surveyor_registers_macro_nodes_from_macro_paths(monkeypatch, tmp_path):
     assert normalize_node["git_change_velocity"] == 9
 
 
+def test_surveyor_tags_ingestion_config_and_dbt_source_schema(monkeypatch, tmp_path):
+    extract_dir = tmp_path / "extract"
+    load_dir = tmp_path / "load"
+    source_dir = tmp_path / "1_data" / "sources"
+    extract_dir.mkdir(parents=True, exist_ok=True)
+    load_dir.mkdir(parents=True, exist_ok=True)
+    source_dir.mkdir(parents=True, exist_ok=True)
+    (extract_dir / "source_to_storage.yml").write_text("foo: bar\n", encoding="utf-8")
+    (load_dir / "storage_to_pg.yml").write_text("foo: bar\n", encoding="utf-8")
+
+    source_dataset = DatasetNode(
+        id="cog_communes",
+        source_file="1_data/sources/schema.yml",
+        source_line=None,
+        dataset_type="source",
+    )
+
+    monkeypatch.setattr(
+        "src.agents.surveyor.analyze_all_yaml_files",
+        lambda repo_path: {
+            "project": None,
+            "datasets": [source_dataset],
+            "model_paths": ["models"],
+            "seed_paths": ["seeds"],
+            "macro_paths": ["macros"],
+        },
+    )
+    monkeypatch.setattr(
+        "src.agents.surveyor.get_all_file_velocities",
+        lambda repo: {
+            "extract/source_to_storage.yml": 3,
+            "load/storage_to_pg.yml": 4,
+            "1_data/sources/schema.yml": 2,
+        },
+    )
+    monkeypatch.setattr("src.agents.surveyor.get_git_change_velocity", lambda repo, rel: 1)
+
+    class StubRouter:
+        def __init__(self, repo_path):
+            self.repo_path = repo_path
+
+        def analyze_directory(self, repo_path):
+            return [], [], []
+
+    monkeypatch.setattr("src.agents.surveyor.LanguageRouter", StubRouter)
+
+    graph = KnowledgeGraph("module")
+    Surveyor(str(tmp_path)).survey(graph)
+
+    assert (
+        graph.graph.nodes["extract/source_to_storage.yml"]["ingestion_role"] == "extraction_config"
+    )
+    assert graph.graph.nodes["load/storage_to_pg.yml"]["ingestion_role"] == "loading_config"
+    assert graph.graph.nodes["1_data/sources/schema.yml"]["ingestion_role"] == "dbt_sources_schema"
+    assert graph.graph.nodes["load/storage_to_pg.yml"]["git_change_velocity"] == 4
+
+
 def test_archivist_helpers_and_archive(monkeypatch, tmp_path):
     monkeypatch.chdir(tmp_path)
     archivist = Archivist("repo")
@@ -438,7 +510,8 @@ def test_archivist_helpers_and_archive(monkeypatch, tmp_path):
     assert answer_lines
     assert "<think>" not in onboarding
     assert "internal scratchpad" not in onboarding
-    assert "Q1: Start with app flow. [load/loaders.py:70]" in onboarding
+    assert "Q1: Start with app flow." in onboarding
+    assert "[UNVERIFIED: this file was not found in the analyzed graph]" in onboarding
     for answer_line in answer_lines:
         assert "[" in answer_line and "]" in answer_line
 
@@ -504,6 +577,109 @@ def test_archivist_module_purpose_index_uses_persisted_json(monkeypatch, tmp_pat
     assert "module=src/module_a.py|purpose=Owns A flow." in codebase
 
 
+def test_archivist_onboarding_flags_unverified_cited_file(monkeypatch, tmp_path):
+    monkeypatch.chdir(tmp_path)
+    archivist = Archivist("repo")
+    module_graph = KnowledgeGraph("module")
+    lineage_graph = KnowledgeGraph("lineage")
+    module_graph.graph.add_node("src/app.py", source_file="src/app.py", source_line=1)
+    lineage_graph.graph.add_node("mart.orders")
+
+    semantic_results = {
+        "day_one_answers": "Q4: Logic is in macros. [macros/invented_macro.sql:12]",
+    }
+
+    archivist.archive(module_graph, lineage_graph, semantic_results, git_velocity={})
+
+    onboarding = (tmp_path / ".cartography" / "onboarding_brief.md").read_text(encoding="utf-8")
+    assert "[UNVERIFIED: this file was not found in the analyzed graph]" in onboarding
+    assert "macros/invented_macro.sql:12" not in onboarding
+
+
+def test_archivist_onboarding_keeps_dataset_node_citation_verified(monkeypatch, tmp_path):
+    monkeypatch.chdir(tmp_path)
+    archivist = Archivist("repo")
+    module_graph = KnowledgeGraph("module")
+    lineage_graph = KnowledgeGraph("lineage")
+
+    module_graph.graph.add_node("src/app.py", source_file="src/app.py", source_line=1)
+    lineage_graph.graph.add_node("infos_communes")
+
+    semantic_results = {
+        "day_one_answers": "Q2: Critical output dataset is infos_communes. [infos_communes:1]",
+    }
+
+    archivist.archive(module_graph, lineage_graph, semantic_results, git_velocity={})
+
+    onboarding = (tmp_path / ".cartography" / "onboarding_brief.md").read_text(encoding="utf-8")
+    assert "[infos_communes:1]" in onboarding
+    assert "[UNVERIFIED: this file was not found in the analyzed graph]" not in onboarding
+
+
+def test_archivist_onboarding_verifies_dataset_citation_by_lineage_substring(monkeypatch, tmp_path):
+    monkeypatch.chdir(tmp_path)
+    archivist = Archivist("repo")
+    module_graph = KnowledgeGraph("module")
+    lineage_graph = KnowledgeGraph("lineage")
+
+    module_graph.graph.add_node("src/app.py", source_file="src/app.py", source_line=1)
+    lineage_graph.graph.add_node(
+        "make-open-data/1_data/prepare/foncier/ventes_immobilieres_enrichies.sql"
+    )
+
+    semantic_results = {
+        "day_one_answers": "Q2: Key output. [ventes_immobilieres_enrichies:1]",
+    }
+
+    archivist.archive(module_graph, lineage_graph, semantic_results, git_velocity={})
+
+    onboarding = (tmp_path / ".cartography" / "onboarding_brief.md").read_text(encoding="utf-8")
+    assert "[ventes_immobilieres_enrichies:1]" in onboarding
+    assert "[UNVERIFIED: this file was not found in the analyzed graph]" not in onboarding
+
+
+def test_archivist_onboarding_verifies_dataset_name_inside_citation_prefix(monkeypatch, tmp_path):
+    monkeypatch.chdir(tmp_path)
+    archivist = Archivist("repo")
+    module_graph = KnowledgeGraph("module")
+    lineage_graph = KnowledgeGraph("lineage")
+
+    module_graph.graph.add_node("src/app.py", source_file="src/app.py", source_line=1)
+    lineage_graph.graph.add_node("ventes_immobilieres_enrichies")
+
+    semantic_results = {
+        "day_one_answers": "Q2: Critical output. [citation: ventes_immobilieres_enrichies:1]",
+    }
+
+    archivist.archive(module_graph, lineage_graph, semantic_results, git_velocity={})
+
+    onboarding = (tmp_path / ".cartography" / "onboarding_brief.md").read_text(encoding="utf-8")
+    assert "[citation: ventes_immobilieres_enrichies:1]" in onboarding
+    assert "[UNVERIFIED: this file was not found in the analyzed graph]" not in onboarding
+
+
+def test_archivist_onboarding_does_not_add_fallback_for_unmatched_explicit_file(
+    monkeypatch, tmp_path
+):
+    monkeypatch.chdir(tmp_path)
+    archivist = Archivist("repo")
+    module_graph = KnowledgeGraph("module")
+    lineage_graph = KnowledgeGraph("lineage")
+
+    module_graph.graph.add_node("src/app.py", source_file="src/app.py", source_line=1)
+    lineage_graph.graph.add_node("mart.orders")
+
+    semantic_results = {
+        "day_one_answers": "Q5: Most changed file is `uv.lock`.",
+    }
+
+    archivist.archive(module_graph, lineage_graph, semantic_results, git_velocity={})
+
+    onboarding = (tmp_path / ".cartography" / "onboarding_brief.md").read_text(encoding="utf-8")
+    assert "Q5: Most changed file is `uv.lock`." in onboarding
+    assert "`src/app.py:1`" not in onboarding
+
+
 def test_semanticist_helpers_and_generation(monkeypatch, tmp_path):
     budget = ContextWindowBudget()
     budget.record("model-a", 40)
@@ -535,6 +711,13 @@ def test_semanticist_helpers_and_generation(monkeypatch, tmp_path):
 
     captured = {}
 
+    debug_messages = []
+
+    def _fake_debug(message, payload):
+        debug_messages.append((message, payload))
+
+    monkeypatch.setattr("src.agents.semanticist.logger.debug", _fake_debug)
+
     def _fake_generate(model, prompt, timeout=300):
         captured["prompt"] = prompt
         return "Q1: answer"
@@ -547,19 +730,113 @@ def test_semanticist_helpers_and_generation(monkeypatch, tmp_path):
         {"src/app.py": 9},
         graph_intelligence={
             "critical_nodes": [
-                {"node": "mart.orders", "score": 0.21, "in_degree": 2, "out_degree": 0}
+                {"node": "src/app.py", "score": 0.31, "in_degree": 3, "out_degree": 2},
+                {"node": "mart.orders", "score": 0.21, "in_degree": 2, "out_degree": 0},
             ],
             "true_sources": ["raw.orders"],
             "true_sinks": ["mart.orders"],
             "blast_radius_top5": {"mart.orders": []},
+            "cross_domain_risk": [
+                {
+                    "node": "infos_communes",
+                    "domains": ["recensement", "geographie", "sante"],
+                    "domain_count": 3,
+                    "downstream_node_count": 4,
+                }
+            ],
             "high_velocity_files": [{"file": "src/app.py", "commits": 9}],
+            "ingestion_pipeline": [
+                {"file": "extract/source_to_storage.yml", "role": "extraction_config"}
+            ],
+            "macro_summary": {
+                "macro_folder": "make-open-data/5_macros/",
+                "macro_count": 3,
+                "key_macros": [
+                    {
+                        "name": "geo_knn",
+                        "source_file": "make-open-data/5_macros/foncier/geo_knn.sql",
+                    },
+                    {
+                        "name": "aggreger_ventes_immobiliers",
+                        "source_file": "make-open-data/5_macros/foncier/aggreger_ventes_immobiliers.sql",
+                    },
+                    {
+                        "name": "pivoter_logement",
+                        "source_file": "make-open-data/5_macros/recensement/pivoter_logement.sql",
+                    },
+                ],
+            },
         },
     )
     assert answers == "Q1: answer"
-    assert captured["prompt"].startswith("Output only the final answer for each question.")
+    assert captured["prompt"].startswith("CRITICAL RULE: Only reference files, tables, datasets")
+    assert "Output only the final answer for each question." in captured["prompt"]
     assert "=== CRITICAL_NODES ===" in captured["prompt"]
+    assert "src/app.py [INFRASTRUCTURE - exclude from Q2]" in captured["prompt"]
+    assert "mart.orders [DATASET - include in Q2]" in captured["prompt"]
     assert "=== BLAST_RADIUS_TOP5 ===" in captured["prompt"]
+    assert "=== CROSS_DOMAIN_RISK ===" in captured["prompt"]
+    assert "infos_communes | domains=recensement, geographie, sante" in captured["prompt"]
     assert "=== HIGH_VELOCITY_FILES ===" in captured["prompt"]
+    assert "=== INGESTION_PIPELINE ===" in captured["prompt"]
+    assert "Stage 1 - extraction_config: extract/source_to_storage.yml" in captured["prompt"]
+    assert "=== MACRO_SUMMARY ===" in captured["prompt"]
+    assert "macro_folder: make-open-data/5_macros/" in captured["prompt"]
+    assert "For Q4, follow this exact logic:" in captured["prompt"]
+    assert (
+        "If macro_count is 0 or MACRO_SUMMARY is empty: do NOT mention macros at all."
+        in captured["prompt"]
+    )
+    assert "For Q5, you MUST use only the HIGH_VELOCITY_FILES list to answer." in captured["prompt"]
+    assert "Do NOT use PageRank scores or CRITICAL_NODES data for Q5." in captured["prompt"]
+    assert (
+        "For Q2, only list SQL dataset nodes and CSV seed files as critical outputs."
+        in captured["prompt"]
+    )
+    assert "For Q3, follow this exact logic:" in captured["prompt"]
+    assert "The node with the highest domain count is the most dangerous node" in captured["prompt"]
+    assert debug_messages
+    assert "graph_intelligence context before Day-One synthesis" in debug_messages[0][0]
+    assert '"file": "src/app.py"' in debug_messages[0][1]
+    assert '"commits": 9' in debug_messages[0][1]
+
+
+def test_semanticist_q4_prompt_guard_when_macro_summary_empty(monkeypatch):
+    graph = KnowledgeGraph("module")
+    graph.graph.add_node("src/app.py", file_type="python")
+    budget = ContextWindowBudget()
+    captured = {}
+
+    def _fake_generate(model, prompt, timeout=300):
+        captured["prompt"] = prompt
+        return "Q4: no macro layer detected in this repo."
+
+    monkeypatch.setattr("src.agents.semanticist._ollama_generate", _fake_generate)
+
+    answers = answer_day_one_questions(
+        graph,
+        {"src/app.py": "Purpose"},
+        budget,
+        {"src/app.py": 3},
+        graph_intelligence={
+            "critical_nodes": [
+                {"node": "src/app.py", "score": 0.31, "in_degree": 1, "out_degree": 0}
+            ],
+            "true_sources": ["raw.orders"],
+            "true_sinks": ["mart.orders"],
+            "high_velocity_files": [{"file": "src/app.py", "commits": 3}],
+            "macro_summary": {"macro_folder": "", "macro_count": 0, "key_macros": []},
+        },
+    )
+
+    assert answers == "Q4: no macro layer detected in this repo."
+    assert "=== MACRO_SUMMARY ===" in captured["prompt"]
+    assert "  (none)" in captured["prompt"]
+    assert (
+        "If macro_count is 0 or MACRO_SUMMARY is empty: do NOT mention macros at all."
+        in captured["prompt"]
+    )
+    assert "State clearly that no macro layer was detected in this repo." in captured["prompt"]
 
 
 def test_uncertainty_scoring_values():

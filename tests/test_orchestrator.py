@@ -130,6 +130,9 @@ def test_run_analysis_saves_outputs_and_marks_orphans(monkeypatch, tmp_path):
         "true_sinks",
         "blast_radius_top5",
         "high_velocity_files",
+        "ingestion_pipeline",
+        "cross_domain_risk",
+        "macro_summary",
     }
     assert intelligence["critical_nodes"]
     assert intelligence["high_velocity_files"][0]["file"] == "module.py"
@@ -241,6 +244,181 @@ def test_build_graph_intelligence_includes_blast_radius_and_high_velocity(monkey
     top_node = intelligence["critical_nodes"][0]["node"]
     assert top_node in intelligence["blast_radius_top5"]
     assert intelligence["high_velocity_files"][0] == {"file": "models/stg_orders.sql", "commits": 7}
+
+
+def test_build_graph_intelligence_backfills_non_python_node_velocity(monkeypatch, tmp_path):
+    orchestrator = build_orchestrator(monkeypatch, tmp_path)
+    lineage = KnowledgeGraph("lineage")
+    lineage.graph.add_edge("raw.orders", "stg.orders", confidence=0.95, confidence_reason="sql")
+    module = KnowledgeGraph("module")
+    module.graph.add_node(
+        "load/storage_to_pg.yml", source_file="load/storage_to_pg.yml", file_type="yaml"
+    )
+    module.graph.add_node(
+        "4_seeds/logement_2020_valeurs.csv", source_file="4_seeds/logement_2020_valeurs.csv"
+    )
+    module.graph.add_node(
+        "1_data/prepare/sante/professionels_sante_departement.sql",
+        source_file="1_data/prepare/sante/professionels_sante_departement.sql",
+        file_type="sql",
+    )
+
+    intelligence = orchestrator._build_graph_intelligence(
+        lineage,
+        module,
+        {
+            "load/storage_to_pg.yml": 8,
+            "4_seeds/logement_2020_valeurs.csv": 5,
+            "1_data/prepare/sante/professionels_sante_departement.sql": 4,
+        },
+    )
+
+    assert module.graph.nodes["load/storage_to_pg.yml"]["git_change_velocity"] == 8
+    assert module.graph.nodes["4_seeds/logement_2020_valeurs.csv"]["git_change_velocity"] == 5
+    assert (
+        module.graph.nodes["1_data/prepare/sante/professionels_sante_departement.sql"][
+            "git_change_velocity"
+        ]
+        == 4
+    )
+    assert intelligence["high_velocity_files"][:3] == [
+        {"file": "load/storage_to_pg.yml", "commits": 8},
+        {"file": "4_seeds/logement_2020_valeurs.csv", "commits": 5},
+        {"file": "1_data/prepare/sante/professionels_sante_departement.sql", "commits": 4},
+    ]
+
+
+def test_build_graph_intelligence_includes_ordered_ingestion_pipeline(monkeypatch, tmp_path):
+    orchestrator = build_orchestrator(monkeypatch, tmp_path)
+    lineage = KnowledgeGraph("lineage")
+    module = KnowledgeGraph("module")
+    module.graph.add_node(
+        "extract/source_to_storage.yml",
+        source_file="extract/source_to_storage.yml",
+        ingestion_role="extraction_config",
+    )
+    module.graph.add_node(
+        "load/storage_to_pg.yml",
+        source_file="load/storage_to_pg.yml",
+        ingestion_role="loading_config",
+    )
+    module.graph.add_node(
+        "1_data/sources/schema.yml",
+        source_file="1_data/sources/schema.yml",
+        ingestion_role="dbt_sources_schema",
+    )
+
+    intelligence = orchestrator._build_graph_intelligence(lineage, module, {})
+    assert intelligence["ingestion_pipeline"] == [
+        {
+            "node": "extract/source_to_storage.yml",
+            "file": "extract/source_to_storage.yml",
+            "role": "extraction_config",
+        },
+        {
+            "node": "load/storage_to_pg.yml",
+            "file": "load/storage_to_pg.yml",
+            "role": "loading_config",
+        },
+        {
+            "node": "1_data/sources/schema.yml",
+            "file": "1_data/sources/schema.yml",
+            "role": "dbt_sources_schema",
+        },
+    ]
+
+
+def test_build_graph_intelligence_identifies_cross_domain_risk(monkeypatch, tmp_path):
+    orchestrator = build_orchestrator(monkeypatch, tmp_path)
+    lineage = KnowledgeGraph("lineage")
+    lineage.graph.add_edge(
+        "raw.geo", "infos_communes", source_file="1_data/prepare/geographie/infos_communes.sql"
+    )
+    lineage.graph.add_edge(
+        "infos_communes", "revenu_commune", source_file="1_data/prepare/revenu/revenu_commune.sql"
+    )
+    lineage.graph.add_edge(
+        "infos_communes",
+        "demographie_communes",
+        source_file="1_data/prepare/recensement/demographie/demographie_communes.sql",
+    )
+    lineage.graph.add_edge(
+        "infos_communes",
+        "professionels_sante_departement",
+        source_file="1_data/prepare/sante/professionels_sante_departement.sql",
+    )
+    lineage.graph.add_edge(
+        "infos_communes",
+        "ventes_immobilieres_enrichies",
+        source_file="1_data/prepare/foncier/ventes_immobilieres_enrichies.sql",
+    )
+
+    module = KnowledgeGraph("module")
+    module.graph.add_node(
+        "infos_communes",
+        source_file="1_data/prepare/geographie/infos_communes.sql",
+        file_type="sql",
+    )
+
+    intelligence = orchestrator._build_graph_intelligence(lineage, module, {})
+    infos_entry = next(
+        (item for item in intelligence["cross_domain_risk"] if item["node"] == "infos_communes"),
+        None,
+    )
+    assert infos_entry is not None
+    assert infos_entry["domain_count"] >= 3
+    assert infos_entry["downstream_node_count"] == 4
+    assert set(infos_entry["domains"]) >= {
+        "geographie",
+        "recensement",
+        "sante",
+        "revenu",
+        "foncier",
+    }
+    assert intelligence["cross_domain_risk"][0]["node"] == "infos_communes"
+
+
+def test_build_graph_intelligence_populates_macro_summary(monkeypatch, tmp_path):
+    orchestrator = build_orchestrator(monkeypatch, tmp_path)
+    lineage = KnowledgeGraph("lineage")
+    module = KnowledgeGraph("module")
+    module.graph.add_node(
+        "macro:geo_knn:make-open-data/5_macros/foncier/geo_knn.sql:1",
+        logical_name="geo_knn",
+        macro_args=["arg1"],
+        source_file="make-open-data/5_macros/foncier/geo_knn.sql",
+    )
+    module.graph.add_node(
+        "macro:aggreger_ventes_immobiliers:make-open-data/5_macros/foncier/aggreger_ventes_immobiliers.sql:1",
+        logical_name="aggreger_ventes_immobiliers",
+        macro_args=["arg1"],
+        source_file="make-open-data/5_macros/foncier/aggreger_ventes_immobiliers.sql",
+    )
+    module.graph.add_node(
+        "macro:pivoter_logement:make-open-data/5_macros/recensement/pivoter_logement.sql:1",
+        logical_name="pivoter_logement",
+        macro_args=["arg1"],
+        source_file="make-open-data/5_macros/recensement/pivoter_logement.sql",
+    )
+
+    intelligence = orchestrator._build_graph_intelligence(lineage, module, {})
+
+    assert intelligence["macro_summary"]["macro_folder"] == "make-open-data/5_macros/"
+    assert intelligence["macro_summary"]["macro_count"] == 3
+    assert intelligence["macro_summary"]["key_macros"][:3] == [
+        {
+            "name": "aggreger_ventes_immobiliers",
+            "source_file": "make-open-data/5_macros/foncier/aggreger_ventes_immobiliers.sql",
+        },
+        {
+            "name": "geo_knn",
+            "source_file": "make-open-data/5_macros/foncier/geo_knn.sql",
+        },
+        {
+            "name": "pivoter_logement",
+            "source_file": "make-open-data/5_macros/recensement/pivoter_logement.sql",
+        },
+    ]
 
 
 def test_incremental_no_changes_uses_saved_graph_and_updates_state(monkeypatch, tmp_path):

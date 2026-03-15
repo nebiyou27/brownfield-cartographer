@@ -290,6 +290,12 @@ def cluster_into_domains(
 # ---------------------------------------------------------------------------
 
 DAY_ONE_PROMPT = """\
+CRITICAL RULE: Only reference files, tables, datasets, and paths that appear explicitly in the context sections provided below (CRITICAL_NODES, TRUE_SOURCES, TRUE_SINKS, BLAST_RADIUS_TOP5, HIGH_VELOCITY_FILES, MACRO_SUMMARY, INGESTION_PIPELINE, CROSS_DOMAIN_RISK, DETECTED_DOMAINS).
+If a file or dataset name does not appear in these sections, do not mention it.
+Do not invent examples.
+Do not use placeholder names.
+If the evidence is insufficient to answer a question fully, say what you found and acknowledge what is missing.
+
 Output only the final answer for each question.
 Do not include reasoning, thinking steps, or any
 text before Q1. Start your response directly with Q1.
@@ -323,8 +329,17 @@ line numbers where possible.
 === BLAST_RADIUS_TOP5 ===
 {blast_radius_block}
 
+=== CROSS_DOMAIN_RISK ===
+{cross_domain_risk_block}
+
 === HIGH_VELOCITY_FILES ===
 {high_velocity_block}
+
+=== INGESTION_PIPELINE ===
+{ingestion_pipeline_block}
+
+=== MACRO_SUMMARY ===
+{macro_summary_block}
 
 === FIVE FDE DAY-ONE QUESTIONS ===
 1. What is the primary data ingestion path?
@@ -336,7 +351,24 @@ line numbers where possible.
 Answer each question with a clear heading Q1:, Q2:, etc.
 Back every claim with a file path citation [file:line] where possible.
 Use CRITICAL_NODES and BLAST_RADIUS_TOP5 as the primary basis for Q2 and Q3.
+For Q3, follow this exact logic:
+1. Check CROSS_DOMAIN_RISK first. The node with the highest domain count is the most dangerous node in the codebase regardless of PageRank score. Use this node as your answer for Q3.
+2. Describe its blast radius using BLAST_RADIUS_TOP5 data if available, or state the domain count and downstream node count from CROSS_DOMAIN_RISK.
+3. Do NOT choose a Python file or infrastructure module for Q3. The most dangerous node is always a dataset or SQL model that multiple business domains depend on.
 Use HIGH_VELOCITY_FILES as the primary basis for Q5.
+For Q5, you MUST use only the HIGH_VELOCITY_FILES list to answer.
+Do NOT use PageRank scores or CRITICAL_NODES data for Q5.
+HIGH_VELOCITY_FILES is ranked by actual git commit frequency.
+For Q2, only list SQL dataset nodes and CSV seed files as critical outputs.
+Do NOT list Python files, test files, or utility scripts as output datasets.
+Python modules are infrastructure, not outputs.
+For Q4, follow this exact logic:
+1. First check MACRO_SUMMARY.
+   - If macro_count > 0: name the macro folder and list specific macro files from MACRO_SUMMARY as evidence of concentrated reusable logic.
+   - If macro_count is 0 or MACRO_SUMMARY is empty: do NOT mention macros at all. Do NOT invent macro file names or paths. State clearly that no macro layer was detected in this repo.
+2. If no macros exist, describe business logic distribution using only files that actually appear in CRITICAL_NODES and TRUE_SINKS. Name only files you can see in the provided context.
+3. Never invent file paths, function names, or module names that do not appear somewhere in the provided context sections.
+4. If you are uncertain whether a file exists, do not name it.
 """
 
 
@@ -368,9 +400,26 @@ def answer_day_one_questions(
 
     intelligence = graph_intelligence or {}
     critical_nodes = intelligence.get("critical_nodes", []) or []
+
+    def _critical_scope_label(node_id: str) -> str:
+        normalized = normalize_path_key(str(node_id)).lower()
+        if normalized.endswith(".py") or "/tests/" in normalized or normalized.startswith("tests/"):
+            return "[INFRASTRUCTURE - exclude from Q2]"
+        if normalized.endswith(".sql") or normalized.endswith(".csv"):
+            return "[DATASET - include in Q2]"
+        if "." in normalized and "/" not in normalized:
+            return "[DATASET - include in Q2]"
+        return "[DATASET - include in Q2]"
+
     critical_nodes_block = (
         "\n".join(
-            "  {node} | score={score:.6f} | in={in_degree} | out={out_degree}".format(**item)
+            "  {node} {label} | score={score:.6f} | in={in_degree} | out={out_degree}".format(
+                node=item["node"],
+                label=_critical_scope_label(str(item["node"])),
+                score=item["score"],
+                in_degree=item["in_degree"],
+                out_degree=item["out_degree"],
+            )
             for item in critical_nodes[:10]
         )
         if critical_nodes
@@ -397,6 +446,17 @@ def answer_day_one_questions(
         blast_radius_block = "\n".join(blast_lines)
     else:
         blast_radius_block = "  (none)"
+    cross_domain_risk = intelligence.get("cross_domain_risk", []) or []
+    cross_domain_risk_block = (
+        "\n".join(
+            f"  {item['node']} | domains={', '.join(item.get('domains', []))} | "
+            f"domain_count={item.get('domain_count', 0)} | "
+            f"downstream_node_count={item.get('downstream_node_count', item.get('blast_radius_size', 0))}"
+            for item in cross_domain_risk
+        )
+        if cross_domain_risk
+        else "  (none)"
+    )
     high_velocity_files = intelligence.get("high_velocity_files", []) or []
     high_velocity_block = (
         "\n".join(
@@ -404,6 +464,35 @@ def answer_day_one_questions(
         )
         if high_velocity_files
         else "  (none)"
+    )
+    ingestion_pipeline = intelligence.get("ingestion_pipeline", []) or []
+    ingestion_pipeline_block = (
+        "\n".join(
+            f"  Stage {idx + 1} - {item.get('role', 'unknown')}: {item.get('file')}"
+            for idx, item in enumerate(ingestion_pipeline)
+        )
+        if ingestion_pipeline
+        else "  (none)"
+    )
+    macro_summary = intelligence.get("macro_summary", {}) or {}
+    macro_count = int(macro_summary.get("macro_count", 0) or 0)
+    key_macros = macro_summary.get("key_macros", []) or []
+    if macro_count > 0:
+        macro_lines = [
+            f"  macro_folder: {macro_summary.get('macro_folder', '')}",
+            f"  macro_count: {macro_count}",
+            "  key_macros:",
+        ]
+        for item in key_macros[:5]:
+            macro_name = item.get("name", "")
+            macro_file = item.get("source_file", "")
+            macro_lines.append(f"    - {macro_name} ({macro_file})")
+        macro_summary_block = "\n".join(macro_lines)
+    else:
+        macro_summary_block = "  (none)"
+    logger.debug(
+        "[Semanticist] graph_intelligence context before Day-One synthesis:\n%s",
+        json.dumps(intelligence, indent=2, ensure_ascii=False, default=str),
     )
 
     prompt = DAY_ONE_PROMPT.format(
@@ -415,7 +504,10 @@ def answer_day_one_questions(
         true_sources_block=true_sources_block[:2500],
         true_sinks_block=true_sinks_block[:2500],
         blast_radius_block=blast_radius_block[:3500],
+        cross_domain_risk_block=cross_domain_risk_block[:2500],
         high_velocity_block=high_velocity_block[:2500],
+        ingestion_pipeline_block=ingestion_pipeline_block[:2500],
+        macro_summary_block=macro_summary_block[:2500],
     )
     budget.record(SYNTHESIS_MODEL, len(prompt))
     logger.info("Running Day-One synthesis with %s (this may take 30-90s)...", SYNTHESIS_MODEL)
