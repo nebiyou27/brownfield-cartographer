@@ -1,5 +1,11 @@
 # Brownfield Cartographer
 
+**What** - Brownfield Cartographer maps existing dbt-style repositories into architecture, lineage, and onboarding artifacts.
+
+**How** - It runs a Surveyor/Hydrologist/Semanticist/Archivist pipeline that combines repository discovery, SQL/Python/config lineage parsing, git velocity enrichment, optional Ollama semantics, and Streamlit exploration.
+
+**Why** - It helps teams understand legacy data systems quickly by turning scattered code and configs into queryable graphs and handoff documentation.
+
 Brownfield Cartographer maps dbt-style repositories into queryable architecture and lineage artifacts.
 
 ## What It Produces
